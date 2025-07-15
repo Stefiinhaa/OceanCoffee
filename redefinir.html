@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocean Coffee - Redefinir Senha</title>
+  <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
+  <link rel="stylesheet" href="CSS/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://use.typekit.net/hta6hdp.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.0.23/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <section>
+    <div class="fundo-inclinado">
+      <img class="coffe" src="IMG/Loginho2.png" alt="Ocean Coffee Brasil">
+      <div class="Quadrado">
+        <h1 class="login">Redefinir Senha</h1>
+        <form class="form-login" id="resetForm">
+          <input class="senha" type="password" placeholder="Nova senha" id="novaSenha" required minlength="6">
+          <input class="senha" type="password" placeholder="Confirmar nova senha" id="confirmaSenha" required minlength="6">
+          <button type="submit" class="btn-entrar">Redefinir senha</button>
+          <p class="register">
+            <a class="ti" href="Index.html">Voltar para login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get("access_token");
+
+      if (!accessToken) {
+        alert("Token de redefinição não encontrado. Por favor, solicite a redefinição novamente.");
+        window.location.href = "Index.html";
+        return;
+      }
+
+      const form = document.getElementById("resetForm");
+      const novaSenhaInput = document.getElementById("novaSenha");
+      const confirmaSenhaInput = document.getElementById("confirmaSenha");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const novaSenha = novaSenhaInput.value.trim();
+        const confirmaSenha = confirmaSenhaInput.value.trim();
+
+        if (novaSenha.length < 6) {
+          alert("A senha deve ter no mínimo 6 caracteres.");
+          return;
+        }
+
+        if (novaSenha !== confirmaSenha) {
+          alert("As senhas não coincidem.");
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase.auth.updateUser(accessToken, {
+            password: novaSenha
+          });
+
+          if (error) throw error;
+
+          alert("Senha redefinida com sucesso! Você será redirecionado para o login.");
+          window.location.href = "Index.html";
+
+        } catch (err) {
+          alert("Erro ao redefinir senha: " + err.message);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

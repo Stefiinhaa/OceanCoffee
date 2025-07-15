@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocean Coffee - Brasil</title>
+  <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
+  <link rel="stylesheet" href="CSS/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://use.typekit.net/hta6hdp.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.0.23/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+</head>
+<style>
+ 
+        .input-senha-container {
+            position: relative;
+            width: 100%;
+        }
+        .input-senha-container input {
+            width: 100%;
+            padding-right: 40px; /* espaço para o ícone */
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .input-senha-container .toggle-olho {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.1rem; /* Tamanho do ícone */
+            color: #555; /* Cor do ícone */
+        }
+</style>
+<body>
+  <section>
+    <div class="fundo-inclinado">
+      <img class="coffe" src="IMG/Loginho2.png" alt="Ocean Coffee Brasil">
+      <div class="Quadrado">
+        <h1 class="login">Login</h1>
+        <form class="form-login" id="loginForm">
+          <input class="email" type="email" placeholder="Email" id="email" required>
+          <div class="input-senha-container">
+            <input type="password" class="email" id="senha" placeholder="Senha" required>
+            <i id="toggleSenha" class="toggle-olho fas fa-eye"></i> <!-- Ícone de olho aberto -->
+        </div>
+          <div class="options">
+            <label class="label"><input class="check" id="lembrar" type="checkbox"> Lembrar-me</label>
+            <a href="#" class="link" id="forgotPassword">Esqueceu a senha?</a>
+          </div>
+          <button type="submit" class="btn-entrar"> Entrar</button>
+          <p class="register">Não tem uma conta? <strong>
+              <a class="ti" href="Cadastro.html">Registre-se</a></strong>
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+  <script src="JS/login.js"></script>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  
+    const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY"; // sua chave
+    const supabase = createClient(supabaseUrl, supabaseKey);
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("loginForm");
+      const forgotLink = document.getElementById("forgotPassword");
+      const emailInput = document.getElementById("email");
+      const lembrarCheck = document.getElementById("lembrar");
+  
+      // Preencher email salvo (lembrar)
+      const emailSalvo = localStorage.getItem("lembrarEmail");
+      if (emailSalvo) {
+        emailInput.value = emailSalvo;
+        lembrarCheck.checked = true;
+      }
+  
+      // Login
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+  
+        const email = emailInput.value.trim();
+        const senha = document.getElementById("senha").value;
+  
+        try {
+          const { data: { user }, error } = await supabase.auth.signInWithPassword({
+            email,
+            password: senha
+          });
+  
+          if (error || !user) throw error;
+  
+          // Buscar tipo e nome do usuário
+          const { data: usuarioInfo, error: userFetchError } = await supabase
+            .from("usuarios")
+            .select("tipo, nome")
+            .eq("email", email)
+            .single();
+  
+          if (userFetchError || !usuarioInfo) {
+            alert("Usuário não encontrado na tabela.");
+            return;
+          }
+  
+          // Lembrar email se marcado
+          if (lembrarCheck.checked) {
+            localStorage.setItem("lembrarEmail", email);
+          } else {
+            localStorage.removeItem("lembrarEmail");
+          }
+  
+          // Salvar nome para exibir popup de boas-vindas
+          localStorage.setItem("bemVindo", usuarioInfo.nome || email);
+  
+          // Redirecionamento por tipo
+          if (usuarioInfo.tipo === "Administrador") {
+            window.location.replace("admin.html");
+          } else {
+            window.location.replace("Confirmacao.html");
+          }
+  
+        } catch (err) {
+          alert("Erro ao fazer login: " + err.message);
+        }
+      });
+  
+      // Recuperação de senha
+      forgotLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+  
+        const email = emailInput.value.trim();
+        if (!email) {
+          alert("Por favor, preencha o campo de email.");
+          return;
+        }
+  
+        try {
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: "https://pagina-redefinir-stefanis-projects-a77d4dcb.vercel.app/redefinir.html" // ajuste se necessário
+          });
+  
+          if (error) throw error;
+          alert("Email de redefinição enviado para " + email);
+        } catch (err) {
+          alert("Erro ao enviar recuperação: " + err.message);
+        }
+      });
+    });
+  </script>
+  
+  
+  
+
+
+
+</body>
+
+</html>
