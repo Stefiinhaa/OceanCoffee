@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Painel - Ocean Coffee</title>
+    <link rel="icon" href="IMG/Loginho2.png" type="image/png">
+    <link rel="stylesheet" href="CSS/styles.css" />
+    <link rel="stylesheet" href="CSS/popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Estilos específicos para a página de perfil com abas */
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .dashboard-container { max-width: 1400px; margin: 90px auto; padding: 0 20px; display: grid; grid-template-columns: 280px 1fr; gap: 30px; height: calc(100vh - 120px); }
+        .dashboard-nav { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 20px; display: flex; flex-direction: column; }
+        .profile-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .profile-header .avatar { width: 100px; height: 100px; border-radius: 50%; background-color: #0047a3; color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; margin: 0 auto 15px auto; }
+        .profile-header h3 { font-size: 1.4rem; font-weight: 600; color: #333; }
+        .profile-header p { font-size: 0.9rem; color: #777; word-break: break-all; }
+        .nav-menu { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .nav-menu a { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-radius: 8px; text-decoration: none; color: #555; font-weight: 600; transition: background-color 0.2s, color 0.2s; }
+        .nav-menu a:hover { background-color: #f0f5ff; color: #0047a3; }
+        .nav-menu a.active { background-color: #0047a3; color: white; }
+        .nav-menu a i { width: 20px; text-align: center; }
+        
+        .dashboard-content { 
+            background-color: #fff; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+            padding: 30px 40px; 
+            overflow-y: auto;
+        }
+        
+        /* A classe .profile-grid foi removida por não ser mais necessária */
+    
+        .card { 
+            border: 1px solid #eee; 
+            border-radius: 12px; 
+            padding: 25px 30px; 
+            margin-bottom: 30px; /* Garante espaçamento entre os cards empilhados */
+        }
+        .card:last-child {
+            margin-bottom: 0;
+        }
+    
+        .card h2 { font-size: 1.5rem; font-weight: 600; color: #0047a3; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 600; color: #555; margin-bottom: 8px; }
+        input { 
+            width: 100%; 
+            padding: 14px 18px;
+            border: 1px solid #ccc; 
+            border-radius: 8px;
+            font-size: 1.05rem;
+            transition: border-color 0.2s, box-shadow 0.2s; 
+        }
+        input:focus { outline: none; border-color: #5ce1e6; box-shadow: 0 0 0 4px rgba(92, 225, 230, 0.3); }
+        input:read-only { background-color: #f0f0f0; cursor: not-allowed; }
+        .btn { 
+            padding: 12px 25px; 
+            border-radius: 8px; 
+            border: none; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.2s; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 1rem; 
+        }
+        .btn-primary { background-color: #007bff; color: white; } .btn-primary:hover { background-color: #0056b3; }
+        .btn-secondary { background-color: #6c757d; color: white; } .btn-secondary:hover { background-color: #5a6268; }
+        
+        @media (max-width: 900px) { .dashboard-container { grid-template-columns: 1fr; height: auto; } }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="navbar-brand" style="padding: 0 20px;"><img src="IMG/ocean coffee.png" alt="Logo" style="height: 40px;"></a>
+        <nav class="navbar-center"><a id="logout-btn" href="#" style="font-weight: bold; color: #e60000;">Sair</a></nav>
+    </header>
+
+    <main class="dashboard-container">
+        <aside class="dashboard-nav">
+            <div class="profile-header">
+                <div class="avatar" id="avatar-inicial"></div>
+                <h3 id="welcome-message">Carregando...</h3>
+                <p id="user-email"></p>
+            </div>
+            <nav class="nav-menu">
+                <a href="perfil.html" class="nav-link active"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a>
+                <a href="meus-anuncios.html" class="nav-link"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a>
+                <a href="anuncie.html" class="nav-link"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
+            </nav>
+        </aside>
+        <div class="dashboard-content">
+            <div id="perfil" class="tab-content active">
+               
+                    <div class="card" id="profile-card">
+                        <h2><i class="fas fa-user-edit"></i> Dados Cadastrais</h2>
+                        <form id="profile-form" class="profile-form">
+                            <div class="form-group"><label for="nome">Nome Completo</label><input type="text" id="nome" readonly required></div>
+                            <div class="form-group"><label for="email">Email</label><input type="email" id="email" readonly required></div>
+                            <div class="form-group"><label for="telefone">Telefone</label><input type="tel" id="telefone" readonly required></div>
+                            <div id="profile-buttons">
+                                <button type="button" class="btn btn-secondary" id="edit-profile-btn">Editar</button>
+                                <button type="submit" class="btn btn-primary" id="save-profile-btn" style="display: none;">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card" id="password-card">
+                        <h2><i class="fas fa-key"></i> Alterar Senha</h2>
+                        <form id="password-form" class="profile-form">
+                            <div class="form-group"><label for="new-password">Nova Senha</label><input type="password" id="new-password" placeholder="Mínimo 6 caracteres" required></div>
+                            <button type="submit" class="btn btn-primary">Atualizar Senha</button>
+                        </form>
+                    </div>
+             
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+        import { showPopup, showToast } from './popup.js';
+
+        const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) { window.location.replace("login.html"); return; }
+
+            const { data: profile, error: profileError } = await supabase.from("usuarios").select("*").eq("user_id", user.id).single();
+            if (profileError || !profile) { await showPopup(`Não foi possível carregar seu perfil.`, 'error'); return; }
+
+            // Renderizar dados do perfil
+            document.getElementById('welcome-message').textContent = profile.nome.split(' ')[0];
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
+            document.getElementById('nome').value = profile.nome || '';
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('telefone').value = profile.telefone || '';
+
+            // Lógica de Logout
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.replace("index.html");
+            });
+
+            // Lógica para editar/salvar perfil
+            const nomeInput = document.getElementById('nome');
+            const emailInput = document.getElementById('email');
+            const telefoneInput = document.getElementById('telefone');
+            const editBtn = document.getElementById('edit-profile-btn');
+            const saveBtn = document.getElementById('save-profile-btn');
+
+            editBtn.addEventListener('click', () => {
+                nomeInput.readOnly = false;
+                emailInput.readOnly = false;
+                telefoneInput.readOnly = false;
+                nomeInput.focus();
+                editBtn.style.display = 'none';
+                saveBtn.style.display = 'block';
+            });
+
+            document.getElementById('profile-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Salvando...';
+
+                const novoNome = nomeInput.value;
+                const novoEmail = emailInput.value;
+                const novoTelefone = telefoneInput.value;
+                
+                // Passo 1: Atualiza o email na autenticação do Supabase (se mudou)
+                if (novoEmail !== user.email) {
+                    const { error: authError } = await supabase.auth.updateUser({ email: novoEmail });
+                    if (authError) {
+                        await showPopup(`Erro ao atualizar email: ${authError.message}`, 'error');
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = 'Salvar';
+                        return;
+                    }
+                }
+
+                // Passo 2: Atualiza os dados na sua tabela 'usuarios'
+                const { error: profileError } = await supabase.from('usuarios').update({ nome: novoNome, email: novoEmail, telefone: novoTelefone }).eq('user_id', user.id);
+                if (profileError) { 
+                    await showPopup(`Erro ao atualizar perfil: ${profileError.message}`, 'error');
+                } else {
+                    showToast('Perfil atualizado com sucesso!');
+                    nomeInput.readOnly = true;
+                    emailInput.readOnly = true;
+                    telefoneInput.readOnly = true;
+                    editBtn.style.display = 'block';
+                    saveBtn.style.display = 'none';
+                    document.getElementById('user-email').textContent = novoEmail;
+                }
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Salvar';
+            });
+
+            // Lógica para alterar senha
+            document.getElementById('password-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const newPassword = document.getElementById('new-password').value;
+                if (newPassword.length < 6) { await showPopup("A nova senha deve ter no mínimo 6 caracteres.", 'error'); return; }
+                const { error } = await supabase.auth.updateUser({ password: newPassword });
+                if (error) { await showPopup(`Erro ao atualizar senha: ${error.message}`, 'error');
+                } else {
+                    showToast('Senha alterada com sucesso!');
+                    document.getElementById('new-password').value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

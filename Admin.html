@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Administrador Ocean Coffee - Usuários</title>
+    <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* CSS COMPLETO E UNIFICADO */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; height: 100vh; background-color: #f4f7f6; overflow: hidden; }
+    
+    /* --- SIDEBAR --- */
+    .sidebar { width: 250px; display: flex; flex-direction: column; justify-content: space-between; background-color: #5ce1e6; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); position: fixed; height: 100%; left: 0; top: 0; z-index: 1001; transition: width 0.3s ease; }
+    .sidebar.collapsed { width: 70px; }
+    
+    .logo { 
+        text-align: center; 
+        padding: 20px 0; 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+        transition: padding 0.3s ease, border-color 0.3s ease;
+    }
+    .sidebar.collapsed .logo {
+        padding: 10px 0;
+        border-bottom-color: transparent;
+    }
+    .logo img { 
+        max-width: 150px; 
+        height: auto;
+        transition: opacity 0.2s ease, width 0.3s ease;
+    }
+    .sidebar.collapsed .logo img {
+        opacity: 0;
+        width: 0;
+        pointer-events: none;
+    }
+
+    .menu { display: flex; flex-direction: column; gap: 5px; padding: 20px 0; flex-grow: 1; }
+    .menu-item, .menu-item2 { display: flex; align-items: center; gap: 12px; padding: 12px 25px; border-radius: 0 25px 25px 0; color: #333; font-weight: 600; cursor: pointer; transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, padding 0.3s ease; text-decoration: none; white-space: nowrap; overflow: hidden; }
+    .menu-item span, .menu-item2 span { transition: opacity 0.3s ease; }
+    .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item2 { justify-content: center; padding: 12px 0; }
+    .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item2 span { opacity: 0; width: 0; }
+    .menu-item svg, .menu-item2 svg { width: 22px; height: 22px; fill: #333; transition: fill 0.3s ease; flex-shrink: 0; }
+    .menu-item:hover, .menu-item2:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; transform: translateX(5px); }
+    .sidebar.collapsed .menu-item:hover, .sidebar.collapsed .menu-item2:hover { transform: none; }
+    .menu-item.selected { background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2); }
+    .menu-item.selected svg { fill: white; }
+    .menu-item2 { margin-top: auto; }
+    .menu-bottom { background-color: #0cc0df; text-align: center; padding: 15px 0; border-top: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; transition: background 0.3s ease; }
+    .menu-bottom:hover { background-color: #08a3bd; }
+    .menu-bottom svg { width: 28px; height: 28px; fill: #333; }
+    
+    /* --- CONTEÚDO PRINCIPAL --- */
+    .content { flex: 1; margin-left: 250px; padding-top: 60px; position: relative; overflow-y: auto; transition: margin-left 0.3s ease; }
+    .content.shifted { margin-left: 70px; }
+    .header { width: calc(100% - 250px); height: 60px; background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; position: fixed; top: 0; left: 250px; z-index: 1000; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); transition: left 0.3s ease, width 0.3s ease; }
+    .header.shifted { left: 70px; width: calc(100% - 70px); }
+    
+    /* --- TABELA E PESQUISA --- */
+    .tabela-container { width: calc(100% - 60px); margin: 30px auto; background-color: #ffffff; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); overflow-x: auto; }
+    .search-bar-container { margin: 20px 30px 0 30px; text-align: center; }
+    .search-bar-container input { padding: 10px 15px; width: 100%; max-width: 500px; border: 2px solid #0047a3; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+    .search-bar-container input:focus { border-color: #3ac0dd; box-shadow: 0 0 8px rgba(58, 192, 221, 0.5); }
+    table { width: 100%; border-collapse: collapse; text-align: center; }
+    th { background-color: #0047a3; color: white; padding: 15px 10px; border: 1px solid rgba(255, 255, 255, 0.3); font-size: 16px; font-weight: 700; text-transform: uppercase; }
+    td { padding: 12px 10px; border: 1px solid #e0e0e0; font-size: 15px; color: #333; }
+    tr:nth-child(even) td { background-color: #f7f7f7; }
+    tr:hover td { background-color: #dbeaff; }
+    
+    /* --- BOTÕES --- */
+    .btn-detalhes { padding: 8px 16px; border: none; background-color: #007bff; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
+    .btn-detalhes:hover { background-color: #0056b3; }
+    button { padding: 8px 15px; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 14px; transition: all 0.2s ease-in-out; margin: 0 3px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
+    button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
+    button:disabled { cursor: not-allowed; background-color: #a0a0a0; transform: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);}
+    .alterar { background-color: #00b86b; } .alterar:hover { background-color: #019655; }
+    .excluir { background-color: #e60000; } .excluir:hover { background-color: #b80000; }
+    .salvar { background-color: #007bff; } .salvar:hover { background-color: #0056b3; }
+    
+    /* --- PAGINAÇÃO --- */
+    .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; }
+    .pagination-info { font-size: 14px; color: #666; }
+    .pagination-controls button { background-color: #007bff; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; margin: 0 5px; transition: background-color 0.2s; }
+    .pagination-controls button:hover:not(:disabled) { background-color: #0056b3; }
+    .pagination-controls button:disabled { background-color: #a0a0a0; }
+
+    /* --- POP-UPS E TOASTS --- */
+    .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1050; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    .popup-overlay.visible { opacity: 1; pointer-events: auto; }
+    .popup-content { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
+    .popup-overlay.visible .popup-content { transform: scale(1); }
+    .popup-icon { font-size: 48px; margin-bottom: 20px; }
+    .popup-icon.success { color: #28a745; }
+    .popup-icon.error { color: #dc3545; }
+    .popup-icon.confirm { color: #ffc107; }
+    .popup-content h3 { margin-top: 0; margin-bottom: 15px; font-size: 22px; color: #333; line-height: 1.4; }
+    .popup-buttons { margin-top: 25px; display: flex; justify-content: center; gap: 15px; }
+    .popup-buttons button { padding: 10px 25px; border-radius: 6px; font-weight: bold; }
+    .popup-buttons .btn-confirm { background-color: #dc3545; } .popup-buttons .btn-confirm:hover { background-color: #c82333; }
+    .popup-buttons .btn-cancel { background-color: #6c757d; } .popup-buttons .btn-cancel:hover { background-color: #5a6268; }
+    .popup-buttons .btn-ok { background-color: #007bff; } .popup-buttons .btn-ok:hover { background-color: #0056b3; }
+    .toast-notification { position: fixed; top: 20px; right: 20px; background-color: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease forwards; }
+    .toast-notification.fade-out { animation: fadeOut 0.5s ease forwards; }
+    .toast-notification.success { background-color: #28a745; }
+    .toast-notification.error { background-color: #dc3545; }
+    .toast-notification i { font-size: 24px; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(100%); } }
+</style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo"><a href="Index.html"><img src="IMG/ocean coffee.png" alt="Logo Ocean Coffee"></a></div>
+            <div class="menu">
+                <a href="Admin.html" class="menu-item selected">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                    <span>Usuários</span>
+                </a>
+                <a href="Solicitações.html" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8V4l8 8-8 8v-4.1C6 15.9 4 19 4 19c0-5 4-9 8-11z"/></svg>
+                    <span>Solicitações</span>
+                </a>
+                <a href="Aprovados.html" class="menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.2l-3.5-3.5 1.4-1.4L9 13.4l7.1-7.1 1.4 1.4z"/></svg>
+                    <span>Aprovados</span>
+                </a>
+                <a href="#" class="menu-item2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        <div class="menu-bottom" id="sidebarToggle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
+        </div>
+    </div>
+
+    <div class="content" id="mainContent">
+        <div class="header" id="mainHeader"><span id="headerTitle">Contas Registradas</span></div>
+        <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail..." /></div>
+        <div class="tabela-container">
+            <table>
+                <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Status</th><th>Ações</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            <div id="pagination-container" class="pagination-container"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // IMPORTAÇÃO CORRIGIDA E TRAVADA NA VERSÃO 2
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+
+        const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        let allUsers = [];
+        let filteredUsers = [];
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        // --- SISTEMA DE NOTIFICAÇÕES PROFISSIONAL ---
+        function showPopup(message, type = 'error') {
+            return new Promise((resolve) => {
+                const overlay = document.createElement('div');
+                overlay.className = 'popup-overlay';
+                let iconClass = '', buttonsHtml = '';
+                switch(type) {
+                    case 'error':
+                        iconClass = 'fas fa-times-circle error';
+                        buttonsHtml = `<button class="btn-ok">OK</button>`;
+                        break;
+                    case 'confirm':
+                        iconClass = 'fas fa-exclamation-triangle confirm';
+                        buttonsHtml = `<button class="btn-cancel">Cancelar</button><button class="btn-confirm">Sim, Excluir</button>`;
+                        break;
+                    case 'success':
+                    default:
+                        iconClass = 'fas fa-check-circle success';
+                        buttonsHtml = `<button class="btn-ok">OK</button>`;
+                        break;
+                }
+                overlay.innerHTML = `<div class="popup-content"><i class="popup-icon ${iconClass}"></i><h3>${message}</h3><div class="popup-buttons">${buttonsHtml}</div></div>`;
+                document.body.appendChild(overlay);
+                setTimeout(() => overlay.classList.add('visible'), 10);
+                const closePopup = (value) => {
+                    overlay.classList.remove('visible');
+                    overlay.addEventListener('transitionend', () => { overlay.remove(); resolve(value); });
+                };
+                overlay.querySelector('.btn-ok')?.addEventListener('click', () => closePopup(true));
+                overlay.querySelector('.btn-confirm')?.addEventListener('click', () => closePopup(true));
+                overlay.querySelector('.btn-cancel')?.addEventListener('click', () => closePopup(false));
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+            toast.innerHTML = `<i class="fas ${iconClass}"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                toast.addEventListener('animationend', () => toast.remove());
+            }, 2500);
+        }
+
+        // --- FUNÇÕES DE LÓGICA DA PÁGINA ---
+        async function listarUsuarios() {
+            const tbody = document.querySelector("tbody");
+            tbody.innerHTML = `<tr><td colspan="5">Carregando usuários...</td></tr>`;
+            const { data, error, count } = await supabase.from("usuarios").select("*", { count: 'exact' }).order('nome', { ascending: true });
+
+            if (error) {
+                console.error("Erro ao carregar usuários:", error);
+                tbody.innerHTML = `<tr><td colspan="5">Erro ao carregar usuários.</td></tr>`;
+                return;
+            }
+            allUsers = data || [];
+            filteredUsers = allUsers;
+            document.getElementById('headerTitle').textContent = `Contas Registradas (${count || 0})`;
+            currentPage = 1;
+            displayPage();
+        }
+
+        function displayPage() {
+            renderizarTabela(filteredUsers);
+            setupPagination(filteredUsers);
+        }
+
+        function renderizarTabela(usersToRender) {
+            const tbody = document.querySelector("tbody");
+            tbody.innerHTML = "";
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const paginatedUsers = usersToRender.slice(startIndex, startIndex + rowsPerPage);
+
+            if (paginatedUsers.length === 0 && currentPage === 1) {
+                tbody.innerHTML = `<tr><td colspan="5">Nenhum usuário encontrado.</td></tr>`;
+                return;
+            }
+
+            paginatedUsers.forEach((usuario) => {
+                const { id, nome, email, tipo = "Comum", status = "Ativo" } = usuario; 
+                const tr = document.createElement("tr");
+                tr.dataset.userId = id;
+                tr.innerHTML = `
+                    <td><span>${nome}</span><input class="input_edicao" type="text" style="display:none" value="${nome}"></td>
+                    <td><span>${email}</span><input class="input_edicao" type="email" style="display:none" value="${email}"></td>
+                    <td><span>${tipo}</span><select class="input_edicao" style="display:none"><option value="Comum" ${tipo === "Comum" ? "selected" : ""}>Comum</option><option value="Administrador" ${tipo === "Administrador" ? "selected" : ""}>Administrador</option></select></td>
+                    <td><span>${status}</span><select class="input_edicao" style="display:none"><option value="Ativo" ${status === "Ativo" ? "selected" : ""}>Ativo</option><option value="Inativo" ${status === "Inativo" ? "selected" : ""}>Inativo</option></select></td>
+                    <td><button class="alterar">Alterar</button><button class="salvar" style="display:none">Salvar</button><button class="excluir">Excluir</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function setupPagination(users) {
+            const paginationContainer = document.getElementById("pagination-container");
+            paginationContainer.innerHTML = "";
+            const pageCount = Math.ceil(users.length / rowsPerPage);
+            if (pageCount <= 1) return;
+            const pageInfo = document.createElement('div');
+            pageInfo.className = 'pagination-info';
+            pageInfo.textContent = `Página ${currentPage} de ${pageCount}`;
+            const controls = document.createElement('div');
+            controls.className = 'pagination-controls';
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Anterior';
+            prevButton.disabled = currentPage === 1;
+            prevButton.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayPage(); } });
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Seguinte';
+            nextButton.disabled = currentPage === pageCount;
+            nextButton.addEventListener('click', () => { if (currentPage < pageCount) { currentPage++; displayPage(); } });
+            controls.appendChild(prevButton);
+            controls.appendChild(nextButton);
+            paginationContainer.appendChild(pageInfo);
+            paginationContainer.appendChild(controls);
+        }
+
+        function filterUsers(searchTerm) {
+            const termo = searchTerm.toLowerCase();
+            filteredUsers = allUsers.filter(user =>
+                (user.nome || '').toLowerCase().includes(termo) ||
+                (user.email || '').toLowerCase().includes(termo)
+            );
+            currentPage = 1;
+            displayPage();
+        }
+        
+        // --- INICIALIZAÇÃO DA PÁGINA E EVENTOS ---
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) { throw new Error("Você precisa estar logado para acessar esta página."); }
+                const { data: usuarioData, error } = await supabase.from("usuarios").select("tipo").eq("user_id", user.id).single().throwOnError();
+                if (!usuarioData || usuarioData.tipo !== "Administrador") { throw new Error("Acesso restrito! Apenas administradores podem acessar esta página."); }
+            } catch (err) {
+                await showPopup(err.message, 'error');
+                window.location.replace("Index.html");
+                return;
+            }
+
+            await listarUsuarios();
+            
+            document.getElementById("searchInput").addEventListener("input", (e) => filterUsers(e.target.value));
+            
+            document.querySelector("tbody").addEventListener("click", async (e) => {
+                const target = e.target;
+                const tr = target.closest("tr");
+                if (!tr) return;
+                
+                const userId = tr.dataset.userId;
+
+                if (target.classList.contains("alterar")) {
+                    tr.querySelectorAll("span").forEach(el => el.style.display = "none");
+                    tr.querySelectorAll("input, select").forEach(el => el.style.display = "inline-block");
+                    target.style.display = "none";
+                    tr.querySelector(".salvar").style.display = "inline-block";
+                }
+
+                if (target.classList.contains("salvar")) {
+                    const inputs = tr.querySelectorAll(".input_edicao");
+                    const updatedData = {
+                        nome: inputs[0].value.trim(), email: inputs[1].value.trim(),
+                        tipo: inputs[2].value, status: inputs[3].value
+                    };
+                    if (!updatedData.nome || !updatedData.email) {
+                        await showPopup("Nome e E-mail não podem ser vazios.", 'error');
+                        return;
+                    }
+                    const { error } = await supabase.from("usuarios").update(updatedData).eq("id", userId);
+                    if (error) {
+                        await showPopup(`Erro ao atualizar: ${error.message}`, 'error');
+                    } else {
+                        showToast("Usuário atualizado com sucesso!");
+                        listarUsuarios();
+                    }
+                }
+
+                if (target.classList.contains("excluir")) {
+                    const confirmed = await showPopup("Deseja realmente excluir este usuário?", 'confirm');
+                    if (confirmed) {
+                        const { error } = await supabase.from("usuarios").delete().eq("id", userId);
+                        if (error) {
+                            await showPopup(`Erro ao excluir: ${error.message}`, 'error');
+                        } else {
+                            showToast("Usuário excluído com sucesso.");
+                            listarUsuarios();
+                        }
+                    }
+                }
+            });
+
+            // Lógica da Sidebar e Logout
+            const sidebar = document.getElementById("sidebar");
+            const sidebarToggle = document.getElementById("sidebarToggle");
+            const mainContent = document.getElementById("mainContent");
+            const mainHeader = document.getElementById("mainHeader");
+            const isSidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+            if (isSidebarCollapsed) {
+                sidebar.classList.add("collapsed");
+                mainContent.classList.add("shifted");
+                mainHeader.classList.add("shifted");
+            }
+            sidebarToggle.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                mainContent.classList.toggle("shifted");
+                mainHeader.classList.toggle("shifted");
+                localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
+            });
+        
+            document.querySelector(".menu-item2").addEventListener("click", async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.replace("Index.html");
+            });
+        });
+    </script>
+</body>
+</html>

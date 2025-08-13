@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Anúncios - Ocean Coffee</title>
+    <link rel="icon" href="IMG/Loginho2.png" type="image/png">
+    <link rel="stylesheet" href="CSS/styles.css" />
+    <link rel="stylesheet" href="CSS/popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Estilos idênticos ao da página de perfil para consistência */
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .dashboard-container { max-width: 1400px; margin: 90px auto; padding: 0 20px; display: grid; grid-template-columns: 280px 1fr; gap: 30px; height: calc(100vh - 120px); }
+        .dashboard-nav { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 20px; display: flex; flex-direction: column; }
+        .profile-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .profile-header .avatar { width: 100px; height: 100px; border-radius: 50%; background-color: #0047a3; color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; margin: 0 auto 15px auto; }
+        .profile-header h3 { font-size: 1.4rem; font-weight: 600; color: #333; }
+        .profile-header p { font-size: 0.9rem; color: #777; word-break: break-all; }
+        .nav-menu { display: flex; flex-direction: column; gap: 10px; flex-grow: 1; }
+        .nav-menu a { display: flex; align-items: center; gap: 15px; padding: 15px 20px; border-radius: 8px; text-decoration: none; color: #555; font-weight: 600; transition: background-color 0.2s, color 0.2s; }
+        .nav-menu a:hover { background-color: #f0f5ff; color: #0047a3; }
+        .nav-menu a.active { background-color: #0047a3; color: white; }
+        .nav-menu a i { width: 20px; text-align: center; }
+        .dashboard-content { background-color: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); padding: 30px 40px; overflow-y: auto; }
+        .card h2 { font-size: 1.5rem; font-weight: 600; color: #0047a3; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+        .btn { padding: 10px 20px; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background-color: #007bff; color: white; } .btn-primary:hover { background-color: #0056b3; }
+        .btn-danger { background-color: #dc3545; color: white; } .btn-danger:hover { background-color: #ffffff; border-radius: 50%;}
+        .anuncios-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        #anuncios-lista { max-height: none; }
+        .anuncio-item { display: flex; gap: 20px; padding: 15px; border-bottom: 1px solid #eee; align-items: center; }
+        .anuncio-item:last-child { border-bottom: none; }
+        .anuncio-img { width: 100px; height: 75px; object-fit: cover; border-radius: 8px; background-color: #eee; }
+        .anuncio-info { flex-grow: 1; }
+        .anuncio-info h4 { font-weight: 600; font-size: 1.1rem; color: #333; }
+        .anuncio-info p { color: #777; font-size: 0.9rem; }
+        .anuncio-status { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; color: white; white-space: nowrap; }
+        .status-analise { background-color: #ffc107; color: #333;}
+        .status-aprovado { background-color: #28a745; }
+        .anuncio-actions button { background: none; border: none; color: #dc3545; font-size: 1.2rem; cursor: pointer; transition: color 0.3s ease-in-out; padding: 5px;}
+        .anuncio-actions button:hover { color: #c82333; } /* Cor do hover ligeiramente mais escura */
+        @media (max-width: 900px) { .dashboard-container { grid-template-columns: 1fr; height: auto; } }
+
+        /* --- ESTILOS PARA POP-UPS E TOASTS (INTEGRADOS) - REFORÇADOS --- */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1050;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .popup-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .popup-overlay.visible .popup-content {
+            transform: scale(1);
+        }
+        .popup-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .popup-icon.success { color: #28a745; }
+        .popup-icon.error { color: #dc3545; }
+        .popup-icon.confirm { color: #ffc107; }
+        .popup-content h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 22px;
+            color: #333;
+            line-height: 1.4;
+        }
+        .popup-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .popup-buttons button {
+            padding: 10px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .popup-buttons .btn-confirm { background-color: #dc3545; } .popup-buttons .btn-confirm:hover { background-color: #c82333; }
+        .popup-buttons .btn-cancel { background-color: #6c757d; } .popup-buttons .btn-cancel:hover { background-color: #5a6268; }
+        .popup-buttons .btn-ok { background-color: #007bff; } .popup-buttons .btn-ok:hover { background-color: #0056b3; }
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideIn 0.5s ease forwards;
+        }
+        .toast-notification.fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+        .toast-notification i {
+            font-size: 24px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <a href="index.html" class="navbar-brand" style="padding: 0 20px;"><img src="IMG/ocean coffee.png" alt="Logo" style="height: 40px;"></a>
+        <nav class="navbar-center"><a id="logout-btn" href="#" style="font-weight: bold; color: #e60000;">Sair</a></nav>
+    </header>
+
+    <main class="dashboard-container">
+        <aside class="dashboard-nav">
+            <div class="profile-header">
+                <div class="avatar" id="avatar-inicial"></div>
+                <h3 id="welcome-message">Carregando...</h3>
+                <p id="user-email"></p>
+            </div>
+            <nav class="nav-menu">
+                <a href="perfil.html" class="nav-link"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a>
+                <a href="meus-anuncios.html" class="nav-link active"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a>
+                <a href="anuncie.html" class="nav-link"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
+            </nav>
+        </aside>
+
+        <div class="dashboard-content">
+             <div class="anuncios-header">
+                <h2><i class="fas fa-list-alt"></i> Lista de Anúncios</h2>
+                <a href="anuncie.html" class="btn btn-primary"><i class="fas fa-plus"></i> Criar Novo Anúncio</a>
+            </div>
+            <div id="anuncios-lista"><p>Carregando anúncios...</p></div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+        import { showPopup, showToast } from './popup.js';
+
+        const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        let currentUser = null;
+
+        function renderizarPerfilLateral(profile) {
+            document.getElementById('welcome-message').textContent = profile.nome.split(' ')[0];
+            document.getElementById('user-email').textContent = currentUser.email;
+            document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
+        }
+
+        function renderizarAnuncios(anuncios) {
+            const lista = document.getElementById('anuncios-lista');
+            lista.innerHTML = ''; 
+            if (anuncios.length === 0) {
+                lista.innerHTML = '<p>Você ainda não criou nenhum anúncio.</p>';
+                return;
+            }
+            anuncios.forEach(anuncio => {
+                const item = document.createElement('div');
+                item.className = 'anuncio-item';
+                const imagem = anuncio.imagens && anuncio.imagens.length > 0 ? anuncio.imagens[0] : 'IMG/placeholder.png';
+                const statusClass = anuncio.status === 'Aprovado' ? 'status-aprovado' : 'status-analise';
+                const data = new Date(anuncio.data_aprovacao || anuncio.data).toLocaleDateString('pt-BR');
+                item.innerHTML = `
+                    <img src="${imagem}" alt="${anuncio.produto}" class="anuncio-img">
+                    <div class="anuncio-info">
+                        <h4>${anuncio.produto}</h4>
+                        <p>Enviado em: ${data}</p>
+                    </div>
+                    <span class="anuncio-status ${statusClass}">${anuncio.status}</span>
+                    <div class="anuncio-actions">
+                        ${anuncio.status !== 'Aprovado' ? `<button class="btn-danger" data-id="${anuncio.id}" title="Excluir Solicitação"><i class="fas fa-trash-alt"></i></button>` : ''}
+                    </div>
+                `;
+                lista.appendChild(item);
+            });
+        }
+
+        async function carregarDados(user) {
+            // Busca o perfil apenas para exibir no menu lateral
+            const { data: profile, error: profileError } = await supabase.from("usuarios").select("nome, email").eq("user_id", user.id).single();
+            if (profile) {
+                renderizarPerfilLateral(profile);
+            }
+
+            // Busca os anúncios
+            try {
+                const [pendentesRes, aprovadosRes] = await Promise.all([
+                    supabase.from("produtos").select("*").eq("user_id", user.id),
+                    supabase.from("aprovados").select("*").eq("user_id", user.id)
+                ]);
+                if (pendentesRes.error) throw pendentesRes.error;
+                if (aprovadosRes.error) throw aprovadosRes.error;
+                
+                const anunciosPendentes = (pendentesRes.data || []).map(p => ({ ...p, status: 'Em Análise' }));
+                const anunciosAprovados = (aprovadosRes.data || []).map(a => ({ ...a, status: 'Aprovado' }));
+                const todosAnuncios = [...anunciosPendentes, ...anunciosAprovados].sort((a, b) => new Date(b.data_aprovacao || b.data) - new Date(a.data_aprovacao || a.data));
+                renderizarAnuncios(todosAnuncios);
+            } catch (error) {
+                document.getElementById('anuncios-lista').innerHTML = `<p style="color: red;">Ocorreu um erro ao carregar seus anúncios.</p>`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.replace("login.html");
+                return;
+            }
+            currentUser = user;
+            await carregarDados(user);
+
+            document.getElementById('logout-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.replace("index.html");
+});
+
+            document.getElementById('anuncios-lista').addEventListener('click', async (e) => {
+                const deleteButton = e.target.closest('.btn-danger');
+                if (deleteButton) {
+                    const anuncioId = deleteButton.dataset.id;
+                    const confirmed = await showPopup("Deseja realmente excluir esta solicitação de anúncio?", "confirm");
+                    if(confirmed) {
+                        const { error } = await supabase.from('produtos').delete().eq('id', anuncioId);
+                        if(error) { await showPopup(`Erro ao excluir: ${error.message}`, 'error');
+                        } else {
+                            showToast("Solicitação excluída com sucesso.");
+                            carregarDados(currentUser);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
