@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ocean Coffee - Marketplace</title>
+  <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
+  <link rel="stylesheet" href="CSS/loja2.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <header class="oc-header">
+    <div class="oc-container oc-header__container">
+      <a href="Index.html" class="oc-header__logo-link">
+        <img class="oc-header__logo-img" src="IMG/Loginho2.png" alt="Logotipo Ocean Coffee">
+      </a>
+      <div class="oc-search-bar">
+        <input type="text" class="oc-search-bar__input" placeholder="Buscar no marketplace...">
+        <button class="oc-search-bar__button" aria-label="Buscar">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 17.5L13.875 13.875M15.8333 8.75C15.8333 12.6825 12.6825 15.8333 8.75 15.8333C4.81752 15.8333 1.66667 12.6825 1.66667 8.75C1.66667 4.81752 4.81752 1.66667 8.75 1.66667C12.6825 1.66667 15.8333 4.81752 15.8333 8.75Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+      <nav class="oc-header-nav">
+        <a href="Market.html" class="oc-header-nav__link">Loja</a>
+        <a href="perfil.html" class="oc-header-nav__link">Minha Conta</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="oc-container">
+    <div class="product-page-layout">
+      <div class="product-gallery">
+        <div class="main-image">
+          <img src="IMG/tratorr.png" alt="Trator Valtra 785 - vista frontal" id="mainProductImage">
+        </div>
+        <div class="thumbnail-images">
+          <img src="IMG/tratorr.png" alt="Trator Valtra 785 - vista frontal" class="thumbnail active" onclick="changeImage('IMG/tratorr.png')">
+          <img src="IMG/trator2.png" alt="Trator Valtra 785 - vista lateral" class="thumbnail" onclick="changeImage('IMG/trator2.png')">
+          <img src="IMG/trator3.png" alt="Trator Valtra 785 - vista traseira" class="thumbnail" onclick="changeImage('IMG/trator3.png')">
+        </div>
+      </div>
+
+      <div class="product-details">
+        <h1 class="product-title">Trator Valtra 785 4x4 com Concha</h1>
+        <p class="product-price">R$110.000,00</p>
+        
+        <div class="product-specs">
+          <h2 class="specs-title">Especificações Técnicas</h2>
+          <ul class="specs-list">
+            <li><i class="fas fa-tag"></i> <strong>Marca:</strong> Valtra</li>
+            <li><i class="fas fa-tractor"></i> <strong>Modelo:</strong> 785</li>
+            <li><i class="fas fa-calendar-alt"></i> <strong>Ano:</strong> 2003</li>
+            <li><i class="fas fa-barcode"></i> <strong>Série:</strong> 0785GA79181</li>
+            <li><i class="fas fa-tachometer-alt"></i> <strong>Horímetro:</strong> 17.697</li>
+            <li><i class="fas fa-gas-pump"></i> <strong>Combustível:</strong> Diesel</li>
+            <li><i class="fas fa-cogs"></i> <strong>Tração:</strong> 4x4</li>
+            <li><i class="fas fa-tire"></i> <strong>Pneus:</strong> 04 (Estado ruim)</li>
+          </ul>
+        </div>
+
+        <div class="product-location">
+          <h2 class="location-title">Localização</h2>
+          <p><i class="fas fa-map-marker-alt"></i> Jardim Ramos, Barretos, SP - CEP 14783-167</p>
+        </div>
+
+        <div class="contact-info">
+            <a href="tel:14981269769" class="contact-button">
+                <i class="fab fa-whatsapp"></i>
+                Entrar em Contato: (14) 98126-9769
+            </a>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer class="oc-footer">
+      <div class="oc-container">
+          <p>&copy; 2025 Ocean Coffee. Todos os direitos reservados.</p>
+      </div>
+  </footer>
+
+  <script>
+    function changeImage(imageSrc) {
+      document.getElementById('mainProductImage').src = imageSrc;
+      
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      thumbnails.forEach(thumb => {
+        thumb.classList.remove('active');
+        if (thumb.src.includes(imageSrc)) {
+          thumb.classList.add('active');
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
