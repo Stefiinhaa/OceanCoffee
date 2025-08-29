@@ -148,33 +148,14 @@
     function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
     function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
     
-    // VERSÃO CORRIGIDA DA FUNÇÃO DE CONFIRMAÇÃO
     function showConfirmationPopup(title, message, options = {}) {
-        const {
-            confirmText = 'Sim, Excluir',
-            cancelText = 'Cancelar',
-            confirmBtnClass = 'delete'
-        } = options;
-
+        const { confirmText = 'Sim, Excluir', cancelText = 'Cancelar', confirmBtnClass = 'delete' } = options;
         return new Promise((resolve) => {
             const o = document.createElement('div');
             o.className = 'confirmation-overlay';
-            
-            let buttonStyle = 'background-color:#dc3545; color:white;'; // Estilo padrão (excluir)
-            if (confirmBtnClass === 'logout') {
-                buttonStyle = 'background-color:#dc3545; color:white;'; // Estilo para sair
-            }
-
-            o.innerHTML = `
-                <div class="confirmation-modal">
-                    <h3>${title}</h3>
-                    <p>${message}</p>
-                    <div class="confirmation-actions">
-                        <button class="confirmation-btn-cancel">${cancelText}</button>
-                        <button class="confirmation-btn-confirm" style="${buttonStyle}">${confirmText}</button>
-                    </div>
-                </div>`;
-            
+            let buttonStyle = 'background-color:#dc3545; color:white;';
+            if (confirmBtnClass === 'logout') { buttonStyle = 'background-color:#dc3545; color:white;'; }
+            o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">${cancelText}</button><button class="confirmation-btn-confirm" style="${buttonStyle}">${confirmText}</button></div></div>`;
             const c = (r) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(r); }); };
             o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => c(false));
             o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => c(true));
@@ -200,18 +181,46 @@
         const filterBar = document.getElementById('filter-bar');
 
         async function loadAds(filter = 'todos') {
-            let query = supabase.from('produtos').select('*').eq('user_id', user.id);
+            let ads = [];
+            let error = null;
 
-            if (filter === 'aprovados') { query = query.eq('aprovado', true); }
-            else if (filter === 'pendentes') { query = query.is('aprovado', null); }
-    // O erro estava aqui, faltava a condição para 'rejeitados'
-            else if (filter === 'rejeitados') { query = query.eq('aprovado', false); }
+            if (filter === 'aprovados') {
+                const { data, error: approvedError } = await supabase.from('aprovados').select('*').eq('user_id', user.id).order('data_aprovacao', { ascending: false });
+                if (approvedError) error = approvedError;
+                ads = data || [];
+            } else if (filter === 'pendentes' || filter === 'rejeitados') {
+                let query = supabase.from('produtos').select('*').eq('user_id', user.id);
+                if (filter === 'pendentes') {
+                    query = query.is('aprovado', null);
+                } else { // 'rejeitados'
+                    query = query.eq('aprovado', false);
+                }
+                const { data, error: productError } = await query.order('data', { ascending: false });
+                if (productError) error = productError;
+                ads = data || [];
+            } else { // filter === 'todos'
+                const { data: approvedAds, error: approvedError } = await supabase.from('aprovados').select('*').eq('user_id', user.id);
+                const { data: otherAds, error: productError } = await supabase.from('produtos').select('*').eq('user_id', user.id);
 
+                if (approvedError || productError) {
+                    error = approvedError || productError;
+                } else {
+                    const combined = [...(approvedAds || []), ...(otherAds || [])];
+                    combined.sort((a, b) => new Date(b.data_aprovacao || b.data) - new Date(a.data_aprovacao || a.data));
+                    ads = combined;
+                }
+            }
+            
+            if (error) {
+                showPopup('Erro ao carregar seus anúncios.', 'error');
+                console.error(error);
+                return;
+            }
 
-            const { data: ads, error } = await query.order('data', { ascending: false });
+            renderAds(ads, filter);
+        }
 
-            if (error) { showPopup('Erro ao carregar seus anúncios. Verifique o console.', 'error'); console.error(error); return; }
-
+        function renderAds(ads, filter) {
             adList.innerHTML = '';
             
             if (ads.length === 0) {
@@ -221,19 +230,36 @@
             } else {
                 noAdsMessage.style.display = 'none';
                 ads.forEach(ad => {
-                    let statusClass = 'pending'; let statusText = 'Pendente';
-                    if (ad.aprovado === true) { statusClass = 'approved'; statusText = 'Aprovado'; }
-                    else if (ad.aprovado === false) { statusClass = 'rejected'; statusText = 'Rejeitado'; }
+                    let statusClass, statusText, dateText, dateValue;
+                    
+                    if (ad.data_aprovacao) { // Anúncio vem da tabela 'aprovados'
+                        statusClass = 'approved';
+                        statusText = 'Aprovado';
+                        dateText = 'Aprovado em';
+                        dateValue = ad.data_aprovacao;
+                    } else { // Anúncio vem da tabela 'produtos'
+                        if (ad.aprovado === false) {
+                            statusClass = 'rejected';
+                            statusText = 'Rejeitado';
+                        } else {
+                            statusClass = 'pending';
+                            statusText = 'Pendente';
+                        }
+                        dateText = 'Publicado em';
+                        dateValue = ad.data;
+                    }
                     
                     const adCard = document.createElement('div');
                     adCard.className = 'ad-card';
                     adCard.setAttribute('data-id', ad.id);
+                    adCard.setAttribute('data-table', ad.data_aprovacao ? 'aprovados' : 'produtos');
+
                     adCard.innerHTML = `
                         <img src="${ad.imagens[0]}" alt="${ad.produto}" class="ad-image">
                         <div class="ad-info">
                             <h3>${ad.produto}</h3>
                             <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
-                            <p>Publicado em: ${new Date(ad.data).toLocaleDateString('pt-BR')}</p>
+                            <p>${dateText}: ${new Date(dateValue).toLocaleDateString('pt-BR')}</p>
                         </div>
                         <div><span class="ad-status ${statusClass}">${statusText}</span></div>
                         <div class="ad-actions">
@@ -254,11 +280,12 @@
         });
 
         adList.addEventListener('click', async (e) => {
-            if (e.target.closest('.delete')) {
-                const adCard = e.target.closest('.ad-card');
+            const deleteButton = e.target.closest('.delete');
+            if (deleteButton) {
+                const adCard = deleteButton.closest('.ad-card');
                 const adId = adCard.dataset.id;
+                const adTable = adCard.dataset.table;
                 
-                // CHAMADA CORRIGIDA PARA EXCLUSÃO
                 const confirmed = await showConfirmationPopup(
                     'Excluir Anúncio', 
                     'Tem certeza que deseja excluir este anúncio? Esta ação não pode ser desfeita.',
@@ -266,8 +293,11 @@
                 );
 
                 if (confirmed) {
-                    const { error: dbError } = await supabase.from('produtos').delete().eq('id', adId);
-                    if (dbError) { showPopup('Erro ao excluir o anúncio.', 'error'); return; }
+                    const { error: dbError } = await supabase.from(adTable).delete().eq('id', adId);
+                    if (dbError) {
+                        showPopup('Erro ao excluir o anúncio.', 'error');
+                        return;
+                    }
                     showPopup('Anúncio excluído com sucesso!', 'success');
                     loadAds(document.querySelector('.filter-btn.active').getAttribute('data-filter'));
                 }
@@ -276,18 +306,11 @@
 
         document.getElementById('logout-btn').addEventListener('click', async (e) => { 
             e.preventDefault(); 
-            
-            // CHAMADA CORRIGIDA PARA LOGOUT
             const userConfirmed = await showConfirmationPopup(
-                'Confirmar Saída', 
-                'Você tem certeza que deseja sair da sua conta?',
+                'Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?',
                 { confirmText: 'Sim, Sair', confirmBtnClass: 'logout' }
             );
-            
-            if (userConfirmed) { 
-                await supabase.auth.signOut(); 
-                window.location.replace("index.html"); 
-            }
+            if (userConfirmed) { await supabase.auth.signOut(); window.location.replace("index.html"); }
         });
 
         await loadAds();

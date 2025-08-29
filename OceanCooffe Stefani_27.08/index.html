@@ -135,12 +135,11 @@
     </div>
   </section>
 
- 
 
 
 
-<!-- Coloque esta seção após a Primeira Sessão -->
- <link rel="stylesheet" href="CSS/curva.css">
+
+<link rel="stylesheet" href="CSS/curva.css">
 <section class="curved-section">
   <div>
     <img class="background" src="IMG/fundoteste4.png">
@@ -389,7 +388,7 @@
             a materialização de minha paixão e de um compromisso com a qualidade e com as pessoas.
             Para mim,cada xícara de café representa uma oportunidade de compartilhar
             algo que vai além do sabor</p>
-          <img class="jorge1" src="IMG/Jorge.png">
+          <img class="jorge1" src="IMG/jorge.png">
           <div class="nome2">Jorge Luiz</div>
         </div>
       </div>
@@ -417,62 +416,21 @@
       </div>
     </div>
   </section>
-<section id="produtos-premium" class="premium-section">
-    <div class="premium-container">
-        <h2 class="premium-section-title">Conheça Nossa Frota Premium</h2>
-        <p class="premium-section-subtitle">Equipamentos de última geração, selecionados para máxima performance e produtividade no campo.</p>
 
-        <div class="premium-product-grid">
-            
-            <article class="premium-product-card">
-                <div class="premium-product-card__image-container">
-                    <img class="foto1" src="IMG/trator3.png">
-                </div>
-                <div class="premium-product-card__content">
-                    <h3 class="premium-product-card__title">Trator Valtra A144 Hitech</h3>
-                    <p class="premium-product-card__description">Potência e tecnologia com transmissão Powershift, ideal para operações que exigem agilidade.</p>
-                    <div class="premium-product-card__footer">
-                        <span class="premium-product-card__price">A partir de R$ 680.000</span>
-                        <a href="Market.html" class="premium-product-card__button">Saiba Mais</a>
-                    </div>
-                </div>
-            </article>
+  <section id="equipamentos-destaque" class="equipamentos-destaque-section">
+    <div class="equipamentos-destaque-container">
+        <h2 class="equipamentos-destaque-section-title">Equipamentos em Destaque</h2>
+        <p class="equipamentos-destaque-section-subtitle">Confira os equipamentos mais recentes adicionados à nossa plataforma.</p>
 
-            <article class="premium-product-card">
-                <div class="premium-product-card__image-container">
-                    <img class="foto1" src="IMG/tator.png">
-                </div>
-                <div class="premium-product-card__content">
-                    <h3 class="premium-product-card__title">Colheitadeira New Holland CR 10.90</h3>
-                    <p class="premium-product-card__description">Reconhecida pelo recorde mundial de colheita, com tecnologia de rotor duplo para máxima eficiência.</p>
-                    <div class="premium-product-card__footer">
-                        <span class="premium-product-card__price">Consulte</span>
-                        <a href="Market.html" class="premium-product-card__button">Saiba Mais</a>
-                    </div>
-                </div>
-            </article>
+        <div class="equipamentos-destaque-product-grid" id="recent-products-grid">
+            </div>
 
-            <article class="premium-product-card">
-                <div class="premium-product-card__image-container">
-                    <img class="foto1" src="IMG/tratorr.png">
-                </div>
-                <div class="premium-product-card__content">
-                    <h3 class="premium-product-card__title">Pulverizador Case IH Patriot 350</h3>
-                    <p class="premium-product-card__description">Excelente autonomia e precisão na aplicação de defensivos, com barras de até 36 metros.</p>
-                    <div class="premium-product-card__footer">
-                        <span class="premium-product-card__price">Consulte</span>
-                        <a href="Market.html" class="premium-product-card__button">Saiba Mais</a>
-                    </div>
-                </div>
-            </article>
-
-        </div>
-
-        <div class="premium-cta-container">
-            <a href="Market.html" class="premium-main-button">Ver todos os equipamentos</a>
+        <div class="equipamentos-destaque-cta-container">
+            <a href="Market.html" class="equipamentos-destaque-main-button">Ver todos os equipamentos</a>
         </div>
     </div>
-</section>
+  </section>
+
   <section>
     <div class="containers">
       <h1 class="title">
@@ -538,7 +496,6 @@
     </div>
   </footer>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="JS/api.js"></script>
 
@@ -553,6 +510,61 @@
       behavior: 'smooth'
     });
   }
+</script>
+
+<script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+
+    const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadRecentProducts() {
+        const grid = document.getElementById('recent-products-grid');
+        if (!grid) return;
+
+        // 1. Buscar os 3 produtos mais recentes da tabela 'aprovados'
+        const { data, error } = await supabase
+            .from('aprovados')
+            .select('*')
+            .order('data_aprovacao', { ascending: false })
+            .limit(3);
+
+        if (error) {
+            console.error('Erro ao buscar produtos recentes:', error);
+            grid.innerHTML = '<p>Não foi possível carregar os produtos no momento.</p>';
+            return;
+        }
+
+        if (data.length === 0) {
+            grid.innerHTML = '<p>Nenhum produto em destaque no momento.</p>';
+            return;
+        }
+
+        // 2. Limpar a grelha e preencher com os produtos
+        grid.innerHTML = '';
+        data.forEach(product => {
+            const productCard = `
+                <article class="equipamentos-destaque-product-card">
+                    <div class="equipamentos-destaque-product-card__image-container">
+                        <img src="${product.imagens[0] || 'IMG/placeholder.png'}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
+                    </div>
+                    <div class="equipamentos-destaque-product-card__content">
+                        <h3 class="equipamentos-destaque-product-card__title">${product.produto}</h3>
+                        <p class="equipamentos-destaque-product-card__description">${product.descricao.substring(0, 100)}...</p>
+                        <div class="equipamentos-destaque-product-card__footer">
+                            <span class="equipamentos-destaque-product-card__price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)}</span>
+                            <a href="Market.html" class="equipamentos-destaque-product-card__button">Saiba Mais</a>
+                        </div>
+                    </div>
+                </article>
+            `;
+            grid.innerHTML += productCard;
+        });
+    }
+
+    // Carregar os produtos quando a página for carregada
+    document.addEventListener('DOMContentLoaded', loadRecentProducts);
 </script>
 
 

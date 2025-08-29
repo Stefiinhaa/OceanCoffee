@@ -1,51 +1,48 @@
-document.addEventListener('DOMContentLoaded', () => {
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
 
-    // --- DADOS DOS PRODUTOS ---
-    const allProducts = [
-        { id: 1, title: 'Trator New Holland T6.130', description: 'Ano 2021 | 130cv | Seminovo', price: 'R$ 350.000', image: 'IMG/Produto.png', alt: 'Trator New Holland T6.130 azul', category: 'Tratores' },
-        { id: 2, title: 'Trator Valtra A750', description: 'Ano 2003 | 75cv | 4x4', price: 'R$ 110.000', image: 'IMG/tratorr.png', alt: 'Trator Valtra vermelho', category: 'Tratores' },
-        { id: 3, title: 'Rolo Faca para Café', description: '1.8 Metros | RIG Implementos', price: 'R$ 33.250', image: 'IMG/tator.png', alt: 'Implemento agrícola rolo faca', category: 'Implementos' },
-        { id: 4, title: 'Colheitadeira TC 5090', description: 'Ano 2023 | New Holland', price: 'R$ 1.250.000', image: 'IMG/colheitadeira.png', alt: 'Colheitadeira de grãos amarela', category: 'Colheitadeiras' },
-        { id: 5, title: 'Pulverizador Jacto 2000L', description: 'Modelo Condor | Usado', price: 'R$ 180.000', image: 'IMG/pulverizador.png', alt: 'Pulverizador agrícola branco', category: 'Pulverizadores' },
-        { id: 6, title: 'Trator John Deere 6110J', description: 'Ano 2018 | 110cv | Completo', price: 'R$ 280.000', image: 'IMG/Produto.png', alt: 'Trator John Deere verde', category: 'Tratores' },
-    ];
+// --- CONFIGURAÇÃO DO SUPABASE ---
+const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+document.addEventListener('DOMContentLoaded', () => {
 
     // --- ELEMENTOS DO DOM ---
     const productGrid = document.getElementById('productGrid');
     const categoryFiltersContainer = document.getElementById('categoryFilters');
+    const searchInput = document.getElementById('searchInput');
+
+    let allProducts = []; // Array para guardar todos os produtos carregados
+
+    // --- FUNÇÃO PARA IDENTIFICAR CATEGORIA A PARTIR DO TÍTULO ---
+    const getCategoryFromTitle = (title) => {
+        const lowerCaseTitle = title.toLowerCase();
+        if (lowerCaseTitle.includes('trator')) return 'Tratores';
+        if (lowerCaseTitle.includes('colheitadeira')) return 'Colheitadeiras';
+        if (lowerCaseTitle.includes('pulverizador')) return 'Pulverizadores';
+        if (lowerCaseTitle.includes('implemento') || lowerCaseTitle.includes('rolo faca')) return 'Implementos';
+        return 'Outros';
+    };
 
     // --- FUNÇÕES DE RENDERIZAÇÃO ---
-
-    // MUDANÇA: A função agora também recebe o "index" (a posição do produto na lista)
-    const createProductCard = (product, index) => {
+    const createProductCard = (product) => {
         const card = document.createElement('div');
         card.className = 'oc-product-card';
+        const imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : 'IMG/placeholder.png';
+        const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco);
 
-        // ============================================================================
-        // NOVO: LÓGICA DE DIRECIONAMENTO ESPECIAL
-        // Verificamos se o índice do produto é 1 (o que corresponde ao segundo item).
-        const isSecondProduct = (index === 1); 
-        
-        // Se for o segundo produto, a URL será 'marketplace.html'.
-        // Caso contrário, será a URL normal com o ID do produto.
-        const productUrl = isSecondProduct 
-            ? 'marketplace.html' 
-            : `product-detail.html?id=${product.id}`;
-        // ============================================================================
-
-        // Agora, usamos a variável "productUrl" em todos os links do card.
         card.innerHTML = `
-            <a href="${productUrl}" class="oc-product-card__image-container" aria-label="Ver detalhes de ${product.title}">
-                <img class="oc-product-card__image" src="${product.image}" alt="${product.alt}" loading="lazy" decoding="async">
+            <a href="MarketPlace.html" class="oc-product-card__image-container" aria-label="Ver detalhes de ${product.produto}">
+                <img class="oc-product-card__image" src="${imageUrl}" alt="${product.produto}" loading="lazy" decoding="async">
             </a>
             <div class="oc-product-card__content">
                 <h3 class="oc-product-card__title">
-                    <a href="${productUrl}" style="text-decoration: none; color: inherit;">${product.title}</a>
+                    <a href="MarketPlace.html" style="text-decoration: none; color: inherit;">${product.produto}</a>
                 </h3>
-                <p class="oc-product-card__description">${product.description}</p>
+                <p class="oc-product-card__description">${product.descricao.substring(0, 100)}...</p>
                 <div class="oc-product-card__footer">
-                    <span class="oc-product-card__price">${product.price}</span>
-                    <a href="${productUrl}" class="oc-product-card__button">Ver Mais</a>
+                    <span class="oc-product-card__price">${priceFormatted}</span>
+                    <a href="MarketPlace.html" class="oc-product-card__button">Ver Mais</a>
                 </div>
             </div>`;
         return card;
@@ -53,27 +50,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const renderProducts = (products) => {
         if (!productGrid) return;
-        productGrid.innerHTML = ''; 
-
+        productGrid.innerHTML = '';
         if (products.length === 0) {
-            productGrid.innerHTML = '<p>Nenhum produto encontrado nesta categoria.</p>';
+            productGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Nenhum produto encontrado.</p>';
             return;
         }
-
         products.forEach((product, index) => {
-            // MUDANÇA: Passamos tanto o "produto" quanto o seu "index" para a função que cria o card.
-            const card = createProductCard(product, index);
+            const card = createProductCard(product);
             card.style.animationDelay = `${index * 80}ms`;
             productGrid.appendChild(card);
         });
     };
 
-    // --- LÓGICA DE FILTRAGEM ---
-
+    // --- LÓGICA DE FILTRAGEM E BUSCA ---
     const renderFilterButtons = () => {
         if (!categoryFiltersContainer) return;
+        categoryFiltersContainer.innerHTML = '';
 
-        const categories = ['Todos', ...new Set(allProducts.map(p => p.category))];
+        // *** ALTERAÇÃO PRINCIPAL AQUI: Lista de categorias estáticas ***
+        const categories = ['Todos', 'Tratores', 'Colheitadeiras', 'Pulverizadores', 'Implementos', 'Outros'];
 
         categories.forEach(category => {
             const button = document.createElement('button');
@@ -87,32 +82,59 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const handleFilterClick = (event) => {
-        const clickedButton = event.target.closest('.oc-filter-button');
-        if (!clickedButton) return;
+    const filterAndRender = () => {
+        const selectedCategory = document.querySelector('.oc-filter-button.active')?.dataset.category || 'Todos';
+        const searchTerm = searchInput.value.toLowerCase();
 
-        document.querySelectorAll('.oc-filter-button').forEach(btn => btn.classList.remove('active'));
-        clickedButton.classList.add('active');
+        let filteredProducts = allProducts;
 
-        const selectedCategory = clickedButton.dataset.category;
+        // Filtra por categoria
+        if (selectedCategory !== 'Todos') {
+            filteredProducts = filteredProducts.filter(product => getCategoryFromTitle(product.produto) === selectedCategory);
+        }
 
-        const filteredProducts = selectedCategory === 'Todos'
-            ? allProducts
-            : allProducts.filter(product => product.category === selectedCategory);
+        // Filtra pelo termo de busca
+        if (searchTerm) {
+            filteredProducts = filteredProducts.filter(product =>
+                product.produto.toLowerCase().includes(searchTerm) ||
+                product.descricao.toLowerCase().includes(searchTerm)
+            );
+        }
         
-        // Renderiza os produtos filtrados (a lógica de link especial vai funcionar aqui também)
         renderProducts(filteredProducts);
     };
-
-    // --- INICIALIZAÇÃO ---
-    const init = () => {
+    
+    // --- INICIALIZAÇÃO E CARREGAMENTO DE DADOS ---
+    async function init() {
         if (!productGrid || !categoryFiltersContainer) {
             console.error('Elementos essenciais (grid ou filtros) não encontrados.');
             return;
         }
-        renderFilterButtons();
+
+        const { data, error } = await supabase
+            .from('aprovados')
+            .select('*')
+            .order('data_aprovacao', { ascending: false });
+
+        if (error) {
+            console.error("Erro ao buscar produtos:", error);
+            productGrid.innerHTML = '<p>Erro ao carregar produtos. Tente novamente mais tarde.</p>';
+            return;
+        }
+
+        allProducts = data;
+        renderFilterButtons(); // Agora cria os botões estáticos
         renderProducts(allProducts); 
-        categoryFiltersContainer.addEventListener('click', handleFilterClick);
+        
+        categoryFiltersContainer.addEventListener('click', (event) => {
+            const clickedButton = event.target.closest('.oc-filter-button');
+            if (!clickedButton) return;
+            document.querySelectorAll('.oc-filter-button').forEach(btn => btn.classList.remove('active'));
+            clickedButton.classList.add('active');
+            filterAndRender();
+        });
+        
+        searchInput.addEventListener('input', filterAndRender);
     };
 
     init();
