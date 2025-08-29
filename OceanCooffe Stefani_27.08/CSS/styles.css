@@ -1,3 +1,18 @@
+/* --- NOVA PADRONIZAÇÃO DE FONTES PROFISSIONAIS --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap');
+
+/* Fonte para Títulos */
+h1, h2, h3, h4, h5, h6, .navbar a, .premium-section-title, .anuncie-btn, .action-button, .filter-btn {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Fonte para Corpo do Texto e Interface */
+body, p, a, input, select, button, label, .info-item, .sidebar-nav a {
+  font-family: 'Inter', sans-serif;
+}
+/* --- FIM DA PADRONIZAÇÃO --- */
+
+
 * {
   margin: 0;
   padding: 0;
@@ -225,88 +240,65 @@ margin-left: -79px;
  margin-bottom: 1.5px;
 }
 
-/* Estilo para a imagem principal do carrossel (se IMG/Carrosel.png não tiver os mesmos textos) */
-/* .Carossel img {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
-/* } */
-
-
-/* Contêiner principal do carrossel */
 .carousel-container {
-  max-width: 1600px; /* Largura máxima do carrossel */
-  height: 509px; /* Altura fixa para o carrossel */
-  margin: 47px auto; /* Centraliza e adiciona margem superior */
-  border-radius: 15px; /* Bordas arredondadas para um visual moderno */
-  overflow: hidden; /* Garante que as imagens e conteúdo não escapem das bordas arredondadas */
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Sombra mais pronunciada e profissional */
+  max-width: 1600px; 
+  height: 509px; 
+  margin: 47px auto; 
+  border-radius: 15px; 
+  overflow: hidden; 
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); 
 }
 
-/* Estilo para todas as imagens dentro dos slides do carrossel */
 .carousel-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ESSENCIAL: Preenche o espaço sem distorcer, cortando as partes extras. */
-  /* Se o texto estiver nas imagens, 'cover' pode cortar parte dele.
-     Se quiser garantir que o texto seja sempre visível, considere 'contain'
-     e adicione um background-color ao .carousel-item. Ex:
-     object-fit: contain;
-     background-color: #333; /* Cor de fundo para as bordas que aparecerem */
-  
+  object-fit: cover; 
 }
 
-/* Estilos para os indicadores (as "bolinhas") */
 .carousel-indicators {
-  bottom: 20px; /* Posiciona as bolinhas mais acima do rodapé do carrossel */
+  bottom: 20px; 
 }
 
 .carousel-indicators [data-bs-target] {
-  background-color: #fff; /* Cor das bolinhas: branco para contraste */
-  border: 1px solid rgba(0, 0, 0, 0.2); /* Borda sutil para definir as bolinhas */
-  border-radius: 50%; /* Faz com que sejam perfeitamente redondas */
-  width: 12px; /* Largura um pouco maior para melhor visibilidade */
-  height: 12px; /* Altura um pouco maior */
-  opacity: 0.6; /* Opacidade padrão para as bolinhas inativas */
-  transition: opacity 0.3s ease, background-color 0.3s ease; /* Transição suave */
+  background-color: #fff; 
+  border: 1px solid rgba(0, 0, 0, 0.2); 
+  border-radius: 50%; 
+  width: 12px; 
+  height: 12px; 
+  opacity: 0.6; 
+  transition: opacity 0.3s ease, background-color 0.3s ease; 
 }
 
 .carousel-indicators .active {
-  background-color: #007bff; /* Cor da bolinha ativa: azul primário do Bootstrap */
-  opacity: 1; /* Totalmente visível quando ativa */
-  transform: scale(1.2); /* Ligeiro aumento no tamanho da bolinha ativa */
+  background-color: #007bff; 
+  opacity: 1; 
+  transform: scale(1.2); 
 }
 
-/* Estilos para os botões de navegação (setas) */
 .carousel-control-prev,
 .carousel-control-next {
-  width: 8%; /* Aumenta a área clicável dos botões */
-  opacity: 0.8; /* Torna as setas mais visíveis */
-  transition: opacity 0.3s ease; /* Transição suave na opacidade */
+  width: 8%; 
+  opacity: 0.8; 
+  transition: opacity 0.3s ease; 
 }
 
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-  opacity: 1; /* Opacidade total ao passar o mouse */
+  opacity: 1; 
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   display: inline-block;
-  width: 3rem; /* Tamanho maior para os ícones */
-  height: 3rem; /* Tamanho maior para os ícones */
+  width: 3rem; 
+  height: 3rem; 
   background-repeat: no-repeat;
-  background-position: center; /* Centraliza o ícone */
-  background-size: 100% 100%; /* Garante que o ícone preencha o espaço */
-  /* Removi todas as margens problemáticas aqui */
+  background-position: center; 
+  background-size: 100% 100%; 
   margin: 0;
-  /* Adicionei uma sombra para o ícone para se destacar mais */
   filter: drop-shadow(0 2px 2px rgba(0,0,0,0.7));
 }
 
-/* Os estilos abaixo não são diretamente relacionados ao carrossel, mas os mantive. */
 .service-card h3 {
   font-size: 24px;
   color: #000;
@@ -348,31 +340,31 @@ margin-left: -79px;
 
 .container {
   display: flex;
-  align-items: center; /* Alinha verticalmente */
-  gap: 8%; /* Espaço entre o card e o h3 */
+  align-items: center; 
+  gap: 8%; 
   padding: 20px;
   margin-left:30px ;
 }
 
 .left-card {
-  width: 350px; /* Aumenta o tamanho do card */
-  height: 400px; /* Definindo uma altura fixa */
-  border-radius: 8px; /* Torna os cantos arredondados */
+  width: 350px; 
+  height: 400px; 
+  border-radius: 8px; 
   margin-top: 20px;
   background-color: #d8d8c5;
-  overflow: hidden; /* Garante que a imagem dentro do card não saia do seu contorno */
+  overflow: hidden; 
 }
 
 .card-img {
   width: 100%;
-  height: 100%; /* Faz a imagem ocupar toda a altura do card */
-  object-fit: cover; /* Faz com que a imagem se ajuste sem distorcer */
+  height: 100%; 
+  object-fit: cover; 
 }
 
 h3 {
   font-family: Garamond;
   font-size: 28px;
-  margin-bottom: 20px; /* Reduz o espaço abaixo do título */
+  margin-bottom: 20px; 
   text-align: center;
 }
 
@@ -402,9 +394,9 @@ h3 {
 
 .principio-bloco {
   display: flex;
-  flex-direction: row; /* lado a lado */
+  flex-direction: row; 
   justify-content: center;
-  flex-wrap: wrap; /* quebra linha se a tela for pequena */
+  flex-wrap: wrap; 
     gap: 115px;
   margin-top: 30px;
 }
@@ -465,10 +457,10 @@ h3 {
 
 .container3 {
   display: flex;
-  align-items: center; /* Alinha verticalmente */
-  gap: 8%; /* Espaço entre texto e o card */
+  align-items: center; 
+  gap: 8%; 
   padding: 20px;
-  margin: 0; /* Remove o empurrão para a direita */
+  margin: 0; 
 }
 
 .text-content2 {
@@ -537,9 +529,9 @@ text-align: center;
 
 .container-caixas {
   display: flex;
-  justify-content: space-evenly; /* Garante que os cards fiquem igualmente espaçados */
-  gap: 20px; /* Reduzi o espaço entre os cards */
-  flex-wrap: nowrap; /* Impede que os cards quebrem para a linha de baixo */
+  justify-content: space-evenly; 
+  gap: 20px; 
+  flex-wrap: nowrap; 
 }
 
 .contorno {
@@ -554,7 +546,7 @@ text-align: center;
 
 .caixa {
   width: 300px;
-  height: 460px; /* Mantém a altura conforme você havia definido */
+  height: 460px; 
   background-color: #d8d8c5;
   border-radius: 16px;
   border: 2px solid #8b4513;
@@ -705,13 +697,13 @@ text-align: center;
 
 .trator {
   left: 0;
-  bottom: -100px; /* antes era 0 ou algum valor acima */
+  bottom: -100px; 
   z-index: 1;
 }
 
 .cortador {
   left: 150px;
-  bottom: -12px; /* ajustado para descer um pouco */
+  bottom: -12px; 
   z-index: 2;
 }
 
@@ -768,6 +760,7 @@ text-align: center;
 }
 .anuncie-btn, a{
   margin-left: 26px;
+  text-decoration: none;
 }
 
 .anuncie-btn,p{
@@ -1139,7 +1132,7 @@ margin-top: 134px;
  padding: 15px 17px;
   font-size: 16px;
   cursor: pointer;
-  background-color: #ff0018; /* cor do botão, pode mudar */
+  background-color: #ff0018; 
   color: white;
   border: none;
   border-radius: 50px;
@@ -1167,22 +1160,6 @@ margin-top: 134px;
   width: 33px;
   margin-left: -11px;
   margin-bottom: 2px;
-}
-
-/* ================================================== */
-/* === ESTILOS DA SEÇÃO DE EQUIPAMENTOS EM DESTAQUE ==== */
-/* ================================================== */
-
-/* Variáveis de cor do novo Design System */
-:root {
-    --equipamentos-destaque-color-primary: #102A43; /* Azul escuro */
-    --equipamentos-destaque-color-accent: #F97316;   /* Laranja */
-    --equipamentos-destaque-color-accent-hover: #EA580C; /* Laranja mais escuro */
-    --equipamentos-destaque-color-background: #F8FAFC; /* Fundo cinza bem claro */
-    --equipamentos-destaque-color-surface: #FFFFFF;    /* Branco para os cards */
-    --equipamentos-destaque-color-text-headings: #1E293B; /* Cor para títulos */
-    --equipamentos-destaque-color-text-body: #475467;     /* Cor para texto comum */
-    --equipamentos-destaque-color-border: #E2E8F0;      /* Cor da borda */
 }
 
 .equipamentos-destaque-section {
@@ -1220,7 +1197,6 @@ margin-top: 134px;
     margin-bottom: 4rem;
 }
 
-/* ESTILO DO CARD DE PRODUTO */
 .equipamentos-destaque-product-card {
     background-color: var(--equipamentos-destaque-color-surface);
     border: 1px solid var(--equipamentos-destaque-color-border);
@@ -1261,7 +1237,8 @@ margin-top: 134px;
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Faz o conteúdo crescer para ocupar o espaço */
+    flex-grow: 1; 
+    background-color: rgb(246, 248, 251)
 }
 
 .equipamentos-destaque-product-card__title {
@@ -1276,7 +1253,7 @@ margin-top: 134px;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
     color: var(--equipamentos-destaque-color-text-body);
-    flex-grow: 1; /* Garante que a descrição empurre o rodapé para baixo */
+    flex-grow: 1; 
 }
 
 .equipamentos-destaque-product-card__footer {
@@ -1285,7 +1262,7 @@ margin-top: 134px;
     align-items: center;
     border-top: 1px solid var(--equipamentos-destaque-color-border);
     padding-top: 1rem;
-    margin-top: auto; /* Alinha o rodapé na parte inferior */
+    margin-top: auto; 
 }
 
 .equipamentos-destaque-product-card__price {
@@ -1309,7 +1286,6 @@ margin-top: 134px;
     background-color: var(--equipamentos-destaque-color-accent);
 }
 
-/* BOTÃO PRINCIPAL (CALL TO ACTION) */
 .equipamentos-destaque-cta-container {
     margin-top: 2rem;
 }
