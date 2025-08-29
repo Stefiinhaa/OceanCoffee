@@ -1,13 +1,13 @@
-/* --- NOVA PADRONIZAÇÃO DE FONTES PROFISSIONAIS --- */
+/* --- PADRÃO DE FONTES PROFISSIONAIS --- */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500&display=swap');
 
-/* Fonte para Títulos */
-h1, h2, h3, h4, h5, h6, .navbar a, .premium-section-title, .anuncie-btn, .action-button, .filter-btn {
+/* Fonte para Títulos e Elementos de Destaque */
+h1, h2, h3, h4, h5, h6, .navbar a, .anuncie-btn, .action-button, .filter-btn, .equipamentos-destaque-section-title, .equipamentos-destaque-main-button {
   font-family: 'Poppins', sans-serif;
 }
 
 /* Fonte para Corpo do Texto e Interface */
-body, p, a, input, select, button, label, .info-item, .sidebar-nav a {
+body, p, a, input, select, button, label, .info-item, .sidebar-nav a, .frase, .principio-texto {
   font-family: 'Inter', sans-serif;
 }
 /* --- FIM DA PADRONIZAÇÃO --- */
@@ -19,12 +19,7 @@ body, p, a, input, select, button, label, .info-item, .sidebar-nav a {
   box-sizing: border-box;
 }
 
-body {
-  font-family: Arial, sans-serif;
-
-}
-
-  .navbar {
+.navbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -103,7 +98,7 @@ body {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-bottom: 40px;
-  font-family: Garamond;
+  font-family: 'Poppins', sans-serif; /* Alterado */
   margin-top: 52px;
   margin-left: 61px;
 }
@@ -145,7 +140,7 @@ body {
 }
 
 .texto1{
-  font-family: Garamond;
+  font-family: 'Poppins', sans-serif; /* Alterado */
   font-size: 70px;
   text-align: center;
   font-weight: bolder;
@@ -160,7 +155,6 @@ color: #0cc0df;
 }
 
 .frase{
-font-family: "poppins", sans-serif;
 font-weight: 400;
 font-style: normal;
 color: white;
@@ -180,7 +174,6 @@ margin-left: -79px;
 }
 
 .services-section h2 {
-  font-family: Garamond;
   font-size: 40px;
   color: #000;
   margin-bottom: 40px;
@@ -313,24 +306,13 @@ margin-left: -79px;
   line-height: 1.6;
 }
 
-.Comercialização {
-  text-align: center;
-  margin-right: 93px;
-}
-
-.Degustação {
-  text-align: center;
-  margin-right: 80px;
-}
-
-.Classificação {
+.Comercialização, .Degustação, .Classificação {
   text-align: center;
   margin-right: 80px;
 }
 
 
 .Sobre h2 {
-  font-family: Garamond;
   font-size: 40px;
   color: #000;
   text-align: center;
@@ -361,13 +343,6 @@ margin-left: -79px;
   object-fit: cover; 
 }
 
-h3 {
-  font-family: Garamond;
-  font-size: 28px;
-  margin-bottom: 20px; 
-  text-align: center;
-}
-
 .cor2 {
   color: #ba391c;
 }
@@ -379,7 +354,6 @@ h3 {
 
 
 .Container2 h2 {
-  font-family: Garamond;
   font-size: 40px;
   color: #ba391c;
   text-align: center;
@@ -450,7 +424,6 @@ h3 {
 .principio-texto {
   text-align: justify;
   font-size: 15px;
-  font-family: "poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
@@ -470,13 +443,12 @@ h3 {
   padding: 0;
   
 }
-.text-content2, p {
+.text-content2 p {
 text-align: center;
   
 }
 
 .Conheça {
-  font-family: Garamond;
   font-size: 40px;
   color: #ba391c;
   margin-bottom: 40px;
@@ -490,7 +462,6 @@ text-align: center;
 }
 
 .Estabelecimento h2 {
-  font-family: Garamond;
   font-size: 40px;
   color: #ba391c;
   text-align: center;
@@ -511,13 +482,7 @@ text-align: center;
   background-color: #f9f5e7;
 }
 
-.Colaboradores {
-  padding: 40px;
-  background-color: #f9f5e7;
-}
-
 .Colaboradores h2 {
-  font-family: Garamond;
   font-size: 36px;
   color: #ba391c;
   text-align: center;
@@ -567,7 +532,6 @@ text-align: center;
 }
 
 .complemento {
-  font-family: 'Open Sans', sans-serif;
   font-weight: 200;
   font-size: 14px;
   text-align: center;
@@ -596,37 +560,12 @@ text-align: center;
   margin-top: 15px;
 }
 
-.nome {
-  font-family: Garamond;
+.nome, .nome2, .nome3 {
   font-size: 23px;
   font-weight: bold;
   color: #ba391c;
   text-align: center;
   margin-top: 15px;
-  margin-left: 2px;
-  margin-right: 2px;
-}
-
-.nome2 {
-  font-family: Garamond;
-  font-size: 23px;
-  font-weight: bold;
-  color: #ba391c;
-  text-align: center;
-  margin-top: 3px;
-  margin-left: 2px;
-  margin-right: 2px;
-}
-
-.nome3 {
-  font-family: Garamond;
-  font-size: 23px;
-  font-weight: bold;
-  color: #ba391c;
-  text-align: center;
-  margin-top: 20px;
-  margin-left: 2px;
-  margin-right: 2px;
 }
 
 .user {
@@ -638,10 +577,6 @@ text-align: center;
 }
 
 
-* {
-  box-sizing: border-box;
-}
-
 .containers {
   width: 100%;
   height: 100%;
@@ -650,11 +585,9 @@ text-align: center;
   flex-direction: column;
   align-items: center;
   padding: 30px;
-  font-family: 'Poppins', sans-serif;
 }
 
 .title {
-  font-family: Garamond, serif;
   font-weight: bold;
   font-size: 33px;
   margin-bottom: 20px;
@@ -735,7 +668,6 @@ text-align: center;
 }
 
 .anuncie-btn {
-
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -747,39 +679,34 @@ text-align: center;
   cursor: pointer;
   transition: 0.3sease;
   font-weight: 400;
-  font-family: "Poppins", sans-serif;
   margin-left: 55px;
   margin-top: 10px;
   text-decoration: none;
   margin-right: 55px;
-      background-color: #ba391c;
+  background-color: #ba391c;
 }
 
 .text{
   margin-bottom: 0rem;
 }
-.anuncie-btn, a{
+.anuncie-btn a{
   margin-left: 26px;
-  text-decoration: none;
 }
 
-.anuncie-btn,p{
+.anuncie-btn p{
   margin-left: 17px;
-  
 }
 
 
 .icon {
   width: 49px;
   margin-left: 11px;
-
 }
 
 .icon2 {
   width: 49px;
     margin-left: 11px;
     margin-right: 10px;
-
 }
 
 .fundo-inclinado {
@@ -810,7 +737,6 @@ margin-top: 134px;
   }
 
   .login{
-    font-family: 'Poppins', sans-serif;
     color: #ffffff;
     font-size: 35px;
     text-align: center;
@@ -913,7 +839,6 @@ margin-top: 134px;
   }
 
 .Cadastro{
-    font-family: 'Poppins', sans-serif;
     color: #ffffff;
     font-size: 35px;
     text-align: center;
@@ -1032,7 +957,6 @@ margin-top: 134px;
   cursor: pointer;
   transition: 0.3s ease;
   font-weight: 400;
-  font-family: "Poppins", sans-serif;
   margin-left: 51px;
   margin-top: 10px;
   text-decoration: none;
@@ -1162,10 +1086,11 @@ margin-top: 134px;
   margin-bottom: 2px;
 }
 
+/* --- ESTILOS CORRIGIDOS PARA A SECÇÃO DE DESTAQUES --- */
+
 .equipamentos-destaque-section {
-    background-color: #f9f5e7;
+    background-color: #f9f5e7; /* Cor creme, igual à seção de serviços */
     padding: 80px 20px;
-    font-family: 'Poppins', sans-serif;
 }
 
 .equipamentos-destaque-container {
@@ -1175,15 +1100,17 @@ margin-top: 134px;
 }
 
 .equipamentos-destaque-section-title {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    font-weight: 600;
-    color: var(--equipamentos-destaque-color-text-headings);
+    font-size: 40px;
+    color: #3e2f1c; /* Castanho escuro para o título */
     margin-bottom: 1rem;
+    border-bottom: 2.5px solid #883a1b;
+    border-top: 2.5px solid #883a1b;
+    padding: 10px 0;
 }
 
 .equipamentos-destaque-section-subtitle {
     font-size: 1.1rem;
-    color: var(--equipamentos-destaque-color-text-body);
+    color: #6b6b6b; /* Cinza para o subtítulo */
     margin-bottom: 3.5rem;
     max-width: 600px;
     margin-left: auto;
@@ -1198,26 +1125,26 @@ margin-top: 134px;
 }
 
 .equipamentos-destaque-product-card {
-    background-color: var(--equipamentos-destaque-color-surface);
-    border: 1px solid var(--equipamentos-destaque-color-border);
-    border-radius: 8px;
+    background-color: #ffffff;
+    border: 1px solid #E0E0E0;
+    border-radius: 13px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     text-align: left;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 .equipamentos-destaque-product-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .equipamentos-destaque-product-card__image-container {
     width: 100%;
     aspect-ratio: 16 / 10;
-    background-color: #eee;
+    background-color: #f1f5f9;
     overflow: hidden;
 }
 
@@ -1226,7 +1153,7 @@ margin-top: 134px;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 400ms ease;
+    transition: transform 0.4s ease;
 }
 
 .equipamentos-destaque-product-card:hover .equipamentos-destaque-product-card__image {
@@ -1234,25 +1161,23 @@ margin-top: 134px;
 }
 
 .equipamentos-destaque-product-card__content {
-    padding: 1.25rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1; 
-    background-color: rgb(246, 248, 251)
 }
 
 .equipamentos-destaque-product-card__title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--equipamentos-destaque-color-text-headings);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #3e2f1c;
     margin-bottom: 0.5rem;
-    line-height: 1.3;
 }
 
 .equipamentos-destaque-product-card__description {
     margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    color: var(--equipamentos-destaque-color-text-body);
+    font-size: 0.95rem;
+    color: #6b6b6b;
     flex-grow: 1; 
 }
 
@@ -1260,7 +1185,7 @@ margin-top: 134px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid var(--equipamentos-destaque-color-border);
+    border-top: 1px solid #E0E0E0;
     padding-top: 1rem;
     margin-top: auto; 
 }
@@ -1268,22 +1193,27 @@ margin-top: 134px;
 .equipamentos-destaque-product-card__price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--equipamentos-destaque-color-primary);
+    color: #883a1b; /* Tom de castanho */
 }
 
-.equipamentos-destaque-product-card__button {
+.equipamentos-destaque-product-card__button,
+.equipamentos-destaque-main-button {
     background-color: #ba391c;
-    color: var(--equipamentos-destaque-color-surface);
+    color: #ffffff;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 600;
     padding: 10px 20px;
     border-radius: 8px;
-    transition: all 300ms ease;
+    transition: all 0.3s ease;
+    border: none;
 }
 
-.equipamentos-destaque-product-card__button:hover {
-    background-color: var(--equipamentos-destaque-color-accent);
+.equipamentos-destaque-product-card__button:hover,
+.equipamentos-destaque-main-button:hover {
+    background-color: #883a1b; /* Tom mais escuro para hover */
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(186, 57, 28, 0.3);
 }
 
 .equipamentos-destaque-cta-container {
@@ -1292,23 +1222,6 @@ margin-top: 134px;
 
 .equipamentos-destaque-main-button {
     display: inline-block;
-    background-color:#ba391c;
-    color: var(--equipamentos-destaque-color-surface);
     font-size: 1.1rem;
-    font-weight: 600;
-    text-decoration: none;
     padding: 14px 32px;
-    border-radius: 8px;
-    transition: all 300ms ease;
-}
-
-.equipamentos-destaque-main-button:hover {
-    background-color: var(--equipamentos-destaque-color-accent-hover);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-}
-
-.foto1{
-width: 378px;
-    height: 234px;
 }
