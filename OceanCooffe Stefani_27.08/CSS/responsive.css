@@ -1,0 +1,149 @@
+/* --- ESTILOS PARA UMA EXPERIÊNCIA MOBILE PROFISSIONAL --- */
+
+/* Regra global para evitar que o site arraste para o lado */
+html, body {
+    overflow-x: hidden;
+}
+
+/* Ocultar o menu mobile no desktop */
+.mobile-header, .mobile-nav, .nav-overlay {
+    display: none;
+}
+
+
+/* --- ESTILOS PARA ECRÃS MENORES (TABLETS E TELEMÓVEIS) --- */
+@media (max-width: 992px) {
+
+    /* --- Esconder a barra de navegação original --- */
+    .navbar {
+        display: none;
+    }
+    
+    /* --- Mostrar e estilizar o novo cabeçalho mobile --- */
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1.5rem;
+        height: 60px;
+        background-color: #b23a27; /* Cor original da sua barra */
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-header .logo-img {
+        height: 40px;
+    }
+    
+    .menu-toggle {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    /* --- Estilo do painel do menu que desliza --- */
+    .mobile-nav {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        right: -100%; /* Começa escondido fora do ecrã */
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: #f9f5e7; /* Cor de fundo creme */
+        z-index: 110;
+        transition: right 0.35s ease-in-out;
+        padding: 1.5rem;
+        box-shadow: -3px 0 15px rgba(0,0,0,0.2);
+    }
+    
+    .mobile-nav.is-open {
+        right: 0; /* Posição quando está aberto */
+    }
+    
+    .mobile-nav-header {
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+    
+    .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        list-style: none;
+    }
+    
+    .mobile-nav-links a {
+        color: #3e2f1c; /* Cor de texto escura */
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 1rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: background-color 0.2s ease;
+    }
+    
+    .mobile-nav-links a:hover {
+        background-color: #e9e5d1;
+    }
+    
+    .mobile-nav-links a i {
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Fundo escurecido quando o menu está aberto */
+    .nav-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 105;
+    }
+    
+    .nav-overlay.is-open {
+        display: block;
+    }
+    
+    /* --- Ajustes de layout para a página principal no mobile --- */
+    #fundo {
+        padding-top: 60px; /* Adiciona espaço para o cabeçalho fixo */
+    }
+    
+    .Primeirasessao {
+        flex-direction: column;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .sessao, .Pacote {
+        width: 100%;
+        margin: 0;
+        padding: 0 1rem;
+    }
+
+    .texto1 {
+        font-size: 48px; /* Reduz o tamanho da fonte */
+        margin-left: 0;
+    }
+
+    .frase {
+        margin-left: 0;
+    }
+}
