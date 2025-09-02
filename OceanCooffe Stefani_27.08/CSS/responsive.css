@@ -14,10 +14,11 @@ html, body {
 /* --- ESTILOS PARA ECRÃS MENORES (TABLETS E TELEMÓVEIS) --- */
 @media (max-width: 992px) {
 
-    /* --- Esconder a barra de navegação original --- */
+    /* --- CORREÇÃO PRINCIPAL: Esconder a barra de navegação original --- */
     .navbar {
-        display: none;
+        display: none !important;
     }
+    
     
     /* --- Mostrar e estilizar o novo cabeçalho mobile --- */
     .mobile-header {
@@ -26,7 +27,7 @@ html, body {
         align-items: center;
         padding: 0 1.5rem;
         height: 60px;
-        background-color: #b23a27; /* Cor original da sua barra */
+        background-color: #b23a27;
         color: white;
         position: fixed;
         top: 0;
@@ -54,11 +55,11 @@ html, body {
         flex-direction: column;
         position: fixed;
         top: 0;
-        right: -100%; /* Começa escondido fora do ecrã */
+        right: -100%; 
         width: 80%;
         max-width: 300px;
         height: 100vh;
-        background-color: #f9f5e7; /* Cor de fundo creme */
+        background-color: #f9f5e7; 
         z-index: 110;
         transition: right 0.35s ease-in-out;
         padding: 1.5rem;
@@ -66,7 +67,7 @@ html, body {
     }
     
     .mobile-nav.is-open {
-        right: 0; /* Posição quando está aberto */
+        right: 0; 
     }
     
     .mobile-nav-header {
@@ -81,13 +82,15 @@ html, body {
         flex-direction: column;
         gap: 0.75rem;
         list-style: none;
+        padding: 0;
     }
     
     .mobile-nav-links a {
-        color: #3e2f1c; /* Cor de texto escura */
+        color: #3e2f1c; 
         text-decoration: none;
         font-size: 1.2rem;
         font-weight: 600;
+        font-family: 'Poppins', sans-serif;
         padding: 1rem;
         border-radius: 8px;
         display: flex;
@@ -123,8 +126,13 @@ html, body {
     
     /* --- Ajustes de layout para a página principal no mobile --- */
     #fundo {
-        padding-top: 60px; /* Adiciona espaço para o cabeçalho fixo */
+        padding-top: 60px; 
+       
     }
+    .Logo{
+        margin-left: 0%;
+    }
+
     
     .Primeirasessao {
         flex-direction: column;
@@ -136,10 +144,11 @@ html, body {
         width: 100%;
         margin: 0;
         padding: 0 1rem;
+                margin-top: 35px;
     }
 
     .texto1 {
-        font-size: 48px; /* Reduz o tamanho da fonte */
+        font-size: 48px; 
         margin-left: 0;
     }
 
