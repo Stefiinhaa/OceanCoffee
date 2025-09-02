@@ -138,7 +138,7 @@ html, body {
     .Primeirasessao {
         flex-direction: column;
         text-align: center;
-        margin-top: 20px;
+      
     }
 
     .sessao, .Pacote {
