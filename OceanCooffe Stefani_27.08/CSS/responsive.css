@@ -127,6 +127,7 @@ html, body {
     /* --- Ajustes de layout para a página principal no mobile --- */
     #fundo {
         padding-top: 60px; 
+        height: 0%;
        
     }
     .Logo{
