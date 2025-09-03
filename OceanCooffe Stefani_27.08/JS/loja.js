@@ -31,18 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : 'IMG/placeholder.png';
         const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco);
 
+        // CORREÇÃO APLICADA AQUI: Adicionado ?id=${product.id} aos links
         card.innerHTML = `
-            <a href="MarketPlace.html" class="oc-product-card__image-container" aria-label="Ver detalhes de ${product.produto}">
+            <a href="MarketPlace.html?id=${product.id}" class="oc-product-card__image-container" aria-label="Ver detalhes de ${product.produto}">
                 <img class="oc-product-card__image" src="${imageUrl}" alt="${product.produto}" loading="lazy" decoding="async">
             </a>
             <div class="oc-product-card__content">
                 <h3 class="oc-product-card__title">
-                    <a href="MarketPlace.html" style="text-decoration: none; color: inherit;">${product.produto}</a>
+                    <a href="MarketPlace.html?id=${product.id}" style="text-decoration: none; color: inherit;">${product.produto}</a>
                 </h3>
                 <p class="oc-product-card__description">${product.descricao.substring(0, 100)}...</p>
                 <div class="oc-product-card__footer">
                     <span class="oc-product-card__price">${priceFormatted}</span>
-                    <a href="MarketPlace.html" class="oc-product-card__button">Ver Mais</a>
+                    <a href="MarketPlace.html?id=${product.id}" class="oc-product-card__button">Ver Mais</a>
                 </div>
             </div>`;
         return card;
@@ -67,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!categoryFiltersContainer) return;
         categoryFiltersContainer.innerHTML = '';
 
-        // *** ALTERAÇÃO PRINCIPAL AQUI: Lista de categorias estáticas ***
         const categories = ['Todos', 'Tratores', 'Colheitadeiras', 'Pulverizadores', 'Implementos', 'Outros'];
 
         categories.forEach(category => {
@@ -88,12 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let filteredProducts = allProducts;
 
-        // Filtra por categoria
         if (selectedCategory !== 'Todos') {
             filteredProducts = filteredProducts.filter(product => getCategoryFromTitle(product.produto) === selectedCategory);
         }
 
-        // Filtra pelo termo de busca
         if (searchTerm) {
             filteredProducts = filteredProducts.filter(product =>
                 product.produto.toLowerCase().includes(searchTerm) ||
@@ -123,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         allProducts = data;
-        renderFilterButtons(); // Agora cria os botões estáticos
+        renderFilterButtons();
         renderProducts(allProducts); 
         
         categoryFiltersContainer.addEventListener('click', (event) => {
