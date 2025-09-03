@@ -68,8 +68,8 @@
         .popup.success { background-color: #28a745; }
         .popup.error { background-color: #dc3545; }
         .popup.info { background-color: #0d6efd; }
-        .confirmation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9998; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-        .confirmation-overlay.show { display: flex; opacity: 1; }
+        .confirmation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .confirmation-overlay.show { opacity: 1; pointer-events: auto; }
         .confirmation-modal { background-color: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); opacity: 0; transition: all 0.3s ease; }
         .confirmation-overlay.show .confirmation-modal { transform: scale(1); opacity: 1; }
         .confirmation-modal h3 { font-size: 1.25rem; font-weight: 600; margin-top: 0; margin-bottom: 0.75rem; }
@@ -193,22 +193,11 @@
         }
         protegerPagina();
         
-        // --- FUNÇÕES DE POP-UP PROFISSIONAIS ---
+        // --- FUNÇÕES DE POP-UP E CONFIRMAÇÃO (IDÊNTICAS AO PERFIL.HTML) ---
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
         function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
-        function showConfirmationPopup(title, message, options = {}) {
-            const { confirmText = 'Sim, Sair', cancelText = 'Cancelar' } = options;
-            return new Promise((resolve) => {
-                const o = document.createElement('div');
-                o.className = 'confirmation-overlay';
-                o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">${cancelText}</button><button class="confirmation-btn-confirm">${confirmText}</button></div></div>`;
-                const close = (result) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(result); }); };
-                o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => close(false));
-                o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => close(true));
-                document.body.appendChild(o);
-                requestAnimationFrame(() => o.classList.add('show'));
-            });
-        }
+        function showConfirmationPopup(title, message) { return new Promise((resolve) => { const o = document.createElement('div'); o.className = 'confirmation-overlay'; o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">Cancelar</button><button class="confirmation-btn-confirm">Sim, Sair</button></div></div>`; const c = (r) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(r); }); }; o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => c(false)); o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => c(true)); document.body.appendChild(o); requestAnimationFrame(() => o.classList.add('show')); }); }
+
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { user } } = await supabase.auth.getUser();
@@ -304,8 +293,9 @@
                 e.preventDefault(); 
                 const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?');
                 if (userConfirmed) {
+                    showPopup("Saindo...", 'info', 1500);
                     await supabase.auth.signOut();
-                    window.location.replace("index.html");
+                    setTimeout(() => window.location.replace("index.html"), 500);
                 }
             }
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
