@@ -66,7 +66,7 @@
         .popup { display: flex; align-items: center; min-width: 300px; padding: 16px 22px; border-radius: 8px; color: white; font-size: 0.95rem; font-weight: 500; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); transform: translateX(calc(100% + 20px)); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .popup.show { transform: translateX(0); opacity: 1; }
         .popup i { font-size: 1.25rem; margin-right: 14px; }
-        .popup.success { background-color: #28a745; } .popup.error { background-color: #dc3545; }
+        .popup.success { background-color: #28a745; } .popup.error { background-color: #dc3545; }.popup.info { background-color: #0d6efd; }
         .confirmation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
         .confirmation-overlay.show { opacity: 1; pointer-events: auto; }
         .confirmation-modal { background-color: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); opacity: 0; transition: all 0.3s ease; }
@@ -96,8 +96,28 @@
             .mobile-nav-links a { color: var(--color-text-muted); text-decoration: none; font-size: 1.1rem; font-weight: 500; padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; }
             .mobile-nav-links a:hover { background-color: var(--color-background); }
             .mobile-nav-links a i { width: 20px; text-align: center; }
-            .mobile-logout { margin-top: auto; }
+            .mobile-logout { margin-top: auto; text-decoration: none; }
+    #mobile-logout-btn {
+        text-decoration: none;
 
+    }
+   
+    .popup-container {
+        width: 90%;
+        max-width: 400px;
+        top: 20px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    .popup {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.9rem; /* Opcional: ajusta o tamanho da fonte */
+    }
+
+    
             .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 105; }
             .nav-overlay.is-open { display: block;
              }
@@ -181,7 +201,7 @@
             <a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
         </div>
         <div class="mobile-logout">
-             <a href="#" id="mobile-logout-btn"><i class="fas fa-sign-out-alt"></i><span id="sair" style="margin-left: 2%;">Sair</span></a>
+             <a href="#" id="mobile-logout-btn" class="sair"><i class="fas fa-sign-out-alt"></i><span id="sair" style="margin-left: 2%;">Sair</span></a>
         </div>
     </nav>
 

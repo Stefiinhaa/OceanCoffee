@@ -40,7 +40,7 @@
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .page-header h1 { font-size: 2rem; font-weight: 700; margin: 0; }
         .ad-list { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-        .ad-card { display: flex; align-items: center; gap: 1rem; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1rem; transition: box-shadow 0.2s ease; overflow: hidden; }
+        .ad-card { display: flex; align-items: center; gap: 1rem; background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1rem; transition: box-shadow 0.2s ease, opacity 0.5s ease; overflow: hidden; }
         .ad-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .ad-image { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
         .ad-info { flex-grow: 1; min-width: 0; }
@@ -98,6 +98,22 @@
             .ad-image { width: 120px; height: 120px; }
             .ad-info h3 { font-size: 1.2rem; }
             .ad-price { font-size: 1.1rem; }
+
+            .popup-container {
+        width: 90%;
+        max-width: 400px;
+        top: 20px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    .popup {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.9rem; /* Opcional: ajusta o tamanho da fonte */
+    }
+
         }
 
         @media (max-width: 992px) {
@@ -204,7 +220,7 @@
     function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
     function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
     function showConfirmationPopup(title, message, options = {}) {
-        const { confirmText = 'Sim, Sair', cancelText = 'Cancelar' } = options;
+        const { confirmText = 'Sim', cancelText = 'Cancelar' } = options;
         return new Promise((resolve) => {
             const o = document.createElement('div');
             o.className = 'confirmation-overlay';
@@ -234,11 +250,10 @@
         const adList = document.getElementById('ad-list');
         const noAdsMessage = document.getElementById('no-ads-message');
         const filterBar = document.getElementById('filter-bar');
+        let allUserAds = []; // Cache local para os anúncios do usuário
 
-        async function loadAds(filter = 'todos') {
+        async function loadAds() {
             adList.innerHTML = '<p style="text-align: center; padding: 2rem;">Carregando...</p>';
-            let finalAds = [];
-
             try {
                 const { data: approvedAds, error: approvedError } = await supabase.from('aprovados').select('*').eq('user_id', user.id);
                 if (approvedError) throw approvedError;
@@ -254,23 +269,27 @@
                     ...ad, status: ad.aprovado === false ? 'rejeitados' : 'pendentes', dataTable: 'produtos', date: ad.data
                 }));
 
-                let allCombined = [...mappedApproved, ...mappedOthers];
-                allCombined.sort((a, b) => new Date(b.date) - new Date(a.date));
+                allUserAds = [...mappedApproved, ...mappedOthers];
+                allUserAds.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
+                filterAndRenderAds(currentFilter);
 
-                if (filter === 'todos') {
-                    finalAds = allCombined;
-                } else {
-                    finalAds = allCombined.filter(ad => ad.status === filter);
-                }
             } catch (error) {
                 console.error("Erro ao carregar anúncios:", error);
                 showPopup('Erro ao carregar seus anúncios.', 'error');
                 adList.innerHTML = '<p style="text-align: center; padding: 2rem; color: red;">Falha ao carregar anúncios.</p>';
-                return;
             }
-            renderAds(finalAds, filter);
         }
         
+        function filterAndRenderAds(filter) {
+            let adsToRender = allUserAds;
+            if (filter !== 'todos') {
+                adsToRender = allUserAds.filter(ad => ad.status === filter);
+            }
+            renderAds(adsToRender, filter);
+        }
+
         function renderAds(ads, filter) {
             adList.innerHTML = '';
             
@@ -316,7 +335,7 @@
             if (e.target.classList.contains('filter-btn')) {
                 document.querySelector('.filter-btn.active').classList.remove('active');
                 e.target.classList.add('active');
-                loadAds(e.target.getAttribute('data-filter'));
+                filterAndRenderAds(e.target.dataset.filter);
             }
         });
 
@@ -328,18 +347,31 @@
                 const adTable = adCard.dataset.table;
                 
                 const confirmed = await showConfirmationPopup('Excluir Anúncio', 'Tem certeza que deseja excluir este anúncio? Esta ação não pode ser desfeita.', { confirmText: 'Sim, Excluir' });
+                
                 if (confirmed) {
                     const { error: dbError } = await supabase.from(adTable).delete().eq('id', adId);
-                    if (dbError) { showPopup('Erro ao excluir o anúncio.', 'error'); return; }
+                    
+                    if (dbError) {
+                        showPopup(`Erro ao excluir o anúncio: ${dbError.message}`, 'error');
+                        console.error("Erro Supabase:", dbError);
+                        return;
+                    }
+                    
                     showPopup('Anúncio excluído com sucesso!', 'success');
-                    loadAds(document.querySelector('.filter-btn.active').getAttribute('data-filter'));
+                    
+                    // Remove o anúncio do cache local
+                    allUserAds = allUserAds.filter(ad => !(ad.id == adId && ad.dataTable == adTable));
+                    
+                    // Re-renderiza a lista a partir do cache atualizado
+                    const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
+                    filterAndRenderAds(currentFilter);
                 }
             }
         });
         
         async function handleLogout(e) {
             e.preventDefault(); 
-            const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?');
+            const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?', { confirmText: 'Sim, Sair' });
             if (userConfirmed) {
                 showPopup("Saindo...", 'info', 1500);
                 await supabase.auth.signOut();
