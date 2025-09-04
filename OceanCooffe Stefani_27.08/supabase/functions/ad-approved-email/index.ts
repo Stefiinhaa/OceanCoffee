@@ -19,7 +19,7 @@ serve(async (req) => {
     const USER_ID = Deno.env.get('EMAILJS_USER_ID');
 
     if (!SERVICE_ID || !TEMPLATE_ID || !USER_ID) {
-      throw new Error("Uma ou mais chaves do EmailJS não foram configuradas como 'secrets' no Supabase.");
+      throw new Error("As chaves do EmailJS não foram encontradas no ambiente. Verifique o arquivo .env.local e o comando de deploy.");
     }
 
     const data = {
