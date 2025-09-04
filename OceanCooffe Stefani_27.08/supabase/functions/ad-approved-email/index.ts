@@ -1,16 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// Headers para permitir que seu site chame esta função
+// As chaves que guardamos no Supabase
+const SERVICE_ID = Deno.env.get('EMAILJS_SERVICE_ID');
+const TEMPLATE_ID = Deno.env.get('EMAILJS_TEMPLATE_ID');
+
+// Headers de segurança
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*', // Para produção, troque '*' pela URL do seu site
+  'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
-
-// SUBSTITUA PELA URL REAL E COMPLETA DO SEU SITE
-const SITE_URL = "https://ocean-coffee.vercel.app/meus-anuncios.html"; 
-
-console.log("Função 'ad-approved-email' pronta para receber chamadas!");
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -18,51 +16,42 @@ serve(async (req) => {
   }
 
   try {
-    const { product_name, user_name, user_id } = await req.json();
+    // Recebe os dados da sua página de solicitações
+    const { product_name, user_name, user_email, site_url } = await req.json();
 
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    // Monta os dados para enviar ao EmailJS
+    const data = {
+      service_id: SERVICE_ID,
+      template_id: TEMPLATE_ID,
+      user_id: 'nlOG2UkpZAFdLuCCd', // O user_id do EmailJS, pode ser encontrado em Integration
+      template_params: {
+        user_name: user_name,
+        user_email: user_email,
+        product_name: product_name,
+        site_url: site_url,
+      },
+    };
 
-    const { data: userData, error: userError } = await supabaseAdmin.auth.admin.getUserById(user_id);
-    if (userError) throw new Error(`Erro ao buscar usuário: ${userError.message}`);
+    // Envia a requisição para a API do EmailJS
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-    const user_email = userData.user.email;
-    if (!user_email) throw new Error("Usuário não possui um e-mail cadastrado.");
+    if (!response.ok) {
+      throw new Error(`EmailJS respondeu com o status: ${response.status}`);
+    }
 
-    const { error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
-        user_email,
-        { data: { 
-            email_content: `
-              <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-                <h2 style="color: #0047a3;">Olá, ${user_name}! Boas notícias!</h2>
-                <p>Seu anúncio para o produto "<strong>${product_name}</strong>" foi aprovado e já está visível para todos em nossa plataforma.</p>
-                <p>Você pode visualizá-lo e gerenciá-lo a qualquer momento na sua conta.</p>
-                <a href="${SITE_URL}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; background-color: #0047a3; color: white; text-decoration: none; border-radius: 5px;">
-                  Ver Meus Anúncios
-                </a>
-                <p style="font-size: 14px;">Agradecemos por usar a Ocean Coffee!</p>
-                <p style="font-size: 14px;">Atenciosamente,<br>Equipe Ocean Coffee</p>
-              </div>
-            `,
-            subject: `Seu anúncio "${product_name}" foi aprovado!` 
-          } 
-        }
-    );
-
-    if (error) throw error;
-
-    return new Response(JSON.stringify({ message: "E-mail de aprovação enviado com sucesso!" }), {
+    return new Response(JSON.stringify({ message: "E-mail enviado com sucesso via EmailJS!" }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     });
 
   } catch (error) {
-    console.error("Erro na função:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
+      status: 500,
     });
   }
 });

@@ -269,38 +269,45 @@
     window.aprovarAnuncio = async (id) => {
     try {
         const produto = todasSolicitacoes.find(p => p.id == id);
-        if (!produto) throw new Error("Solicitação não encontrada no cache local.");
+        if (!produto) throw new Error("Solicitação não encontrada.");
 
-        // 1. Adiciona o anúncio na tabela de 'aprovados'
+        // Busca o e-mail do usuário
+        const { data: userData, error: userError } = await supabase
+            .from("usuarios")
+            .select("email")
+            .eq("user_id", produto.user_id)
+            .single();
+
+        if (userError || !userData) throw new Error("Não foi possível encontrar o e-mail do usuário.");
+
+        // Processo de aprovação (continua o mesmo)
         const { id: oldId, aprovado, data, ...dadosParaAprovados } = produto;
         dadosParaAprovados.data_aprovacao = new Date().toISOString();
-        const { error: insertError } = await supabase.from('aprovados').insert([dadosParaAprovados]);
-        if (insertError) throw new Error(`Erro ao mover para aprovados: ${insertError.message}`);
+        await supabase.from('aprovados').insert([dadosParaAprovados]);
+        await supabase.from('produtos').delete().eq('id', id);
 
-        // 2. Remove da tabela de 'produtos'
-        const { error: deleteError } = await supabase.from('produtos').delete().eq('id', id);
-        if (deleteError) throw new Error(`Erro ao finalizar aprovação: ${deleteError.message}`);
+        // Monta a URL completa para a página de anúncios
+        const siteURL = window.location.origin + '/meus-anuncios.html';
 
-        // 3. CHAMA A EDGE FUNCTION PARA ENVIAR O E-MAIL
-        console.log("Invocando a função de e-mail...");
-        const { data: functionResponse, error: functionError } = await supabase.functions.invoke('ad-approved-email', {
+        // Chama a Edge Function com os dados para o EmailJS
+        const { error: functionError } = await supabase.functions.invoke('ad-approved-email', {
             body: { 
                 product_name: produto.produto,
                 user_name: produto.nome_usuario,
-                user_id: produto.user_id // Passa o ID do usuário para a função
+                user_email: userData.email,
+                site_url: siteURL // Envia a URL do seu site para o template
             },
         });
 
-        if(functionError){
-            console.error("Erro ao enviar e-mail de notificação:", functionError);
-            showToast(`Anúncio aprovado! (Falha ao enviar e-mail)`, 'success');
+        if (functionError) {
+            console.error("Erro ao enviar e-mail:", functionError);
+            showToast(`Anúncio aprovado! (Falha ao notificar usuário)`, 'success');
         } else {
-            console.log("Resposta da função:", functionResponse);
             showToast(`Anúncio aprovado e e-mail enviado!`, 'success');
         }
 
         fecharModalDetalhes();
-        carregarSolicitacoes();
+        await carregarSolicitacoes();
 
     } catch (error) {
         showToast(`Erro no processo de aprovação: ${error.message}`, 'error');
