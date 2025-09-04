@@ -48,10 +48,13 @@
         .ad-info p { margin: 0 0 0.25rem 0; color: var(--color-text-muted); font-size: 0.9rem; }
         .ad-price { font-size: 1rem; font-weight: 500; color: var(--color-primary); }
         .ad-status-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; flex-shrink: 0; }
+        
+        /* --- ESTILOS DOS BALÕES DE STATUS (CORRIGIDOS) --- */
         .ad-status { display: inline-block; padding: 4px 10px; font-size: 0.8rem; font-weight: 600; border-radius: 20px; color: white; }
-        .ad-status.approved { background-color: var(--color-success); }
-        .ad-status.pending { background-color: var(--color-warning); color: var(--color-text); }
-        .ad-status.rejected { background-color: var(--color-danger); }
+        .ad-status.aprovados { background-color: var(--color-success); }
+        .ad-status.pendentes { background-color: var(--color-warning); color: var(--color-text); }
+        .ad-status.rejeitados { background-color: var(--color-danger); }
+        
         .ad-actions { display: flex; }
         .action-btn { background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 1.1rem; padding: 5px; transition: color 0.2s; }
         .action-btn.delete:hover { color: var(--color-danger); }
@@ -98,22 +101,6 @@
             .ad-image { width: 120px; height: 120px; }
             .ad-info h3 { font-size: 1.2rem; }
             .ad-price { font-size: 1.1rem; }
-
-            .popup-container {
-        width: 90%;
-        max-width: 400px;
-        top: 20px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-    }
-
-    .popup {
-        min-width: 0;
-        width: 100%;
-        font-size: 0.9rem; /* Opcional: ajusta o tamanho da fonte */
-    }
-
         }
 
         @media (max-width: 992px) {
@@ -250,7 +237,7 @@
         const adList = document.getElementById('ad-list');
         const noAdsMessage = document.getElementById('no-ads-message');
         const filterBar = document.getElementById('filter-bar');
-        let allUserAds = []; // Cache local para os anúncios do usuário
+        let allUserAds = []; 
 
         async function loadAds() {
             adList.innerHTML = '<p style="text-align: center; padding: 2rem;">Carregando...</p>';
@@ -303,9 +290,10 @@
                     const statusTextMap = { aprovados: 'Aprovado', pendentes: 'Pendente', rejeitados: 'Rejeitado' };
                     const dateTextMap = { aprovados: 'Aprovado em', pendentes: 'Enviado em', rejeitados: 'Enviado em' };
 
-                    const statusClass = ad.status;
-                    const statusText = statusTextMap[ad.status];
-                    const dateText = dateTextMap[ad.status];
+                    // *** CORREÇÃO APLICADA AQUI ***
+                    const statusClass = ad.status; // Usar o status mapeado diretamente
+                    const statusText = statusTextMap[statusClass];
+                    const dateText = dateTextMap[statusClass];
                     
                     const adCard = document.createElement('div');
                     adCard.className = 'ad-card';
