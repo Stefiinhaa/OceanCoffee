@@ -13,20 +13,22 @@ serve(async (req) => {
   try {
     const { product_name, user_name, user_email, site_url } = await req.json();
 
-    // Pega as chaves secretas do ambiente da função
+    // Pega todas as chaves secretas do ambiente
     const SERVICE_ID = Deno.env.get('EMAILJS_SERVICE_ID');
     const TEMPLATE_ID = Deno.env.get('EMAILJS_TEMPLATE_ID');
-    const PRIVATE_KEY = Deno.env.get('EMAILJS_PRIVATE_KEY'); // <-- Usando a chave privada
+    const USER_ID = Deno.env.get('EMAILJS_USER_ID');
+    const PRIVATE_KEY = Deno.env.get('EMAILJS_PRIVATE_KEY'); // <-- Nova chave
 
-    if (!SERVICE_ID || !TEMPLATE_ID || !PRIVATE_KEY) {
-      throw new Error("Uma ou mais chaves do EmailJS (Service, Template, ou Private) não foram configuradas como 'secrets'.");
+    if (!SERVICE_ID || !TEMPLATE_ID || !USER_ID || !PRIVATE_KEY) {
+      throw new Error("Uma ou mais chaves do EmailJS não foram configuradas como 'secrets'. Verifique todas as quatro: SERVICE_ID, TEMPLATE_ID, USER_ID, PRIVATE_KEY.");
     }
 
+    // Monta o corpo da requisição, incluindo o "accessToken"
     const data = {
       service_id: SERVICE_ID,
       template_id: TEMPLATE_ID,
-      user_id: Deno.env.get('EMAILJS_USER_ID'), // Public Key
-      accessToken: PRIVATE_KEY, // <-- Adicionamos a chave privada aqui
+      user_id: USER_ID,
+      accessToken: PRIVATE_KEY, // <-- Autenticação para o servidor
       template_params: {
         user_name: user_name,
         user_email: user_email,
@@ -35,7 +37,6 @@ serve(async (req) => {
       },
     };
 
-    // A URL da API não muda, mas a presença do "accessToken" ativa o modo de servidor
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
