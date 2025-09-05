@@ -267,53 +267,32 @@
 
     // --- FUNÇÕES DE AÇÃO DO ADMIN (CORRIGIDAS) ---
     window.aprovarAnuncio = async (id) => {
-    try {
-        const produto = todasSolicitacoes.find(p => p.id == id);
-        if (!produto) throw new Error("Solicitação não encontrada.");
+        try {
+            const { data: produto, error: fetchError } = await supabase.from('produtos').select('*').eq('id', id).single();
+            if (fetchError || !produto) throw new Error(fetchError?.message || "Solicitação não encontrada.");
 
-        // Busca o e-mail do usuário
-        const { data: userData, error: userError } = await supabase
-            .from("usuarios")
-            .select("email")
-            .eq("user_id", produto.user_id)
-            .single();
+            // FIX: Removendo explicitamente as colunas 'id', 'aprovado' e a antiga 'data'
+            const { id: oldId, aprovado, data, ...dadosParaAprovados } = produto;
+            
+            // Adicionando a coluna correta para a data de aprovação
+            dadosParaAprovados.data_aprovacao = new Date().toISOString();
 
-        if (userError || !userData) throw new Error("Não foi possível encontrar o e-mail do usuário.");
+            const { error: insertError } = await supabase.from('aprovados').insert([dadosParaAprovados]);
+            if (insertError) throw new Error(insertError.message || "Erro ao mover para aprovados.");
 
-        // Processo de aprovação (continua o mesmo)
-        const { id: oldId, aprovado, data, ...dadosParaAprovados } = produto;
-        dadosParaAprovados.data_aprovacao = new Date().toISOString();
-        await supabase.from('aprovados').insert([dadosParaAprovados]);
-        await supabase.from('produtos').delete().eq('id', id);
-
-        // Monta a URL completa para a página de anúncios
-        const siteURL = window.location.origin + '/meus-anuncios.html';
-
-        // Chama a Edge Function com os dados para o EmailJS
-        const { error: functionError } = await supabase.functions.invoke('ad-approved-email', {
-            body: { 
-                product_name: produto.produto,
-                user_name: produto.nome_usuario,
-                user_email: userData.email,
-                site_url: siteURL // Envia a URL do seu site para o template
-            },
-        });
-
-        if (functionError) {
-            console.error("Erro ao enviar e-mail:", functionError);
-            showToast(`Anúncio aprovado! (Falha ao notificar usuário)`, 'success');
-        } else {
-            showToast(`Anúncio aprovado e e-mail enviado!`, 'success');
+            const { error: deleteError } = await supabase.from('produtos').delete().eq('id', id);
+            if (deleteError) {
+                console.error("Falha ao remover solicitação original:", deleteError.message);
+                throw new Error("Erro ao finalizar aprovação.");
+            }
+            showToast(`Anúncio aprovado com sucesso!`, 'success');
+            fecharModalDetalhes();
+            carregarSolicitacoes();
+        } catch (error) {
+            showToast(`Erro ao aprovar: ${error.message}`, 'error');
+            console.error('Erro no processo de aprovação:', error);
         }
-
-        fecharModalDetalhes();
-        await carregarSolicitacoes();
-
-    } catch (error) {
-        showToast(`Erro no processo de aprovação: ${error.message}`, 'error');
-        console.error('Erro detalhado:', error);
-    }
-};
+    };
 
     window.rejeitarAnuncio = async (id) => {
         const confirmado = await showConfirmationPopup('Confirmar Rejeição','Deseja rejeitar este anúncio? Ele será marcado como "Rejeitado" para o usuário.','Sim, Rejeitar','rejeitar');
