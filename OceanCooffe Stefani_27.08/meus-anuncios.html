@@ -266,6 +266,7 @@
             font-size: 1.1rem;
             padding: 5px;
             transition: color 0.2s;
+            margin-left: 23px;
         }
 
         .action-btn.delete:hover {
@@ -816,7 +817,7 @@
                         </div>
                         <div class="ad-status-actions">
                             <span class="ad-status ${statusClass}">${statusText}</span>
-                            
+
                             <div class="ad-actions">
                           ${ad.status === 'pendentes' ? `<a href="editar-anuncio.html?id=${ad.id}" class="action-btn edit" title="Editar anúncio"><i class="fas fa-pencil-alt"></i></a>` : ''}
                                      <button class="action-btn delete" title="Excluir anúncio"><i class="fas fa-trash-alt"></i></button>

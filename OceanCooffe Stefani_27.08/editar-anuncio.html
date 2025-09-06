@@ -24,7 +24,7 @@
         .sidebar-header .logo-img { height: 50px; }
         .user-profile-summary { text-align: center; margin-bottom: 2rem; }
         .user-profile-summary .avatar { width: 80px; height: 80px; border-radius: 50%; background-color: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; margin: 0 auto 1rem auto; }
-        .user-profile-summary h3 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+        .user-profile-summary h3 {    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; font-size: 1.1rem; font-weight: 600; margin: 0; }
         .user-profile-summary p { font-size: 0.875rem; color: var(--color-text-muted); word-break: break-all; }
         .sidebar-nav { flex-grow: 1; display: flex; flex-direction: column; }
         .sidebar-nav-main { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -37,29 +37,46 @@
         .dashboard-main h1 { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; }
         #anuncioForm { display: flex; flex-direction: column; gap: 1.5rem; }
         .form-section { background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.75rem; }
-        .form-section h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-primary); padding-bottom: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; gap: 0.75rem; margin-top: 0; }
+        .form-section h3 { font-size: 1.2rem; font-weight: 600;     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; color: var(--color-primary); padding-bottom: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; gap: 0.75rem; margin-top: 0; }
         .fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         .form-group input, .form-group textarea { width: 100%; padding: 0.875rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; font-family: var(--font-family-main); resize: vertical; box-sizing: border-box; }
         .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 71, 163, 0.1); }
-        .form-actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
+        .form-actions { display: flex; margin-top: 1rem; }
         .publicar-btn { background: var(--color-success); color: #fff; padding: 0.875rem 2rem; border-radius: 8px; border: none; font-weight: 500; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .publicar-btn:hover { background-color: #1a7444; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 71, 163, 0.2); }
         .publicar-btn:disabled { background: #adb5bd; cursor: not-allowed; transform: none; box-shadow: none; }
-        
-        /* Estilos para upload de imagem */
         .image-upload-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; }
         .image-upload-box { border: 2px dashed var(--color-border); border-radius: 10px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; background-color: var(--color-background); aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; }
         .image-upload-box:hover { border-color: var(--color-primary); background-color: #eef2f5; }
         .image-upload-box input[type="file"] { display: none; }
         .image-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .upload-placeholder { text-align: center; color: var(--color-text-muted); position: absolute; }
+        .upload-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--color-text-muted); position: absolute; }
         .upload-placeholder i { font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-primary); }
         .upload-placeholder p { font-weight: 500; font-size: 0.9rem; }
         
         /* Popups e Responsividade */
-        .popup-container, .confirmation-overlay { /* Cole os estilos de pop-up aqui */ }
+        .popup-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+        .popup { display: flex; align-items: center; min-width: 300px; padding: 16px 22px; border-radius: 8px; color: white; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); transform: translateX(calc(100% + 20px)); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: all; }
+        .popup.show { transform: translateX(0); opacity: 1; }
+        .popup i { font-size: 1.25rem; margin-right: 14px; }
+        .popup.success { background-color: #28a745; }
+        .popup.error { background-color: #dc3545; }
+        .popup.info { background-color: #0d6efd; }
+        .confirmation-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9998; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .confirmation-overlay.show { opacity: 1; pointer-events: auto; }
+        .confirmation-modal { background-color: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); opacity: 0; transition: all 0.3s ease; }
+        .confirmation-overlay.show .confirmation-modal { transform: scale(1); opacity: 1; }
+        .confirmation-modal h3 { font-size: 1.25rem; font-weight: 600; margin-top: 0; margin-bottom: 0.75rem; }
+        .confirmation-modal p { color: #6c757d; margin-bottom: 1.75rem; }
+        .confirmation-actions { display: flex; gap: 1rem; justify-content: center; }
+        .confirmation-actions button { border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 500; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; }
+        .confirmation-btn-cancel { background-color: #e9ecef; color: #495057; }
+        .confirmation-btn-cancel:hover { background-color: #dee2e6; }
+        .confirmation-btn-confirm { background-color: #dc3545; color: white; }
+        .confirmation-btn-confirm:hover { background-color: #c82333; }
+
         .mobile-header, .mobile-nav, .nav-overlay { display: none; }
         @media (max-width: 992px) {
             .dashboard-layout { grid-template-columns: 1fr; }
@@ -80,6 +97,10 @@
             .mobile-logout { margin-top: auto; }
             .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 105; }
             .nav-overlay.is-open { display: block; }
+        }
+        @media (max-width: 768px) {
+            .popup-container { width: 90%; max-width: 400px; top: 20px; left: 50%; right: auto; transform: translateX(-50%); }
+            .popup { min-width: 0; width: 100%; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -158,7 +179,7 @@
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        // Copie aqui suas funções de `showPopup` e `showConfirmationPopup`
+        // --- FUNÇÕES DE POP-UP CORRIGIDAS ---
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
         function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
         function showConfirmationPopup(title, message, options = {}) { const { confirmText = 'Sim, Sair', cancelText = 'Cancelar' } = options; return new Promise((resolve) => { const o = document.createElement('div'); o.className = 'confirmation-overlay'; o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">${cancelText}</button><button class="confirmation-btn-confirm">${confirmText}</button></div></div>`; const c = (r) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(r); }); }; o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => c(false)); o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => c(true)); document.body.appendChild(o); requestAnimationFrame(() => o.classList.add('show')); }); }
@@ -193,14 +214,12 @@
                 return;
             }
 
-            // Carregando dados do anúncio
             const { data: anuncio, error } = await supabase.from('produtos').select('*').eq('id', anuncioId).single();
             if (error || !anuncio) {
                 loadingMessage.textContent = "Erro ao carregar o anúncio.";
                 return;
             }
 
-            // Preenchendo o formulário
             document.getElementById('produto').value = anuncio.produto;
             document.getElementById('descricao').value = anuncio.descricao;
             precoMask.value = String(anuncio.preco);
@@ -209,14 +228,13 @@
             
             const previews = [document.getElementById('preview1'), document.getElementById('preview2'), document.getElementById('preview3')];
             const placeholders = [document.getElementById('placeholder1'), document.getElementById('placeholder2'), document.getElementById('placeholder3')];
-
             previews.forEach((img, index) => {
                 if(anuncio.imagens && anuncio.imagens[index]) {
                     img.src = anuncio.imagens[index];
-                    placeholders[index].style.display = 'none'; // Esconde o placeholder se a imagem existir
+                    placeholders[index].style.display = 'none';
                 } else {
                     img.src = '';
-                    placeholders[index].style.display = 'flex'; // Mostra o placeholder se não houver imagem
+                    placeholders[index].style.display = 'flex';
                 }
             });
 
@@ -246,7 +264,7 @@
 
                 try {
                     const fileInputs = [document.getElementById('imagem1'), document.getElementById('imagem2'), document.getElementById('imagem3')];
-                    const newImageUrls = [...anuncio.imagens];
+                    const newImageUrls = [...(anuncio.imagens || [])]; // Garante que seja um array
                     let uploadTasks = [];
 
                     fileInputs.forEach((input, index) => {
@@ -270,24 +288,25 @@
                         preco: parseFloat(precoMask.unmaskedValue),
                         local: document.getElementById('local').value,
                         contato: telefoneMask.unmaskedValue,
-                        imagens: newImageUrls
+                        imagens: newImageUrls.filter(Boolean) // Remove possíveis entradas vazias
                     };
 
                     const { error: updateError } = await supabase.from('produtos').update(updatedData).eq('id', anuncioId);
                     if (updateError) throw updateError;
                     
-                    alert('Anúncio atualizado com sucesso!');
-                    window.location.href = 'meus-anuncios.html';
+                    showPopup('Anúncio atualizado com sucesso!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'meus-anuncios.html';
+                    }, 2000);
 
                 } catch (error) {
-                    alert(`Erro ao salvar: ${error.message}`);
+                    showPopup(`Erro ao salvar: ${error.message}`, 'error');
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
                 }
             });
 
-            // Lógica do menu mobile e logout
             async function handleLogout(e) { e.preventDefault(); const c = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair?', { confirmText: 'Sim, Sair' }); if (c) { await supabase.auth.signOut(); window.location.replace("index.html"); } }
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
             document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
