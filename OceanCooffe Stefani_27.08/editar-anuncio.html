@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="CSS/styles.css"> 
     <script src="https://unpkg.com/imask"></script>
     <style>
-        /* Estilos copiados e adaptados de perfil.html e anuncie.html */
+        /* ESTILOS COPIADOS DIRETAMENTE DE MEUS-ANUNCIOS.HTML PARA CONSISTÊNCIA */
         :root { --color-primary: #0047a3; --color-danger: #dc3545; --color-success: #28a745; --color-text: #212529; --color-text-muted: #6c757d; --color-background: #f8f9fa; --color-surface: #ffffff; --color-border: #e9ecef; --font-family-main: 'Inter', sans-serif; }
         body { background-color: var(--color-background); font-family: var(--font-family-main); color: var(--color-text); margin: 0; }
         .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; height: 100vh; }
@@ -41,7 +41,7 @@
         .fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
-        .form-group input, .form-group textarea { width: 100%; padding: 0.875rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; font-family: var(--font-family-main); resize: vertical; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.875rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; font-family: var(--font-family-main); resize: vertical; box-sizing: border-box; }
         .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 71, 163, 0.1); }
         .form-actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
         .publicar-btn { background: var(--color-success); color: #fff; padding: 0.875rem 2rem; border-radius: 8px; border: none; font-weight: 500; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
@@ -51,16 +51,36 @@
         /* Estilos para upload de imagem */
         .image-upload-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; }
         .image-upload-box { border: 2px dashed var(--color-border); border-radius: 10px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; background-color: var(--color-background); aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; }
-        .image-upload-box:hover { border-color: var(--color-primary); }
+        .image-upload-box:hover { border-color: var(--color-primary); background-color: #eef2f5; }
         .image-upload-box input[type="file"] { display: none; }
-        .upload-placeholder { text-align: center; color: var(--color-text-muted); }
+        .image-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .upload-placeholder { text-align: center; color: var(--color-text-muted); position: absolute; }
         .upload-placeholder i { font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-primary); }
         .upload-placeholder p { font-weight: 500; font-size: 0.9rem; }
-        .image-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         
         /* Popups e Responsividade */
-        .popup-container, .confirmation-overlay, .mobile-header, .mobile-nav, .nav-overlay { /* Cole os estilos completos dessas classes aqui a partir do arquivo meus-anuncios.html */ }
-        @media (max-width: 992px) { /* Cole os estilos de responsividade completos aqui */ }
+        .popup-container, .confirmation-overlay { /* Cole os estilos de pop-up aqui */ }
+        .mobile-header, .mobile-nav, .nav-overlay { display: none; }
+        @media (max-width: 992px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .dashboard-sidebar { display: none; }
+            .dashboard-main { padding: 1.5rem; padding-top: 80px; }
+            .dashboard-main h1 { font-size: 1.5rem; }
+            .sair{text-decoration: none;}
+            .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; height: 60px; background-color: var(--color-surface); border-bottom: 1px solid var(--color-border); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
+            .mobile-header .logo-img { height: 35px; }
+            .menu-toggle { background: none; border: none; font-size: 1.5rem; color: var(--color-text); cursor: pointer; }
+            .mobile-nav { display: block; position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100vh; background-color: var(--color-surface); z-index: 110; transition: left 0.3s ease-in-out; padding: 1.5rem; display: flex; flex-direction: column; }
+            .mobile-nav.is-open { left: 0; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+            .mobile-nav .sidebar-header { padding-bottom: 1rem; margin-bottom: 1rem; }
+            .mobile-nav-links { display: flex; flex-direction: column; gap: 0.75rem; }
+            .mobile-nav-links a { color: var(--color-text-muted); text-decoration: none; font-size: 1.1rem; font-weight: 500; padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; }
+            .mobile-nav-links a:hover { background-color: var(--color-background); }
+            .mobile-nav-links a i { width: 20px; text-align: center; }
+            .mobile-logout { margin-top: auto; }
+            .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 105; }
+            .nav-overlay.is-open { display: block; }
+        }
     </style>
 </head>
 <body>
@@ -94,9 +114,9 @@
                 <div class="form-section">
                     <h3><i class="fas fa-images"></i> Imagens do Anúncio (Clique para alterar)</h3>
                     <div class="image-upload-container">
-                        <label for="imagem1" class="image-upload-box"><input type="file" id="imagem1" data-preview-id="preview1" accept="image/*"><img src="" class="image-preview" id="preview1"></label>
-                        <label for="imagem2" class="image-upload-box"><input type="file" id="imagem2" data-preview-id="preview2" accept="image/*"><img src="" class="image-preview" id="preview2"></label>
-                        <label for="imagem3" class="image-upload-box"><input type="file" id="imagem3" data-preview-id="preview3" accept="image/*"><img src="" class="image-preview" id="preview3"></label>
+                        <label for="imagem1" class="image-upload-box"><input type="file" id="imagem1" data-preview-id="preview1" accept="image/*"><img src="" class="image-preview" id="preview1"><div class="upload-placeholder" id="placeholder1"><i class="fas fa-camera"></i><p>Imagem 1</p></div></label>
+                        <label for="imagem2" class="image-upload-box"><input type="file" id="imagem2" data-preview-id="preview2" accept="image/*"><img src="" class="image-preview" id="preview2"><div class="upload-placeholder" id="placeholder2"><i class="fas fa-plus"></i><p>Imagem 2</p></div></label>
+                        <label for="imagem3" class="image-upload-box"><input type="file" id="imagem3" data-preview-id="preview3" accept="image/*"><img src="" class="image-preview" id="preview3"><div class="upload-placeholder" id="placeholder3"><i class="fas fa-plus"></i><p>Imagem 3</p></div></label>
                     </div>
                 </div>
                 <div class="form-section">
@@ -120,7 +140,16 @@
 
     <div class="nav-overlay" id="nav-overlay"></div>
     <nav class="mobile-nav" id="mobile-nav">
-        </nav>
+        <div class="sidebar-header"><h3 id="mobile-welcome-message">Olá!</h3></div>
+        <div class="mobile-nav-links">
+            <a href="perfil.html"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a>
+            <a href="meus-anuncios.html"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a>
+            <a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
+        </div>
+        <div class="mobile-logout">
+             <a href="#" id="mobile-logout-btn" class="sair"><i class="fas fa-sign-out-alt"></i><span style="margin-left: 1rem;">Sair</span></a>
+        </div>
+    </nav>
     
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
@@ -130,8 +159,10 @@
         const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Copie aqui suas funções de `showPopup` e `showConfirmationPopup`
-        function showPopup(message, type = 'info', duration = 3500) { /* ... */ }
-        function showConfirmationPopup(title, message, options={}) { /* ... */ }
+        function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
+        function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
+        function showConfirmationPopup(title, message, options = {}) { const { confirmText = 'Sim, Sair', cancelText = 'Cancelar' } = options; return new Promise((resolve) => { const o = document.createElement('div'); o.className = 'confirmation-overlay'; o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">${cancelText}</button><button class="confirmation-btn-confirm">${confirmText}</button></div></div>`; const c = (r) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(r); }); }; o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => c(false)); o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => c(true)); document.body.appendChild(o); requestAnimationFrame(() => o.classList.add('show')); }); }
+
 
         document.addEventListener("DOMContentLoaded", async () => {
             const form = document.getElementById('anuncioForm');
@@ -144,6 +175,7 @@
             if (profile) {
                 const firstName = profile.nome.split(' ')[0];
                 document.getElementById('welcome-message').textContent = firstName;
+                document.getElementById('mobile-welcome-message').textContent = `Olá, ${firstName}!`;
                 document.getElementById('user-email-sidebar').textContent = profile.email;
                 document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
             }
@@ -176,30 +208,36 @@
             telefoneMask.value = anuncio.contato;
             
             const previews = [document.getElementById('preview1'), document.getElementById('preview2'), document.getElementById('preview3')];
+            const placeholders = [document.getElementById('placeholder1'), document.getElementById('placeholder2'), document.getElementById('placeholder3')];
+
             previews.forEach((img, index) => {
                 if(anuncio.imagens && anuncio.imagens[index]) {
                     img.src = anuncio.imagens[index];
+                    placeholders[index].style.display = 'none'; // Esconde o placeholder se a imagem existir
                 } else {
-                    img.src = 'IMG/placeholder.png'; // Uma imagem placeholder
+                    img.src = '';
+                    placeholders[index].style.display = 'flex'; // Mostra o placeholder se não houver imagem
                 }
             });
 
             loadingMessage.style.display = 'none';
             form.style.display = 'flex';
 
-            // Lógica de upload e preview de imagem
             document.querySelectorAll('input[type="file"]').forEach(input => {
                 input.addEventListener('change', function(event) {
                     const file = event.target.files[0];
                     if (!file) return;
                     const previewElement = document.getElementById(this.dataset.previewId);
+                    const placeholderElement = document.getElementById(this.dataset.previewId.replace('preview', 'placeholder'));
                     const reader = new FileReader();
-                    reader.onload = e => { previewElement.src = e.target.result; };
+                    reader.onload = e => { 
+                        previewElement.src = e.target.result; 
+                        placeholderElement.style.display = 'none';
+                    };
                     reader.readAsDataURL(file);
                 });
             });
 
-            // Lógica de envio do formulário
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const btn = document.getElementById('publicarBtn');
@@ -207,9 +245,8 @@
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
 
                 try {
-                    // 1. Fazer upload de novas imagens, se houver
                     const fileInputs = [document.getElementById('imagem1'), document.getElementById('imagem2'), document.getElementById('imagem3')];
-                    const newImageUrls = [...anuncio.imagens]; // Começa com as imagens antigas
+                    const newImageUrls = [...anuncio.imagens];
                     let uploadTasks = [];
 
                     fileInputs.forEach((input, index) => {
@@ -227,7 +264,6 @@
 
                     await Promise.all(uploadTasks);
 
-                    // 2. Atualizar dados no banco de dados
                     const updatedData = {
                         produto: document.getElementById('produto').value,
                         descricao: document.getElementById('descricao').value,
@@ -240,16 +276,25 @@
                     const { error: updateError } = await supabase.from('produtos').update(updatedData).eq('id', anuncioId);
                     if (updateError) throw updateError;
                     
-                    alert('Anúncio atualizado com sucesso!'); // Substitua por showPopup
+                    alert('Anúncio atualizado com sucesso!');
                     window.location.href = 'meus-anuncios.html';
 
                 } catch (error) {
-                    alert(`Erro ao salvar: ${error.message}`); // Substitua por showPopup
+                    alert(`Erro ao salvar: ${error.message}`);
                 } finally {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
                 }
             });
+
+            // Lógica do menu mobile e logout
+            async function handleLogout(e) { e.preventDefault(); const c = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair?', { confirmText: 'Sim, Sair' }); if (c) { await supabase.auth.signOut(); window.location.replace("index.html"); } }
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+            document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
+            const menuToggle = document.getElementById('menu-toggle'), mobileNav = document.getElementById('mobile-nav'), navOverlay = document.getElementById('nav-overlay');
+            function closeMenu() { mobileNav.classList.remove('is-open'); navOverlay.classList.remove('is-open'); }
+            menuToggle.addEventListener('click', () => { mobileNav.classList.add('is-open'); navOverlay.classList.add('is-open'); });
+            navOverlay.addEventListener('click', closeMenu);
         });
     </script>
 </body>
