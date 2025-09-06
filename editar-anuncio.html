@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Anúncio - Ocean Coffee</title>
+    <link rel="icon" href="IMG/Loginho2.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="CSS/styles.css"> 
+    <script src="https://unpkg.com/imask"></script>
+    <style>
+        /* Estilos adaptados da página anuncie.html */
+        :root { --color-primary: #0047a3; --color-danger: #dc3545; --color-success: #28a745; --color-text: #212529; --color-text-muted: #6c757d; --color-background: #f8f9fa; --color-surface: #ffffff; --color-border: #e9ecef; --font-family-main: 'Inter', sans-serif; }
+        body { background-color: var(--color-background); font-family: var(--font-family-main); color: var(--color-text); margin: 0; }
+        .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; height: 100vh; }
+        .dashboard-main { overflow-y: auto; padding: 2.5rem; }
+        .dashboard-sidebar { background-color: var(--color-surface); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; padding: 1.5rem; }
+        .sidebar-header { padding: 0 0.5rem 1.5rem 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); text-align: center; }
+        .sidebar-header .logo-img { height: 50px; }
+        .user-profile-summary { text-align: center; margin-bottom: 2rem; }
+        .user-profile-summary .avatar { width: 80px; height: 80px; border-radius: 50%; background-color: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; margin: 0 auto 1rem auto; }
+        .user-profile-summary h3 { font-size: 1.1rem; font-weight: 600; margin: 0; }
+        .user-profile-summary p { font-size: 0.875rem; color: var(--color-text-muted); word-break: break-all; }
+        .sidebar-nav { flex-grow: 1; display: flex; flex-direction: column; }
+        .sidebar-nav-main { display: flex; flex-direction: column; gap: 0.5rem; }
+        .sidebar-nav-logout { margin-top: auto; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 1rem; padding: 0.875rem 1rem; border-radius: 8px; text-decoration: none; color: var(--color-text-muted); font-weight: 500; transition: all 0.2s ease; }
+        .sidebar-nav a:hover { background-color: var(--color-background); color: var(--color-text); }
+        .sidebar-nav a.active { background-color: var(--color-primary); color: white; }
+        .sidebar-nav a i { width: 20px; text-align: center; font-size: 1.1rem; }
+        #logout-btn:hover { color: var(--color-danger); background-color: #fbebee; }
+        .dashboard-main h1 { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; }
+        #anuncioForm { display: flex; flex-direction: column; gap: 1.5rem; }
+        .form-section { background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.75rem; }
+        .form-section h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-primary); padding-bottom: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; gap: 0.75rem; margin-top: 0; }
+        .fields-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.875rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-size: 1rem; transition: border-color 0.2s, box-shadow 0.2s; font-family: var(--font-family-main); resize: vertical; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 71, 163, 0.1); }
+        .form-actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
+        .publicar-btn { background: var(--color-success); color: #fff; padding: 0.875rem 2rem; border-radius: 8px; border: none; font-weight: 500; font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .publicar-btn:hover { background-color: #1a7444; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0, 71, 163, 0.2); }
+        .publicar-btn:disabled { background: #adb5bd; cursor: not-allowed; transform: none; box-shadow: none; }
+        .image-note { font-size: 0.9rem; color: var(--color-text-muted); margin-top: 1rem; text-align: center; }
+        .popup-container { position: fixed; top: 20px; right: 20px; z-index: 10000; }
+        /* Adicione aqui os demais estilos de pop-up que já possui */
+        .mobile-header, .mobile-nav, .nav-overlay { display: none; }
+        @media (max-width: 992px) { /* Estilos de responsividade */ }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header"><a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a></div>
+            <div class="user-profile-summary">
+                <div class="avatar" id="avatar-inicial"></div>
+                <h3 id="welcome-message">Carregando...</h3>
+                <p id="user-email-sidebar"></p>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="sidebar-nav-main">
+                    <a href="perfil.html"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a>
+                    <a href="meus-anuncios.html" class="active"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a>
+                    <a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
+                </div>
+                <div class="sidebar-nav-logout"><a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a></div>
+            </nav>
+        </aside>
+        
+        <main class="dashboard-main">
+            <h1>Editar Anúncio</h1>
+            <div id="loading-message"><p>Carregando dados do anúncio...</p></div>
+            <form id="anuncioForm" style="display: none;">
+                <div class="form-section">
+                    <h3><i class="fas fa-images"></i> Imagens do Anúncio</h3>
+                    <p class="image-note">A edição de imagens ainda não está disponível. Para alterar as imagens, por favor, exclua este anúncio e crie um novo.</p>
+                </div>
+                <div class="form-section">
+                    <h3><i class="fas fa-info-circle"></i> Detalhes do Anúncio</h3>
+                    <div class="fields-grid">
+                        <div class="form-group full-width"><input type="text" id="produto" placeholder="Título do anúncio" required></div>
+                        <div class="form-group full-width"><textarea id="descricao" placeholder="Descreva seu produto em detalhes..." rows="5" required></textarea></div>
+                        <div class="form-group"><input type="text" id="preco" placeholder="Preço (R$)" required></div>
+                        <div class="form-group"><input type="text" id="local" placeholder="Cidade e Estado (Ex: Campinas, SP)" required></div>
+                        <div class="form-group"><input type="text" id="telefone" placeholder="Seu telefone de contato" required></div>
+                    </div>
+                    <div class="form-actions">
+                         <button type="submit" id="publicarBtn" class="publicar-btn">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+        
+        const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // Funções de pop-up (copie do seu arquivo meus-anuncios.html)
+        function showPopup(message, type = 'info', duration = 3500) { /* ... cole sua função showPopup aqui ... */ }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const form = document.getElementById('anuncioForm');
+            const loadingMessage = document.getElementById('loading-message');
+
+            const precoInput = document.getElementById('preco');
+            const telefoneInput = document.getElementById('telefone');
+            
+            // Máscaras para os campos
+            const precoMask = IMask(precoInput, { mask: 'R$ num', blocks: { num: { mask: Number, thousandsSeparator: '.', radix: ',' } } });
+            const telefoneMask = IMask(telefoneInput, { mask: [ { mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
+
+            // Pega o ID do anúncio da URL
+            const params = new URLSearchParams(window.location.search);
+            const anuncioId = params.get('id');
+
+            if (!anuncioId) {
+                loadingMessage.textContent = "Erro: ID do anúncio não encontrado.";
+                return;
+            }
+
+            // Carrega os dados do anúncio
+            const { data, error } = await supabase
+                .from('produtos')
+                .select('*')
+                .eq('id', anuncioId)
+                .single();
+
+            if (error || !data) {
+                loadingMessage.textContent = "Erro ao carregar o anúncio. Ele pode não existir ou você não tem permissão para editá-lo.";
+                console.error(error);
+                return;
+            }
+
+            // Preenche o formulário com os dados
+            document.getElementById('produto').value = data.produto;
+            document.getElementById('descricao').value = data.descricao;
+            precoMask.value = String(data.preco);
+            document.getElementById('local').value = data.local;
+            telefoneMask.value = data.contato;
+
+            // Mostra o formulário e esconde a mensagem de carregamento
+            loadingMessage.style.display = 'none';
+            form.style.display = 'flex';
+
+            // Lógica de envio do formulário
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('publicarBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+                const updatedData = {
+                    produto: document.getElementById('produto').value,
+                    descricao: document.getElementById('descricao').value,
+                    preco: parseFloat(precoMask.unmaskedValue),
+                    local: document.getElementById('local').value,
+                    contato: telefoneMask.unmaskedValue
+                };
+
+                const { error: updateError } = await supabase
+                    .from('produtos')
+                    .update(updatedData)
+                    .eq('id', anuncioId);
+
+                if (updateError) {
+                    // Substitua por sua função showPopup
+                    alert(`Erro ao salvar: ${updateError.message}`);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+                } else {
+                    // Substitua por sua função showPopup
+                    alert('Anúncio atualizado com sucesso!');
+                    window.location.href = 'meus-anuncios.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
