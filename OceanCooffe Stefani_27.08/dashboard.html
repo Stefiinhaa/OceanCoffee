@@ -6,6 +6,7 @@
     <title>Dashboard - Administrador Ocean Coffee</title>
     <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* CSS GERAL E DO DASHBOARD */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -68,18 +69,29 @@
         .stat-card .info h3 { font-size: 1rem; color: #6c757d; margin: 0 0 0.5rem 0; }
         .stat-card .info p { font-size: 2rem; font-weight: 700; color: #333; margin: 0; }
         
-        .recent-requests {
-            margin: 0 1.5rem;
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+        .chart-container, .recent-requests {
             background-color: #fff;
             padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
         }
-        .recent-requests h2 {
+        .chart-container h2, .recent-requests h2 {
             font-size: 1.25rem;
             margin-top: 0;
             padding-bottom: 1rem;
             border-bottom: 1px solid #eee;
+        }
+        #pieChartContainer {
+            max-height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .requests-list { list-style: none; padding: 0; margin-top: 1rem; }
         .requests-list li {
@@ -106,143 +118,78 @@
 </head>
 <body>
     <div class="sidebar" id="sidebar">
-        <div>
-            <div class="logo"><a href="index.html"><img src="IMG/ocean coffee.png" alt="Logo Ocean Coffee"></a></div>
-            <div class="menu">
-                <a href="dashboard.html" class="menu-item selected">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="admin.html" class="menu-item">
-                    <i class="fas fa-users"></i>
-                    <span>Usuários</span>
-                </a>
-                <a href="Solicitações.html" class="menu-item">
-                    <i class="fas fa-inbox"></i>
-                    <span>Solicitações</span>
-                </a>
-                <a href="Aprovados.html" class="menu-item">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Aprovados</span>
-                </a>
-            </div>
         </div>
-        <div class="menu-bottom" id="sidebarToggle">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
-        </div>
-    </div>
 
     <div class="content" id="mainContent">
         <div class="header" id="mainHeader"><span>Dashboard</span></div>
         
         <div class="dashboard-grid">
-            <div class="stat-card">
-                <div class="icon-container users"><i class="fas fa-users"></i></div>
-                <div class="info">
-                    <h3>Total de Usuários</h3>
-                    <p id="total-users">0</p>
-                </div>
             </div>
-            <div class="stat-card">
-                <div class="icon-container pending"><i class="fas fa-inbox"></i></div>
-                <div class="info">
-                    <h3>Solicitações Pendentes</h3>
-                    <p id="pending-requests">0</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon-container approved"><i class="fas fa-check-circle"></i></div>
-                <div class="info">
-                    <h3>Anúncios Aprovados</h3>
-                    <p id="approved-ads">0</p>
-                </div>
-            </div>
-        </div>
 
-        <div class="recent-requests">
-            <h2>Últimas Solicitações</h2>
-            <ul class="requests-list" id="requests-list">
-                </ul>
+        <div class="dashboard-row">
+            <div class="chart-container">
+                <h2>Distribuição de Anúncios</h2>
+                <div id="pieChartContainer">
+                    <canvas id="statusPieChart"></canvas>
+                </div>
+            </div>
+            <div class="recent-requests">
+                <h2>Últimas Solicitações</h2>
+                <ul class="requests-list" id="requests-list"></ul>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+        // ... (código do Supabase client) ...
 
-        const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
-        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
-        const supabase = createClient(supabaseUrl, supabaseKey);
-
-        async function fetchDashboardStats() {
-            // Busca os dados em paralelo para mais performance
+        async function renderStatusPieChart() {
             const [
-                { count: usersCount, error: usersError },
+                { count: approvedCount, error: approvedError },
                 { count: pendingCount, error: pendingError },
-                { count: approvedCount, error: approvedError }
+                { count: rejectedCount, error: rejectedError }
             ] = await Promise.all([
-                supabase.from('usuarios').select('*', { count: 'exact', head: true }),
+                supabase.from('aprovados').select('*', { count: 'exact', head: true }),
                 supabase.from('produtos').select('*', { count: 'exact', head: true }).is('aprovado', null),
-                supabase.from('aprovados').select('*', { count: 'exact', head: true })
+                supabase.from('produtos').select('*', { count: 'exact', head: true }).eq('aprovado', false)
             ]);
 
-            if (usersError) console.error("Erro ao buscar usuários:", usersError);
-            if (pendingError) console.error("Erro ao buscar pendentes:", pendingError);
-            if (approvedError) console.error("Erro ao buscar aprovados:", approvedError);
-
-            document.getElementById('total-users').textContent = usersCount || 0;
-            document.getElementById('pending-requests').textContent = pendingCount || 0;
-            document.getElementById('approved-ads').textContent = approvedCount || 0;
-        }
-
-        async function fetchRecentRequests() {
-            const listElement = document.getElementById('requests-list');
-            listElement.innerHTML = '<li>Carregando...</li>';
-
-            const { data, error } = await supabase
-                .from('produtos')
-                .select('id, produto, nome_usuario')
-                .is('aprovado', null)
-                .order('data', { ascending: false })
-                .limit(5);
-
-            if (error) {
-                console.error("Erro ao buscar solicitações recentes:", error);
-                listElement.innerHTML = '<li>Erro ao carregar solicitações.</li>';
-                return;
-            }
-
-            if (data.length === 0) {
-                listElement.innerHTML = '<li>Nenhuma solicitação pendente no momento.</li>';
-                return;
-            }
-
-            listElement.innerHTML = '';
-            data.forEach(req => {
-                const listItem = document.createElement('li');
-                listItem.innerHTML = `
-                    <div>
-                        <p class="product-name">${req.produto}</p>
-                        <p class="user-name">por ${req.nome_usuario}</p>
-                    </div>
-                    <a href="Solicitações.html" class="view-link">Ver</a>
-                `;
-                listElement.appendChild(listItem);
+            const ctx = document.getElementById('statusPieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Aprovados', 'Pendentes', 'Rejeitados'],
+                    datasets: [{
+                        label: 'Status dos Anúncios',
+                        data: [approvedCount || 0, pendingCount || 0, rejectedCount || 0],
+                        backgroundColor: [
+                            '#28a745', // Verde para Aprovados
+                            '#ffc107', // Amarelo para Pendentes
+                            '#dc3545'  // Vermelho para Rejeitados
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
             });
         }
 
         document.addEventListener("DOMContentLoaded", () => {
             fetchDashboardStats();
             fetchRecentRequests();
+            renderStatusPieChart(); // Chama a nova função do gráfico
 
-            const sidebar = document.getElementById("sidebar");
-            const sidebarToggle = document.getElementById("sidebarToggle");
-            const mainContent = document.getElementById("mainContent");
-            const mainHeader = document.getElementById("mainHeader");
-            sidebarToggle.addEventListener("click", () => {
-                sidebar.classList.toggle("collapsed");
-                mainContent.classList.toggle("shifted");
-                mainHeader.classList.toggle("shifted");
-            });
+            // ... (resto do seu script do dashboard) ...
         });
     </script>
 </body>
