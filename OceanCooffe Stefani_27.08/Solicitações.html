@@ -179,46 +179,30 @@
     }
     
     // --- FUNÇÃO DE POP-UP DE CONFIRMAÇÃO ---
-    function showConfirmationPopup(title, message, confirmText, confirmBtnClass, options = []) {
+    function showConfirmationPopup(title, message, confirmText, confirmBtnClass) {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.className = 'modal-overlay visible';
-            let optionsHtml = '';
-            if (options.length > 0) {
-                optionsHtml += '<div style="text-align: left; margin-top: 1rem;">';
-                options.forEach(option => {
-                    optionsHtml += `<label style="display: block; margin-bottom: 0.5rem;"><input type="checkbox" name="rejection_reason" value="${option}" style="margin-right: 0.5rem;"> ${option}</label>`;
-                });
-                optionsHtml += '</div>';
-            }
+            let buttonStyle = confirmBtnClass === 'aprovar' 
+                ? 'background-color:#28a745; color:white;' 
+                : 'background-color:#dc3545; color:white;';
 
             overlay.innerHTML = `
                 <div class="modal-content" style="max-width: 420px; padding: 2rem; text-align: center;">
                     <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">${title}</h2>
-                    <p style="color: #6c757d; margin-bottom: 1rem;">${message}</p>
-                    ${optionsHtml}
-                    <div class="modal-acoes" style="justify-content: center; gap: 1rem; margin-top: 1.5rem;">
+                    <p style="color: #6c757d; margin-bottom: 2rem;">${message}</p>
+                    <div class="modal-acoes" style="justify-content: center; gap: 1rem;">
                         <button class="action-button" id="cancel-popup-btn" style="background-color: #6c757d;">Cancelar</button>
-                        <button class="action-button" id="confirm-popup-btn" style="background-color:#dc3545; color:white;">${confirmText}</button>
+                        <button class="action-button" id="confirm-popup-btn" style="${buttonStyle}">${confirmText}</button>
                     </div>
                 </div>`;
             
-            const closePopup = (result) => {
-                if (result) {
-                    const selectedReasons = Array.from(overlay.querySelectorAll('input[name="rejection_reason"]:checked')).map(cb => cb.value);
-                    resolve({ confirmed: true, reasons: selectedReasons });
-                } else {
-                    resolve({ confirmed: false, reasons: [] });
-                }
-                overlay.remove();
-            };
-
+            const closePopup = (result) => { overlay.remove(); resolve(result); };
             overlay.querySelector('#cancel-popup-btn').addEventListener('click', () => closePopup(false));
             overlay.querySelector('#confirm-popup-btn').addEventListener('click', () => closePopup(true));
             document.body.appendChild(overlay);
         });
     }
-
 
     // --- LÓGICA DA PÁGINA ---
     async function carregarSolicitacoes() {
@@ -311,31 +295,9 @@
     };
 
     window.rejeitarAnuncio = async (id) => {
-        const rejectionReasons = [
-            "Preço irreal ou ausente",
-            "Descrição inadequada ou insuficiente",
-            "Imagens de baixa qualidade ou irreais",
-            "Produto não condiz com a proposta do site",
-            "Informações de contato inválidas"
-        ];
-    
-        const { confirmed, reasons } = await showConfirmationPopup(
-            'Confirmar Rejeição',
-            'Selecione os motivos da rejeição (opcional):',
-            'Sim, Rejeitar',
-            'rejeitar',
-            rejectionReasons
-        );
-    
-        if (confirmed) {
-            const { error } = await supabase
-                .from('produtos')
-                .update({ 
-                    aprovado: false, 
-                    rejection_reasons: reasons 
-                })
-                .eq('id', id);
-    
+        const confirmado = await showConfirmationPopup('Confirmar Rejeição','Deseja rejeitar este anúncio? Ele será marcado como "Rejeitado" para o usuário.','Sim, Rejeitar','rejeitar');
+        if (confirmado) {
+            const { error } = await supabase.from('produtos').update({ aprovado: false }).eq('id', id);
             if (error) {
                 showToast('Erro ao rejeitar o anúncio.', 'error');
             } else {
@@ -345,7 +307,6 @@
             }
         }
     };
-
 
     // --- INICIALIZAÇÃO E EVENTOS ---
     document.addEventListener("DOMContentLoaded",()=>{carregarSolicitacoes(),document.getElementById("searchInput").addEventListener("input",e=>{const t=e.target.value.toLowerCase(),o=todasSolicitacoes.filter(e=>(e.produto||"").toLowerCase().includes(t)||(e.nome_usuario||"").toLowerCase().includes(t));renderizarTabela(o)});const e=document.getElementById("sidebar"),t=document.getElementById("sidebarToggle"),o=document.getElementById("mainContent"),a=document.getElementById("mainHeader");t.addEventListener("click",()=>{e.classList.toggle("collapsed"),o.classList.toggle("shifted"),a.classList.toggle("shifted")}),document.querySelector(".menu-item2").addEventListener("click",async e=>{e.preventDefault(),await supabase.auth.signOut(),window.location.replace("index.html")}),window.addEventListener("keydown",e=>{const t=document.getElementById("fullscreen-modal");t.classList.contains("visible")?("Escape"===e.key&&fecharModalFullscreen(),"ArrowRight"===e.key&&mudarImagemFullscreen(1),"ArrowLeft"===e.key&&mudarImagemFullscreen(-1)):document.getElementById("detalhes-modal").classList.contains("visible")&&"Escape"===e.key&&fecharModalDetalhes()})});
