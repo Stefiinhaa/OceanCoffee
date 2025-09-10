@@ -5,51 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nossa Equipe - Ocean Coffee</title>
     <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
-    <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ESTILOS GERAIS E DA PÁGINA DA EQUIPE */
         :root {
             --color-primary: #0047a3;
             --color-secondary: #5ce1e6;
+            --color-accent: #ba391c;
             --color-text-dark: #212529;
             --color-text-light: #6c757d;
             --color-surface: #ffffff;
             --color-background: #f8f9fa;
+            --color-border: #E2E8F0;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--color-background);
             color: var(--color-text-light);
+            margin: 0;
+        }
+        
+        /* --- HEADER PROFISSIONAL (Baseado em loja.css) --- */
+        .oc-header {
+            background-color: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            position: sticky; top: 0;
+            width: 100%; height: 80px;
+            z-index: 1000;
+        }
+        .oc-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 1.5rem;
+        }
+        .oc-header__container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            gap: 1.5rem;
+        }
+        .oc-header__logo-img { height: 48px; }
+        .oc-header-nav { display: none; } /* Escondido no mobile, aparece no desktop */
+        .oc-header-nav__link { 
+            text-decoration: none; 
+            color: var(--color-text-dark); 
+            font-weight: 600; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            transition: all 300ms ease;
+        }
+        .oc-header-nav__link:hover { 
+            background-color: var(--color-background); 
+            color: var(--color-primary); 
         }
 
+        /* --- HERO SECTION --- */
         .team-hero {
-            background: linear-gradient(rgba(0, 71, 163, 0.8), rgba(0, 71, 163, 0.8)), url('IMG/fundoteste4.png');
+            background: linear-gradient(rgba(0, 71, 163, 0.85), rgba(0, 71, 163, 0.85)), url('IMG/fundoteste4.png');
             background-size: cover;
             background-position: center;
             padding: 100px 20px;
             text-align: center;
             color: var(--color-surface);
         }
-
-        .team-hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .team-hero p {
-            font-size: 1.25rem;
-            max-width: 700px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-
-        .team-section {
-            padding: 80px 20px;
-        }
-
+        .team-hero h1 { font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 1rem; }
+        .team-hero p { font-size: 1.25rem; max-width: 700px; margin: 0 auto; opacity: 0.9; }
+        
+        /* --- SEÇÃO DA EQUIPE --- */
+        .team-section { padding: 80px 20px; }
         .team-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -57,7 +85,6 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .team-card {
             background-color: var(--color-surface);
             border-radius: 15px;
@@ -66,103 +93,82 @@
             padding: 40px 20px;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .team-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .team-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(92, 225, 230, 0.1), transparent 70%);
-            transition: transform 0.5s ease;
-            transform-origin: bottom right;
-            z-index: 1;
-        }
+        .team-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12); }
+        .team-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(92, 225, 230, 0.1), transparent 70%); transition: transform 0.5s ease; transform-origin: bottom right; z-index: 1; }
+        .team-card:hover::before { transform: scale(3); }
+        .team-card-content { position: relative; z-index: 2; }
+        .team-card img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 6px solid var(--color-surface); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
+        .team-card h3 { font-size: 1.5rem; font-weight: 600; color: var(--color-text-dark); margin-bottom: 5px; }
+        .team-card .role { font-size: 1rem; color: var(--color-primary); font-weight: 500; margin-bottom: 20px; }
+        .social-links { display: flex; justify-content: center; gap: 1.5rem; }
+        .social-links a { color: var(--color-text-light); font-size: 1.5rem; transition: color 0.3s ease, transform 0.3s ease; }
+        .social-links a:hover { color: var(--color-primary); transform: scale(1.2); }
         
-        .team-card:hover::before {
-            transform: scale(3);
-        }
+        /* --- FOOTER --- */
+        .footer { margin-top: 0; }
+        .footer-content { max-width: 1200px; }
 
-        .team-card-content {
-            position: relative;
-            z-index: 2;
+        /* --- RESPONSIVIDADE DO HEADER (baseado em responsive.css) --- */
+        .mobile-header, .mobile-nav, .nav-overlay { display: none; }
+        @media (max-width: 992px) {
+            .oc-header { display: none; } /* Esconde o header de desktop */
+            .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; height: 60px; background-color: #b23a27; color: white; position: sticky; top: 0; left: 0; width: 100%; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            .mobile-header .logo-img { height: 40px; }
+            .menu-toggle { background: none; border: none; font-size: 1.5rem; color: white; cursor: pointer; }
+            .mobile-nav { display: flex; flex-direction: column; position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100vh; background-color: #f9f5e7; z-index: 110; transition: right 0.35s ease-in-out; padding: 1.5rem; box-shadow: -3px 0 15px rgba(0,0,0,0.2); }
+            .mobile-nav.is-open { right: 0; }
+            .mobile-nav-header { padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #ddd; text-align: center; }
+            .mobile-nav-links { display: flex; flex-direction: column; gap: 0.75rem; list-style: none; padding: 0; }
+            .mobile-nav-links a { color: #3e2f1c; text-decoration: none; font-size: 1.2rem; font-weight: 600; padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; transition: background-color 0.2s ease; }
+            .mobile-nav-links a:hover { background-color: #e9e5d1; }
+            .mobile-nav-links a i { width: 20px; text-align: center; }
+            .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 105; }
+            .nav-overlay.is-open { display: block; }
         }
-
-        .team-card img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
-            border: 6px solid var(--color-surface);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .team-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-text-dark);
-            margin-bottom: 5px;
-        }
-
-        .team-card .role {
-            font-size: 1rem;
-            color: var(--color-primary);
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-        }
-
-        .social-links a {
-            color: var(--color-text-light);
-            font-size: 1.5rem;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--color-primary);
-            transform: scale(1.2);
-        }
-        
-        header.navbar {
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .footer {
-            margin-top: 0;
+        @media (min-width: 993px) {
+            .oc-header-nav { display: flex; }
         }
     </style>
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="navbar-left">
-            <a href="index.html">
-                <img class="cocatrel" src="IMG/Loginho2.png" style="width: 150px;" alt="Logo Ocean Coffee">
+    <header class="oc-header">
+        <div class="oc-container oc-header__container">
+            <a href="index.html" class="oc-header__logo-link">
+                <img class="oc-header__logo-img" src="IMG/Loginho2.png" alt="Logotipo Ocean Coffee">
             </a>
-        </div>
-        <nav class="navbar-center">
-            <a href="index.html">Voltar para a Home</a>
-        </nav>
-        <div class="navbar-right">
-             <a href="Market.html" style="color:white;"><i class="fas fa-store"></i></a>
+            <nav class="oc-header-nav">
+                <a href="index.html" class="oc-header-nav__link">Home</a>
+                <a href="Market.html" class="oc-header-nav__link">Loja</a>
+                <a href="Login.html" class="oc-header-nav__link">Login</a>
+            </nav>
         </div>
     </header>
 
+    <header class="mobile-header">
+        <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    <div class="nav-overlay" id="nav-overlay"></div>
+    <nav class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-header">
+            <img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img" style="height: 50px;">
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="index.html"><i class="fas fa-home"></i>Home</a></li>
+            <li><a href="Market.html"><i class="fas fa-store"></i>Loja</a></li>
+            <li><a href="Login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+        </ul>
+    </nav>
+
     <main>
         <section class="team-hero">
-            <h1>Conheça Nossa Equipe</h1>
+            <h1>Nossa Equipe</h1>
             <p>Os profissionais dedicados a transformar grãos de café em grandes oportunidades.</p>
         </section>
 
@@ -270,6 +276,32 @@
             </div>
         </div>
     </footer>
+    
+    <script>
+        // SCRIPT PARA O MENU HAMBURGER
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileNav = document.getElementById('mobile-nav');
+            const navOverlay = document.getElementById('nav-overlay');
+            const navLinks = document.querySelectorAll('.mobile-nav-links a');
+
+            function closeMenu() {
+                mobileNav.classList.remove('is-open');
+                navOverlay.classList.remove('is-open');
+            }
+
+            menuToggle.addEventListener('click', () => {
+                mobileNav.classList.add('is-open');
+                navOverlay.classList.add('is-open');
+            });
+
+            navOverlay.addEventListener('click', closeMenu);
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+        });
+    </script>
 
 </body>
 </html>
