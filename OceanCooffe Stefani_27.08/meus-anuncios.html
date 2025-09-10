@@ -174,6 +174,7 @@
 
         .ad-card {
             display: flex;
+            flex-wrap: wrap; /* Permite que o conteúdo quebre a linha */
             align-items: center;
             gap: 1rem;
             background-color: var(--color-surface);
@@ -229,9 +230,15 @@
             align-items: flex-end;
             gap: 0.5rem;
             flex-shrink: 0;
+            margin-left: auto;
+        }
+        
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* --- ESTILOS DOS BALÕES DE STATUS (CORRIGIDOS) --- */
         .ad-status {
             display: inline-block;
             padding: 4px 10px;
@@ -241,420 +248,43 @@
             color: white;
         }
 
-        .ad-status.aprovados {
-            background-color: var(--color-success);
-        }
+        .ad-status.aprovados { background-color: var(--color-success); }
+        .ad-status.pendentes { background-color: var(--color-warning); color: var(--color-text); }
+        .ad-status.rejeitados { background-color: var(--color-danger); }
 
-        .ad-status.pendentes {
-            background-color: var(--color-warning);
-            color: var(--color-text);
-        }
+        .ad-actions { display: flex; }
+        .action-btn { background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: 1.1rem; padding: 5px; transition: color 0.2s; }
+        .action-btn.delete:hover { color: var(--color-danger); }
 
-        .ad-status.rejeitados {
-            background-color: var(--color-danger);
-        }
-
-        .ad-actions {
-            display: flex;
-        }
-
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
+        /* --- NOVOS ESTILOS PARA MOTIVO DA REJEIÇÃO --- */
+        .rejection-reason-icon {
             color: var(--color-text-muted);
+            cursor: pointer;
             font-size: 1.1rem;
-            padding: 5px;
-            transition: color 0.2s;
-            margin-left: 23px;
         }
-
-        .action-btn.delete:hover {
+        .rejection-reason-box {
+            display: none; /* Começa escondido */
+            width: 100%;
+            background-color: #fff8f8;
+            border: 1px solid #f9c5c5;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap; /* Preserva as quebras de linha */
             color: var(--color-danger);
         }
-
-        /* FILTROS */
-        .filter-bar {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            background-color: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: 8px;
-            padding: 0.5rem;
-            flex-wrap: wrap;
+        .rejection-reason-box.visible {
+            display: block; /* Mostra a caixa */
         }
-
-        .filter-btn {
-            background-color: transparent;
-            border: none;
-            padding: 0.625rem 1rem;
-            border-radius: 6px;
-            font-family: var(--font-family-main);
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--color-text-muted);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .filter-btn:hover {
-            background-color: var(--color-background);
-            color: var(--color-text);
-        }
-
-        .filter-btn.active {
-            background-color: var(--color-primary);
-            color: white;
-        }
-
-        #no-ads-message {
-            text-align: center;
-            padding: 4rem;
-            background-color: var(--color-surface);
-            border-radius: 12px;
-            border: 1px dashed var(--color-border);
-        }
-
-        #no-ads-message h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        #no-ads-message p {
-            color: var(--color-text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        .new-ad-btn {
-            display: inline-block;
-            text-decoration: none;
-            background-color: var(--color-primary);
-            color: white;
-            padding: 0.875rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: background-color 0.2s;
-        }
-
-        .new-ad-btn:hover {
-            background-color: #00337a;
-        }
-
-        /* ESTILOS DOS POP-UPS (INTEGRADOS) */
-        .popup-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            pointer-events: none;
-        }
-
-        .popup {
-            display: flex;
-            align-items: center;
-            min-width: 300px;
-            padding: 16px 22px;
-            border-radius: 8px;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 500;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            transform: translateX(calc(100% + 20px));
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            pointer-events: all;
-        }
-
-        .popup.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .popup i {
-            font-size: 1.25rem;
-            margin-right: 14px;
-        }
-
-        .popup.success {
-            background-color: #28a745;
-        }
-
-        .popup.error {
-            background-color: #dc3545;
-        }
-
-        .popup.info {
-            background-color: #0d6efd;
-        }
-
-        .confirmation-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .confirmation-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .confirmation-modal {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            transform: scale(0.9);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .confirmation-overlay.show .confirmation-modal {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .confirmation-modal h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 0.75rem;
-        }
-
-        .confirmation-modal p {
-            color: #6c757d;
-            margin-bottom: 1.75rem;
-        }
-
-        .confirmation-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .confirmation-actions button {
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .confirmation-btn-cancel {
-            background-color: #e9ecef;
-            color: #495057;
-        }
-
-        .confirmation-btn-cancel:hover {
-            background-color: #dee2e6;
-        }
-
-        .confirmation-btn-confirm {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .confirmation-btn-confirm:hover {
-            background-color: #c82333;
-        }
-
-        /* RESPONSIVIDADE & MOBILE NAV */
-        .mobile-header,
-        .mobile-nav,
-        .nav-overlay {
-            display: none;
-        }
-
-        @media (min-width: 768px) {
-            .ad-list {
-                gap: 1.5rem;
-            }
-
-            .ad-card {
-                padding: 1.5rem;
-            }
-
-            .ad-image {
-                width: 120px;
-                height: 120px;
-            }
-
-            .ad-info h3 {
-                font-size: 1.2rem;
-            }
-
-            .ad-price {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .dashboard-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-sidebar {
-                display: none;
-            }
-
-            .dashboard-main {
-                padding: 1.5rem;
-                padding-top: 80px;
-            }
-
-            .page-header h1 {
-                font-size: 1.5rem;
-            }
-
-            .sair {
-                text-decoration: none;
-            }
-
-            .mobile-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 0 1.5rem;
-                height: 60px;
-                background-color: var(--color-surface);
-                border-bottom: 1px solid var(--color-border);
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                z-index: 100;
-            }
-
-            .mobile-header .logo-img {
-                height: 35px;
-            }
-
-            .menu-toggle {
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: var(--color-text);
-                cursor: pointer;
-            }
-
-            .mobile-nav {
-                display: block;
-                position: fixed;
-                top: 0;
-                left: -100%;
-                width: 80%;
-                max-width: 300px;
-                height: 100vh;
-                background-color: var(--color-surface);
-                z-index: 110;
-                transition: left 0.3s ease-in-out;
-                padding: 1.5rem;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .mobile-nav.is-open {
-                left: 0;
-                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
-            }
-
-            .mobile-nav .sidebar-header {
-                padding-bottom: 1rem;
-                margin-bottom: 1rem;
-            }
-
-            .mobile-nav-links {
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .mobile-nav-links a {
-                color: var(--color-text-muted);
-                text-decoration: none;
-                font-size: 1.1rem;
-                font-weight: 500;
-                padding: 1rem;
-                border-radius: 8px;
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .mobile-nav-links a:hover {
-                background-color: var(--color-background);
-            }
-
-            .mobile-nav-links a i {
-                width: 20px;
-                text-align: center;
-            }
-
-            .mobile-logout {
-                margin-top: auto;
-            }
-
-            .nav-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 105;
-            }
-
-            .nav-overlay.is-open {
-                display: block;
-            }
-        }
+        
+        /* ... (restante do seu CSS) ... */
     </style>
 </head>
 
 <body>
-    <div class="dashboard-layout">
-        <aside class="dashboard-sidebar">
-            <div class="sidebar-header"><a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee"
-                        class="logo-img"></a></div>
-            <div class="user-profile-summary">
-                <div class="avatar" id="avatar-inicial"></div>
-                <h3 id="welcome-message">Carregando...</h3>
-                <p id="user-email-sidebar"></p>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="sidebar-nav-main">
-                    <a href="perfil.html"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a>
-                    <a href="meus-anuncios.html" class="active"><i class="fas fa-bullhorn"></i><span>Meus
-                            Anúncios</span></a>
-                    <a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
-                </div>
-                <div class="sidebar-nav-logout"><a href="#" id="logout-btn"><i
-                            class="fas fa-sign-out-alt"></i><span>Sair</span></a></div>
-            </nav>
-        </aside>
-
-        <main class="dashboard-main">
+    <main class="dashboard-main">
             <header class="mobile-header">
                 <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
                 <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
@@ -682,22 +312,6 @@
         </main>
     </div>
 
-    <div class="nav-overlay" id="nav-overlay"></div>
-    <nav class="mobile-nav" id="mobile-nav">
-        <div class="sidebar-header">
-            <h3 id="mobile-welcome-message">Olá!</h3>
-        </div>
-        <div class="mobile-nav-links">
-            <a href="perfil.html"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a>
-            <a href="meus-anuncios.html"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a>
-            <a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
-        </div>
-        <div class="mobile-logout">
-            <a href="#" id="mobile-logout-btn" class="sair"><i class="fas fa-sign-out-alt"></i><span
-                    style="margin-left: 1rem;">Sair</span></a>
-        </div>
-    </nav>
-
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
 
@@ -705,210 +319,90 @@
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        async function protegerPagina() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) { window.location.replace('Login.html'); }
-        }
-        protegerPagina();
-
-        // --- FUNÇÕES DE POP-UP E CONFIRMAÇÃO (IDÊNTICAS AO PERFIL.HTML) ---
-        function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
-        function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
-        function showConfirmationPopup(title, message, options = {}) {
-            const { confirmText = 'Sim', cancelText = 'Cancelar' } = options;
-            return new Promise((resolve) => {
-                const o = document.createElement('div');
-                o.className = 'confirmation-overlay';
-                o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">${cancelText}</button><button class="confirmation-btn-confirm">${confirmText}</button></div></div>`;
-                const close = (result) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(result); }); };
-                o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => close(false));
-                o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => close(true));
-                document.body.appendChild(o);
-                requestAnimationFrame(() => o.classList.add('show'));
-            });
-        }
-
+        // ... (suas funções de protegerPagina, pop-ups, etc.) ...
 
         document.addEventListener("DOMContentLoaded", async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
-
-            const { data: profile } = await supabase.from("usuarios").select("nome, email").eq("user_id", user.id).single();
-            if (profile) {
-                const firstName = profile.nome.split(' ')[0];
-                document.getElementById('welcome-message').textContent = firstName;
-                document.getElementById('mobile-welcome-message').textContent = `Olá, ${firstName}!`;
-                document.getElementById('user-email-sidebar').textContent = profile.email;
-                document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
-            }
+            // ... (código de inicialização e busca de perfil) ...
 
             const adList = document.getElementById('ad-list');
-            const noAdsMessage = document.getElementById('no-ads-message');
-            const filterBar = document.getElementById('filter-bar');
             let allUserAds = [];
 
             async function loadAds() {
-                adList.innerHTML = '<p style="text-align: center; padding: 2rem;">Carregando...</p>';
-                try {
-                    const { data: approvedAds, error: approvedError } = await supabase.from('aprovados').select('*').eq('user_id', user.id);
-                    if (approvedError) throw approvedError;
-
-                    const { data: otherAds, error: otherError } = await supabase.from('produtos').select('*').eq('user_id', user.id);
-                    if (otherError) throw otherError;
-
-                    const mappedApproved = (approvedAds || []).map(ad => ({
-                        ...ad, status: 'aprovados', dataTable: 'aprovados', date: ad.data_aprovacao
-                    }));
-
-                    const mappedOthers = (otherAds || []).map(ad => ({
-                        ...ad, status: ad.aprovado === false ? 'rejeitados' : 'pendentes', dataTable: 'produtos', date: ad.data
-                    }));
-
-                    allUserAds = [...mappedApproved, ...mappedOthers];
-                    allUserAds.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                    const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
-                    filterAndRenderAds(currentFilter);
-
-                } catch (error) {
-                    console.error("Erro ao carregar anúncios:", error);
-                    showPopup('Erro ao carregar seus anúncios.', 'error');
-                    adList.innerHTML = '<p style="text-align: center; padding: 2rem; color: red;">Falha ao carregar anúncios.</p>';
-                }
-            }
-
-            function filterAndRenderAds(filter) {
-                let adsToRender = allUserAds;
-                if (filter !== 'todos') {
-                    adsToRender = allUserAds.filter(ad => ad.status === filter);
-                }
-                renderAds(adsToRender, filter);
+                // ... (código para buscar anúncios)
+                // IMPORTANTE: Certifique-se que o select busca a coluna 'motivo_rejeicao'
+                const { data: otherAds, error: otherError } = await supabase.from('produtos').select('*, motivo_rejeicao').eq('user_id', user.id);
+                // ... (resto da função)
             }
 
             function renderAds(ads, filter) {
                 adList.innerHTML = '';
-
                 if (ads.length === 0) {
-                    noAdsMessage.style.display = 'block';
-                    const filterText = { todos: 'anúncios', aprovados: 'anúncios aprovados', pendentes: 'anúncios pendentes', rejeitados: 'anúncios rejeitados' };
-                    noAdsMessage.querySelector('h2').textContent = `Você não tem ${filterText[filter]}.`;
+                    // ... (lógica para "nenhum anúncio")
                 } else {
-                    noAdsMessage.style.display = 'none';
                     ads.forEach(ad => {
-                        const statusTextMap = { aprovados: 'Aprovado', pendentes: 'Pendente', rejeitados: 'Rejeitado' };
-                        const dateTextMap = { aprovados: 'Aprovado em', pendentes: 'Enviado em', rejeitados: 'Enviado em' };
-
-                        // *** CORREÇÃO APLICADA AQUI ***
-                        const statusClass = ad.status; // Usar o status mapeado diretamente
-                        const statusText = statusTextMap[statusClass];
-                        const dateText = dateTextMap[statusClass];
-
                         const adCard = document.createElement('div');
                         adCard.className = 'ad-card';
                         adCard.setAttribute('data-id', ad.id);
                         adCard.setAttribute('data-table', ad.dataTable);
 
-                        let rejectionReasonsHtml = '';
-                        if (ad.status === 'rejeitados' && ad.rejection_reasons && ad.rejection_reasons.length > 0) {
-                            rejectionReasonsHtml = `
-                                <div style="font-size: 0.8rem; color: #dc3545; margin-top: 0.5rem;">
-                                    <strong>Motivos da rejeição:</strong>
-                                    <ul style="margin: 0.25rem 0 0 1rem; padding: 0; list-style-type: circle;">
-                                        ${ad.rejection_reasons.map(reason => `<li>${reason}</li>`).join('')}
-                                    </ul>
-                                </div>`;
-                        }
+                        const statusClass = ad.status;
+                        const statusText = { aprovados: 'Aprovado', pendentes: 'Pendente', rejeitados: 'Rejeitado' }[statusClass];
+                        const dateText = { aprovados: 'Aprovado em', pendentes: 'Enviado em', rejeitados: 'Enviado em' }[statusClass];
+                        
+                        // Lógica para criar o ícone de motivo e a caixa de mensagem
+                        const reasonIconHtml = ad.status === 'rejeitados' && ad.motivo_rejeicao 
+                            ? `<i class="fas fa-question-circle rejection-reason-icon" title="Ver motivo da rejeição"></i>` 
+                            : '';
+                        
+                        const reasonBoxHtml = ad.status === 'rejeitados' && ad.motivo_rejeicao
+                            ? `<div class="rejection-reason-box">${ad.motivo_rejeicao}</div>`
+                            : '';
 
                         adCard.innerHTML = `
-                        <img src="${ad.imagens[0]}" alt="${ad.produto}" class="ad-image">
-                        <div class="ad-info">
-                            <h3>${ad.produto}</h3>
-                            <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
-                            <p>${dateText}: ${new Date(ad.date).toLocaleDateString('pt-BR')}</p>
-                             ${rejectionReasonsHtml}
-                        </div>
-                        <div class="ad-status-actions">
-                            <span class="ad-status ${statusClass}">${statusText}</span>
-
-                            <div class="ad-actions">
-                          ${ad.status === 'pendentes' ? `<a href="editar-anuncio.html?id=${ad.id}" class="action-btn edit" title="Editar anúncio"><i class="fas fa-pencil-alt"></i></a>` : ''}
-                                     <button class="action-btn delete" title="Excluir anúncio"><i class="fas fa-trash-alt"></i></button>
+                            <img src="${ad.imagens[0]}" alt="${ad.produto}" class="ad-image">
+                            <div class="ad-info">
+                                <h3>${ad.produto}</h3>
+                                <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
+                                <p>${dateText}: ${new Date(ad.date).toLocaleDateString('pt-BR')}</p>
                             </div>
-                        </div>
-                    `;
+                            <div class="ad-status-actions">
+                                <div class="status-container">
+                                    <span class="ad-status ${statusClass}">${statusText}</span>
+                                    ${reasonIconHtml}
+                                </div>
+                                <div class="ad-actions">
+                                    ${ad.status === 'pendentes' ? `<a href="editar-anuncio.html?id=${ad.id}" class="action-btn edit" title="Editar anúncio"><i class="fas fa-pencil-alt"></i></a>` : ''}
+                                    <button class="action-btn delete" title="Excluir anúncio"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            ${reasonBoxHtml}
+                        `;
                         adList.appendChild(adCard);
                     });
                 }
             }
 
-            filterBar.addEventListener('click', (e) => {
-                if (e.target.classList.contains('filter-btn')) {
-                    document.querySelector('.filter-btn.active').classList.remove('active');
-                    e.target.classList.add('active');
-                    filterAndRenderAds(e.target.dataset.filter);
-                }
-            });
-
             adList.addEventListener('click', async (e) => {
+                // Lógica para o ícone de motivo
+                if (e.target.classList.contains('rejection-reason-icon')) {
+                    const adCard = e.target.closest('.ad-card');
+                    const reasonBox = adCard.querySelector('.rejection-reason-box');
+                    if (reasonBox) {
+                        reasonBox.classList.toggle('visible');
+                    }
+                    return;
+                }
+
+                // Lógica para o botão de deletar (mantida a mesma)
                 const deleteButton = e.target.closest('.delete');
                 if (deleteButton) {
-                    const adCard = deleteButton.closest('.ad-card');
-                    const adId = adCard.dataset.id;
-                    const adTable = adCard.dataset.table;
-
-                    const confirmed = await showConfirmationPopup('Excluir Anúncio', 'Tem certeza que deseja excluir este anúncio? Esta ação não pode ser desfeita.', { confirmText: 'Sim, Excluir' });
-
-                    if (confirmed) {
-                        const { error: dbError } = await supabase.from(adTable).delete().eq('id', adId);
-
-                        if (dbError) {
-                            showPopup(`Erro ao excluir o anúncio: ${dbError.message}`, 'error');
-                            console.error("Erro Supabase:", dbError);
-                            return;
-                        }
-
-                        showPopup('Anúncio excluído com sucesso!', 'success');
-
-                        // Remove o anúncio do cache local
-                        allUserAds = allUserAds.filter(ad => !(ad.id == adId && ad.dataTable == adTable));
-
-                        // Re-renderiza a lista a partir do cache atualizado
-                        const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
-                        filterAndRenderAds(currentFilter);
-                    }
+                    // ... seu código de exclusão ...
                 }
             });
 
-            async function handleLogout(e) {
-                e.preventDefault();
-                const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?', { confirmText: 'Sim, Sair' });
-                if (userConfirmed) {
-                    showPopup("Saindo...", 'info', 1500);
-                    await supabase.auth.signOut();
-                    setTimeout(() => window.location.replace("index.html"), 500);
-                }
-            }
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
-            document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
-
-            const menuToggle = document.getElementById('menu-toggle');
-            const mobileNav = document.getElementById('mobile-nav');
-            const navOverlay = document.getElementById('nav-overlay');
-
-            function closeMenu() {
-                mobileNav.classList.remove('is-open');
-                navOverlay.classList.remove('is-open');
-            }
-
-            menuToggle.addEventListener('click', () => {
-                mobileNav.classList.add('is-open');
-                navOverlay.classList.add('is-open');
-            });
-            navOverlay.addEventListener('click', closeMenu);
-
+            // ... (resto do seu script com `handleLogout`, menu mobile, etc.) ...
             await loadAds();
         });
     </script>
 </body>
-
 </html>
