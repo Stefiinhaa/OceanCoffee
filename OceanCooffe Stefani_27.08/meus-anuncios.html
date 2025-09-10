@@ -808,12 +808,24 @@
                         adCard.setAttribute('data-id', ad.id);
                         adCard.setAttribute('data-table', ad.dataTable);
 
+                        let rejectionReasonsHtml = '';
+                        if (ad.status === 'rejeitados' && ad.rejection_reasons && ad.rejection_reasons.length > 0) {
+                            rejectionReasonsHtml = `
+                                <div style="font-size: 0.8rem; color: #dc3545; margin-top: 0.5rem;">
+                                    <strong>Motivos da rejeição:</strong>
+                                    <ul style="margin: 0.25rem 0 0 1rem; padding: 0; list-style-type: circle;">
+                                        ${ad.rejection_reasons.map(reason => `<li>${reason}</li>`).join('')}
+                                    </ul>
+                                </div>`;
+                        }
+
                         adCard.innerHTML = `
                         <img src="${ad.imagens[0]}" alt="${ad.produto}" class="ad-image">
                         <div class="ad-info">
                             <h3>${ad.produto}</h3>
                             <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
                             <p>${dateText}: ${new Date(ad.date).toLocaleDateString('pt-BR')}</p>
+                             ${rejectionReasonsHtml}
                         </div>
                         <div class="ad-status-actions">
                             <span class="ad-status ${statusClass}">${statusText}</span>
