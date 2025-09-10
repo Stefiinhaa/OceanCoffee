@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipe de Desenvolvimento - Ocean Coffee</title>
+    <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
+    <link rel="stylesheet" href="CSS/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f9f5e7;
+        }
+        .team-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .team-section h1 {
+            font-family: Garamond, serif;
+            font-size: 48px;
+            color: #3e2f1c;
+            margin-bottom: 20px;
+        }
+        .team-section .subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            color: #6b6b6b;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .team-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        .team-card img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid #5ce1e6;
+        }
+        .team-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3e2f1c;
+            margin-bottom: 5px;
+        }
+        .team-card .role {
+            font-size: 1rem;
+            color: #ba391c;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        .team-card .bio {
+            font-size: 0.95rem;
+            color: #6b6b6b;
+            margin-bottom: 20px;
+        }
+        .social-links a {
+            color: #3e2f1c;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .social-links a:hover {
+            color: #ba391c;
+        }
+
+        /* Adicione o header e footer para consistência */
+        header.navbar {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .footer {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">
+                <img class="cocatrel" src="IMG/Loginho2.png" style="width: 150px;" alt="Logo Ocean Coffee">
+            </a>
+        </div>
+        <nav class="navbar-center">
+            <a href="index.html">Voltar para a Home</a>
+        </nav>
+        <div class="navbar-right">
+             <a href="Market.html" style="color:white;"><i class="fas fa-store"></i></a>
+        </div>
+    </header>
+
+    <main>
+        <section class="team-section">
+            <h1>Nossa Equipe</h1>
+            <p class="subtitle">Conheça os desenvolvedores por trás do projeto Ocean Coffee.</p>
+            
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="IMG/user.png" alt="Foto da Stefani">
+                    <h3>Stefani</h3>
+                    <p class="role">Designer UI/UX & Gerente de Projeto</p>
+                    <p class="bio">Responsável pela identidade visual, experiência do usuário e pela gestão completa do projeto, garantindo a coesão e qualidade final.</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <img src="IMG/gabriel.png" alt="Foto do Gabriel">
+                    <h3>Gabriel</h3>
+                    <p class="role">Desenvolvedor Front-End</p>
+                    <p class="bio">Especialista em transformar designs em interfaces interativas e responsivas, focando na usabilidade e performance do lado do cliente.</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <img src="IMG/jorge.png" alt="Foto do Jorge">
+                    <h3>Jorge</h3>
+                    <p class="role">Engenheiro de Backend & Banco de Dados</p>
+                    <p class="bio">Arquiteto da lógica do servidor e da estrutura do banco de dados, garantindo que todas as informações sejam processadas de forma segura e eficiente.</p>
+                    <div class="social-links">
+                        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column footer-about">
+                <img src="IMG/Logo.png" alt="Logo Ocean Coffee" class="footer-logo">
+                <p>&copy; 2025 Ocean Coffee. <br>Todos os direitos reservados.</p>
+            </div>
+            <div class="footer-column footer-links">
+                <h4>Links Rápidos</h4>
+                <a href="index.html#NossoCafe">Nosso Café</a>
+                <a href="index.html#Serviços">Serviços</a>
+                <a href="index.html#Sobre">Sobre</a>
+            </div>
+            <div class="footer-column footer-social">
+                <h4>Siga-nos</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
