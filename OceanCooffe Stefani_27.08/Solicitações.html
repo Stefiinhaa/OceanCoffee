@@ -270,7 +270,9 @@
         document.getElementById('detalhes-modal').classList.add('visible');
     };
     
-    window.fecharModalDetalhes = () => document.getElementById('detalhes-modal').classList.remove('visible');
+    const detalhesModal = document.getElementById('detalhes-modal');
+    detalhesModal.querySelector('.modal-close-btn').addEventListener('click', () => detalhesModal.classList.remove('visible'));
+    
     window.mudarImagemModal=(e,t)=>{
         e.stopPropagation();
         carrosselAtualIndex=(carrosselAtualIndex+t+imagensCarrosselAtual.length)%imagensCarrosselAtual.length;
@@ -307,7 +309,7 @@
     rejectionModal.querySelector('.btn-cancel').addEventListener('click', () => rejectionModal.classList.remove('visible'));
 
     window.rejeitarAnuncio = (id) => {
-        fecharModalDetalhes();
+        detalhesModal.classList.remove('visible');
         rejectionModal.classList.add('visible');
         rejectionForm.dataset.anuncioId = id;
     };
@@ -334,7 +336,10 @@
         if (customMessage) { finalMessage += `\nMensagem do administrador: ${customMessage}`; }
         
         try {
-            const { error } = await supabase.from('produtos').update({ aprovado: false, motivo_rejeicao: finalMessage }).eq('id', anuncioId);
+            const { error } = await supabase
+                .from('produtos')
+                .update({ aprovado: false, motivo_rejeicao: finalMessage, rejeicao_vista: false })
+                .eq('id', anuncioId);
             if (error) throw error;
             
             showToast('Anúncio rejeitado com sucesso!', 'success');
@@ -354,7 +359,7 @@
             const { data: produto, error: fetchError } = await supabase.from('produtos').select('*').eq('id', id).single();
             if (fetchError || !produto) throw new Error(fetchError?.message || "Solicitação não encontrada.");
             
-            const { id: oldId, aprovado, data, ...dadosParaAprovados } = produto;
+            const { id: oldId, aprovado, data, motivo_rejeicao, rejeicao_vista, ...dadosParaAprovados } = produto;
             dadosParaAprovados.data_aprovacao = new Date().toISOString();
             const { error: insertError } = await supabase.from('aprovados').insert([dadosParaAprovados]);
             if (insertError) throw new Error(insertError.message || "Erro ao mover para aprovados.");
@@ -363,7 +368,7 @@
             if (deleteError) throw new Error("Erro ao finalizar aprovação.");
             
             showToast(`Anúncio aprovado com sucesso!`, 'success');
-            fecharModalDetalhes();
+            detalhesModal.classList.remove('visible');
             await carregarSolicitacoes();
         } catch (error) {
             showToast(`Erro ao aprovar: ${error.message}`, 'error');
@@ -386,6 +391,7 @@
             sidebar.classList.toggle("collapsed");
             mainContent.classList.toggle("shifted");
             mainHeader.classList.toggle("shifted");
+            localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
         });
         document.querySelector(".menu-item2").addEventListener("click", async e => {
             e.preventDefault();
