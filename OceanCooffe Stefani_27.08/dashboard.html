@@ -17,15 +17,16 @@
         .logo img { max-width: 150px; height: auto; transition: opacity 0.2s ease, width 0.3s ease; }
         .sidebar.collapsed .logo img { opacity: 0; width: 0; pointer-events: none; }
         .menu { display: flex; flex-direction: column; gap: 5px; padding: 20px 0; flex-grow: 1; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 25px; border-radius: 0 25px 25px 0; color: #333; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; white-space: nowrap; overflow: hidden; }
-        .menu-item span { transition: opacity 0.3s ease; }
-        .sidebar.collapsed .menu-item { justify-content: center; padding: 12px 0; }
-        .sidebar.collapsed .menu-item span { opacity: 0; width: 0; }
-        .menu-item svg { width: 22px; height: 22px; fill: #333; transition: fill 0.3s ease; flex-shrink: 0; }
-        .menu-item:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; transform: translateX(5px); }
-        .sidebar.collapsed .menu-item:hover { transform: none; }
+        .menu-item, .menu-item2 { display: flex; align-items: center; gap: 12px; padding: 12px 25px; border-radius: 0 25px 25px 0; color: #333; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; white-space: nowrap; overflow: hidden; }
+        .menu-item span, .menu-item2 span { transition: opacity 0.3s ease; }
+        .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item2 { justify-content: center; padding: 12px 0; }
+        .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item2 span { opacity: 0; width: 0; }
+        .menu-item svg, .menu-item2 svg { width: 22px; height: 22px; fill: #333; transition: fill 0.3s ease; flex-shrink: 0; }
+        .menu-item:hover, .menu-item2:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; transform: translateX(5px); }
+        .sidebar.collapsed .menu-item:hover, .sidebar.collapsed .menu-item2:hover { transform: none; }
         .menu-item.selected { background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2); }
         .menu-item.selected svg { fill: white; }
+        .menu-item2 { margin-top: auto; }
         .menu-bottom { background-color: #0cc0df; text-align: center; padding: 15px 0; border-top: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; transition: background 0.3s ease; }
         .menu-bottom:hover { background-color: #08a3bd; }
         .menu-bottom svg { width: 28px; height: 28px; fill: #333; }
@@ -118,13 +119,62 @@
 </head>
 <body>
     <div class="sidebar" id="sidebar">
+        <div>
+            <div class="logo"><a href="index.html"><img src="IMG/ocean coffee.png" alt="Logo Ocean Coffee"></a></div>
+            <div class="menu">
+                <a href="dashboard.html" class="menu-item selected">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="admin.html" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Usuários</span>
+                </a>
+                <a href="Solicitações.html" class="menu-item">
+                    <i class="fas fa-inbox"></i>
+                    <span>Solicitações</span>
+                </a>
+                <a href="Aprovados.html" class="menu-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Aprovados</span>
+                </a>
+                <a href="#" class="menu-item menu-item2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                    <span>Logout</span>
+                </a>
+            </div>
         </div>
+        <div class="menu-bottom" id="sidebarToggle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
+        </div>
+    </div>
 
     <div class="content" id="mainContent">
         <div class="header" id="mainHeader"><span>Dashboard</span></div>
         
         <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="icon-container users"><i class="fas fa-users"></i></div>
+                <div class="info">
+                    <h3>Total de Usuários</h3>
+                    <p id="total-users">0</p>
+                </div>
             </div>
+            <div class="stat-card">
+                <div class="icon-container pending"><i class="fas fa-inbox"></i></div>
+                <div class="info">
+                    <h3>Solicitações Pendentes</h3>
+                    <p id="pending-requests">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon-container approved"><i class="fas fa-check-circle"></i></div>
+                <div class="info">
+                    <h3>Anúncios Aprovados</h3>
+                    <p id="approved-ads">0</p>
+                </div>
+            </div>
+        </div>
 
         <div class="dashboard-row">
             <div class="chart-container">
@@ -135,14 +185,74 @@
             </div>
             <div class="recent-requests">
                 <h2>Últimas Solicitações</h2>
-                <ul class="requests-list" id="requests-list"></ul>
+                <ul class="requests-list" id="requests-list">
+                    </ul>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
-        // ... (código do Supabase client) ...
+
+        const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        async function fetchDashboardStats() {
+            const [
+                { count: usersCount, error: usersError },
+                { count: pendingCount, error: pendingError },
+                { count: approvedCount, error: approvedError }
+            ] = await Promise.all([
+                supabase.from('usuarios').select('*', { count: 'exact', head: true }),
+                supabase.from('produtos').select('*', { count: 'exact', head: true }).is('aprovado', null),
+                supabase.from('aprovados').select('*', { count: 'exact', head: true })
+            ]);
+
+            if (usersError) console.error("Erro ao buscar usuários:", usersError);
+            if (pendingError) console.error("Erro ao buscar pendentes:", pendingError);
+            if (approvedError) console.error("Erro ao buscar aprovados:", approvedError);
+
+            document.getElementById('total-users').textContent = usersCount || 0;
+            document.getElementById('pending-requests').textContent = pendingCount || 0;
+            document.getElementById('approved-ads').textContent = approvedCount || 0;
+        }
+
+        async function fetchRecentRequests() {
+            const listElement = document.getElementById('requests-list');
+            listElement.innerHTML = '<li>Carregando...</li>';
+
+            const { data, error } = await supabase
+                .from('produtos')
+                .select('id, produto, nome_usuario')
+                .is('aprovado', null)
+                .order('data', { ascending: false })
+                .limit(5);
+
+            if (error) {
+                console.error("Erro ao buscar solicitações recentes:", error);
+                listElement.innerHTML = '<li>Erro ao carregar solicitações.</li>';
+                return;
+            }
+
+            if (data.length === 0) {
+                listElement.innerHTML = '<li>Nenhuma solicitação pendente no momento.</li>';
+                return;
+            }
+
+            listElement.innerHTML = '';
+            data.forEach(req => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <div>
+                        <p class="product-name">${req.produto}</p>
+                        <p class="user-name">por ${req.nome_usuario}</p>
+                    </div>
+                    <a href="Solicitações.html" class="view-link">Ver</a>
+                `;
+                listElement.appendChild(listItem);
+            });
+        }
 
         async function renderStatusPieChart() {
             const [
@@ -154,6 +264,11 @@
                 supabase.from('produtos').select('*', { count: 'exact', head: true }).is('aprovado', null),
                 supabase.from('produtos').select('*', { count: 'exact', head: true }).eq('aprovado', false)
             ]);
+
+            if (approvedError || pendingError || rejectedError) {
+                console.error("Erro ao buscar dados para o gráfico");
+                return;
+            }
 
             const ctx = document.getElementById('statusPieChart').getContext('2d');
             new Chart(ctx, {
@@ -187,9 +302,24 @@
         document.addEventListener("DOMContentLoaded", () => {
             fetchDashboardStats();
             fetchRecentRequests();
-            renderStatusPieChart(); // Chama a nova função do gráfico
+            renderStatusPieChart();
 
-            // ... (resto do seu script do dashboard) ...
+            const sidebar = document.getElementById("sidebar");
+            const sidebarToggle = document.getElementById("sidebarToggle");
+            const mainContent = document.getElementById("mainContent");
+            const mainHeader = document.getElementById("mainHeader");
+            sidebarToggle.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                mainContent.classList.toggle("shifted");
+                mainHeader.classList.toggle("shifted");
+            });
+
+            // Lógica de logout
+            document.querySelector(".menu-item2").addEventListener("click", async (e) => {
+                e.preventDefault();
+                await supabase.auth.signOut();
+                window.location.replace("index.html");
+            });
         });
     </script>
 </body>
