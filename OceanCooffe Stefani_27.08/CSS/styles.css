@@ -318,11 +318,13 @@ margin-left: 100px;
 }
 
 .container {
-  display: flex;
-  align-items: center; 
-  gap: 8%; 
-  padding: 20px;
-  margin-left:30px ;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8%;
+    padding: 20px;
+    justify-content: center;
+    margin-left: 30px;
 }
 
 .left-card {
@@ -505,7 +507,7 @@ text-align: center;
   display: flex;
   justify-content: space-evenly; 
   gap: 20px; 
-  flex-wrap: nowrap; 
+  flex-wrap:wrap; 
 }
 
 .contorno {
@@ -975,4 +977,10 @@ text-align: center;
     display: inline-block;
     font-size: 1.1rem;
     padding: 14px 32px;
+}
+
+@media (max-width: 768px) {
+    .services-section{
+        padding: 0;
+    }
 }
