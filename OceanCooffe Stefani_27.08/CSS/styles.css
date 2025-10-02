@@ -709,7 +709,7 @@ text-align: center;
 }
 
 .anuncie-btn p{
-  margin-left: 17px;
+      margin-left: 5px;
 }
 
 .icon {
@@ -982,5 +982,8 @@ text-align: center;
 @media (max-width: 768px) {
     .services-section{
         padding: 0;
+    }
+    .carousel-container {
+      height: 219px;
     }
 }

@@ -1,12 +1,15 @@
 /* --- ESTILOS PARA UMA EXPERIÊNCIA MOBILE PROFISSIONAL --- */
 
 /* Regra global para evitar que o site arraste para o lado */
-html, body {
+html,
+body {
     overflow-x: hidden;
 }
 
 /* Ocultar o menu mobile no desktop */
-.mobile-header, .mobile-nav, .nav-overlay {
+.mobile-header,
+.mobile-nav,
+.nav-overlay {
     display: none;
 }
 
@@ -18,8 +21,8 @@ html, body {
     .navbar {
         display: none !important;
     }
-  
-    
+
+
     /* --- Mostrar e estilizar o novo cabeçalho mobile --- */
     .mobile-header {
         display: flex;
@@ -34,13 +37,13 @@ html, body {
         left: 0;
         width: 100%;
         z-index: 100;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    
+
     .mobile-header .logo-img {
         height: 40px;
     }
-    
+
     .menu-toggle {
         background: none;
         border: none;
@@ -55,28 +58,28 @@ html, body {
         flex-direction: column;
         position: fixed;
         top: 0;
-        right: -100%; 
+        right: -100%;
         width: 80%;
         max-width: 300px;
         height: 100vh;
-        background-color: #f9f5e7; 
+        background-color: #f9f5e7;
         z-index: 110;
         transition: right 0.35s ease-in-out;
         padding: 1.5rem;
-        box-shadow: -3px 0 15px rgba(0,0,0,0.2);
+        box-shadow: -3px 0 15px rgba(0, 0, 0, 0.2);
     }
-    
+
     .mobile-nav.is-open {
-        right: 0; 
+        right: 0;
     }
-    
+
     .mobile-nav-header {
         padding-bottom: 1rem;
         margin-bottom: 1rem;
         border-bottom: 1px solid #ddd;
         text-align: center;
     }
-    
+
     .mobile-nav-links {
         display: flex;
         flex-direction: column;
@@ -84,9 +87,9 @@ html, body {
         list-style: none;
         padding: 0;
     }
-    
+
     .mobile-nav-links a {
-        color: #3e2f1c; 
+        color: #3e2f1c;
         text-decoration: none;
         font-size: 1.2rem;
         font-weight: 600;
@@ -98,11 +101,11 @@ html, body {
         gap: 1rem;
         transition: background-color 0.2s ease;
     }
-    
+
     .mobile-nav-links a:hover {
         background-color: #e9e5d1;
     }
-    
+
     .mobile-nav-links a i {
         width: 20px;
         text-align: center;
@@ -116,44 +119,287 @@ html, body {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0, 0, 0, 0.5);
         z-index: 105;
     }
-    
+
     .nav-overlay.is-open {
         display: block;
     }
-    
+
     /* --- Ajustes de layout para a página principal no mobile --- */
     #fundo {
-        padding-top: 60px; 
+        padding-top: 60px;
         max-height: min-content;
-       
+
     }
-    .Logo{
+
+    .Logo {
         margin-left: 0%;
     }
 
-    
+
     .Primeirasessao {
         flex-direction: column;
         text-align: center;
-      
+
     }
 
-    .sessao, .Pacote {
+    .sessao,
+    .Pacote {
         width: 100%;
         margin: 0;
         padding: 0 1rem;
-                margin-top: 35px;
+        margin-top: 35px;
     }
 
     .texto1 {
-        font-size: 48px; 
+        font-size: 48px;
         margin-left: 0;
     }
 
     .frase {
         margin-left: 0;
     }
+
+    /* --- NOVOS ESTILOS PARA O .content-block --- */
+    .content-block {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .info {
+        width: 100%;
+        max-width: 600px;
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .button-container {
+        justify-content: center;
+    }
+
+    /* --- VERSÃO PROFISSIONAL E RESPONSIVA DA SEÇÃO 'Nosso Café' --- */
+    .curved-section {
+        height: auto;
+        padding: 80px 20px;
+        background-color: #f5f3d8;
+        position: relative;
+    }
+
+    .curved-section .background,
+    .curved-section .curved-shape {
+        display: none;
+    }
+
+    .coffee-info {
+        flex-direction: column;
+        padding: 0;
+        text-align: center;
+        gap: 20px;
+        /* Reduz o gap para um visual mais coeso */
+    }
+
+    .coffee-info .text-side,
+    .coffee-info .info-list {
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .coffee-info h1.nomecafe {
+        margin: 0 auto;
+        font-size: 38px;
+        white-space: normal;
+    }
+
+    .img {
+        width: 150px;
+        /* Tamanho reduzido para melhor proporção */
+        margin: 25px auto 40px auto;
+        /* Adiciona mais espaço abaixo */
+    }
+
+    .info-list {
+        margin-top: 0;
+        gap: 25px;
+        align-items: center;
+        max-width: 400px;
+        /* Limita a largura da lista para melhor leitura */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .info-item {
+        display: flex;
+        /* Alinha ícone e texto na horizontal */
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        /* Alinha o texto à esquerda para facilitar a leitura */
+        gap: 15px;
+        font-size: 16px;
+    }
+
+    /* Reseta o posicionamento complexo dos ícones */
+    .Grãoinfo,
+    .Grãoinfo2,
+    .Grãoinfo3 {
+        width: 40px;
+        height: 40px;
+        margin: 0;
+        position: static;
+        flex-shrink: 0;
+        /* Impede que o ícone seja espremido */
+    }
+
+    .info1,
+    .info2,
+    .info3 {
+        margin: 0;
+        position: static;
+    }
 }
+
+
+@media (max-width: 576px) {
+    .title {
+        font-size: 28px;
+    }
+
+    .Ocean {
+        width: 180px;
+    }
+
+    .image-container {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        display: flex;
+        margin-bottom: 33px;
+        margin-left: 23px;
+    }
+
+    .trator,
+    .cortador {
+        width: 180px;
+        height: 180px;
+        margin-top: 0;
+        position: relative;
+    }
+
+    .trator {
+        left: -20px;
+        bottom: 0;
+        top: 0;
+    }
+
+    .cortador {
+        left: -60px;
+        /* Overlap */
+        top: 40px;
+    }
+
+    .info {
+        padding: 0;
+    }
+}
+
+<style>
+  /* --- ESTILOS PROFISSIONAIS PARA A SECÇÃO "NOSSO CAFÉ" --- */
+
+  /* Estilo base para desktop (mantém o que já funcionava) */
+  .curved-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .curved-section .background {
+    width: 100%;
+    height: 100%;
+    background: url('IMG/fundoteste4.png');
+    background-size: cover;
+    position: absolute;
+    z-index: 0;
+  }
+  .curved-shape {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 65%;
+    height: 120%;
+    background-color: #f5f3d8;
+    border-top-left-radius: 76% 98%;
+    border-bottom-left-radius: 25% 10%;
+    z-index: 2;
+  }
+
+  /* --- MUDANÇA TOTAL PARA TELAS MENORES (AQUI ESTÁ A MAGIA!) --- */
+  @media (max-width: 992px) {
+    .curved-section {
+      height: auto; /* Altura flexível para o conteúdo */
+      padding: 60px 20px;
+      background-color: #f9f5e7; /* Cor de fundo limpa e profissional */
+    }
+
+    /* Esconde os elementos de design antigos que causavam a desordem */
+    .curved-section .background,
+    .curved-section .curved-shape {
+      display: none !important;
+    }
+
+    /* Novo container principal */
+    .coffee-info-container {
+      display: grid; /* Layout de grelha: robusto e alinhado */
+      grid-template-columns: 100px 1fr; /* Coluna pequena para imagem, coluna maior para texto */
+      align-items: center;
+      gap: 25px; /* Espaço entre a imagem e o texto */
+      max-width: 550px;
+      margin: 0 auto; /* Centraliza o bloco todo */
+      text-align: left;
+    }
+
+    .coffee-bean-img {
+      grid-column: 1 / 2; /* Imagem fica na primeira coluna */
+      width: 100%;
+      height: auto;
+    }
+
+    .coffee-text-content {
+      grid-column: 2 / 3; /* Todo o texto fica na segunda coluna */
+    }
+
+    .nomecafe {
+      font-size: 32px !important;
+      margin: 0 0 15px 0 !important;
+      color: #3e2f1c !important;
+      text-align: left !important;
+    }
+
+    .info-list {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 15px !important;
+      margin: 0 !important;
+    }
+
+    .info-item {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      font-size: 15px !important;
+    }
+
+    .Grãoinfo, .Grãoinfo2, .Grãoinfo3 {
+      width: 30px !important;
+      height: 30px !important;
+      flex-shrink: 0 !important;
+      margin: 0 !important;
+    }
+
+    .info1, .info2, .info3 {
+      margin: 0 !important;
+      color: #5a5a5a !important;
+    }
+  }
