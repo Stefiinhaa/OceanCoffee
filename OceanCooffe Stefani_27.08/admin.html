@@ -80,12 +80,37 @@
     .excluir { background-color: #e60000; } .excluir:hover { background-color: #b80000; }
     .salvar { background-color: #007bff; } .salvar:hover { background-color: #0056b3; }
     
-    /* --- PAGINAÇÃO --- */
+    /* --- PAGINAÇÃO (NOVO ESTILO) --- */
     .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; }
     .pagination-info { font-size: 14px; color: #666; }
-    .pagination-controls button { background-color: #007bff; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; margin: 0 5px; transition: background-color 0.2s; }
-    .pagination-controls button:hover:not(:disabled) { background-color: #0056b3; }
-    .pagination-controls button:disabled { background-color: #a0a0a0; }
+    .pagination-controls { display: flex; align-items: center; gap: 5px; }
+    .pagination-controls button {
+        background-color: #f0f0f0;
+        color: #333;
+        border: 1px solid #ccc;
+        padding: 8px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .pagination-controls button:hover:not(:disabled) {
+        background-color: #007bff;
+        color: white;
+    }
+    .pagination-controls button:disabled {
+        background-color: #e9e9e9;
+        color: #aaa;
+        cursor: not-allowed;
+    }
+    .pagination-controls button.active {
+        background-color: #0056b3;
+        color: white;
+        border-color: #0056b3;
+    }
+    .pagination-controls .ellipsis {
+        padding: 8px 5px;
+        color: #666;
+    }
 
     /* --- POP-UPS E TOASTS --- */
     .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1050; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
@@ -173,11 +198,10 @@
             toast.innerHTML = `<i class="fas fa-check-circle"></i><span>Bem-vindo(a), ${name}!</span>`;
             document.body.appendChild(toast);
             
-            // Adiciona a classe para iniciar a animação de saída e remove o elemento do DOM depois
             setTimeout(() => {
                 toast.classList.add('fade-out');
                 toast.addEventListener('animationend', () => toast.remove());
-            }, 100); // Inicia a animação quase imediatamente, mas o CSS controla o delay
+            }, 100); 
         }
 
         function showPopup(message, type = 'error') {
@@ -278,21 +302,87 @@
             paginationContainer.innerHTML = "";
             const pageCount = Math.ceil(users.length / rowsPerPage);
             if (pageCount <= 1) return;
+
             const pageInfo = document.createElement('div');
             pageInfo.className = 'pagination-info';
-            pageInfo.textContent = `Página ${currentPage} de ${pageCount}`;
+            pageInfo.textContent = `Mostrando ${Math.min((currentPage - 1) * rowsPerPage + 1, users.length)} a ${Math.min(currentPage * rowsPerPage, users.length)} de ${users.length} usuários`;
+
             const controls = document.createElement('div');
             controls.className = 'pagination-controls';
-            const prevButton = document.createElement('button');
-            prevButton.textContent = 'Anterior';
-            prevButton.disabled = currentPage === 1;
-            prevButton.addEventListener('click', () => { if (currentPage > 1) { currentPage--; displayPage(); } });
-            const nextButton = document.createElement('button');
-            nextButton.textContent = 'Seguinte';
-            nextButton.disabled = currentPage === pageCount;
-            nextButton.addEventListener('click', () => { if (currentPage < pageCount) { currentPage++; displayPage(); } });
-            controls.appendChild(prevButton);
-            controls.appendChild(nextButton);
+
+            const createButton = (text, page, isDisabled = false, isActive = false) => {
+                const button = document.createElement('button');
+                button.innerHTML = text;
+                button.disabled = isDisabled;
+                if (isActive) button.classList.add('active');
+                if (page) {
+                    button.addEventListener('click', () => {
+                        currentPage = page;
+                        displayPage();
+                    });
+                }
+                return button;
+            };
+            
+            const createEllipsis = () => {
+                const span = document.createElement('span');
+                span.className = 'ellipsis';
+                span.textContent = '...';
+                return span;
+            };
+
+            // Botão "Anterior"
+            controls.appendChild(createButton('&laquo; Anterior', currentPage - 1, currentPage === 1));
+
+            const maxVisibleButtons = 5; // Total de botões numéricos visíveis
+            let startPage, endPage;
+
+            if (pageCount <= maxVisibleButtons) {
+                // Mostra todos os números se não houver muitos
+                startPage = 1;
+                endPage = pageCount;
+            } else {
+                // Lógica para mostrar botões com elipses
+                const maxPagesShown = maxVisibleButtons - 2; // Deixa espaço para "1" e "pageCount"
+                let maxPagesBeforeCurrent = Math.floor(maxPagesShown / 2);
+                let maxPagesAfterCurrent = Math.ceil(maxPagesShown / 2) - 1;
+
+                if (currentPage <= maxPagesBeforeCurrent) {
+                    startPage = 1;
+                    endPage = maxPagesShown;
+                } else if (currentPage + maxPagesAfterCurrent >= pageCount) {
+                    startPage = pageCount - maxPagesShown + 1;
+                    endPage = pageCount;
+                } else {
+                    startPage = currentPage - maxPagesBeforeCurrent;
+                    endPage = currentPage + maxPagesAfterCurrent;
+                }
+            }
+
+            // Sempre mostrar a primeira página
+            if (startPage > 1) {
+                controls.appendChild(createButton('1', 1));
+                if (startPage > 2) {
+                    controls.appendChild(createEllipsis());
+                }
+            }
+
+            // Números de página intermediários
+            for (let i = startPage; i <= endPage; i++) {
+                controls.appendChild(createButton(i, i, false, i === currentPage));
+            }
+
+            // Sempre mostrar a última página
+            if (endPage < pageCount) {
+                if (endPage < pageCount - 1) {
+                    controls.appendChild(createEllipsis());
+                }
+                controls.appendChild(createButton(pageCount, pageCount));
+            }
+
+            // Botão "Próximo"
+            controls.appendChild(createButton('Próximo &raquo;', currentPage + 1, currentPage === pageCount));
+
             paginationContainer.appendChild(pageInfo);
             paginationContainer.appendChild(controls);
         }
@@ -402,4 +492,3 @@
     </script>
 </body>
 </html>
-

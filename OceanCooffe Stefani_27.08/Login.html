@@ -13,7 +13,7 @@
         .login-card { background-color: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 100%; max-width: 450px; text-align: center; backdrop-filter: blur(5px); }
         .login-card img { max-width: 150px; margin-bottom: 20px; }
         .login-card h1 { font-size: 2rem; font-weight: 600; margin-bottom: 25px; color: #333; }
-        .input-field { width: 100%; padding: 12px 15px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; }
+        .input-field { width: 100%; padding: 12px 15px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
         .btn-login { width: 100%; padding: 12px; border: none; border-radius: 8px; background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 71, 163, 0.4); }
         .btn-login:disabled { background: #aaa; cursor: not-allowed; transform: none; box-shadow: none; }
@@ -21,7 +21,25 @@
         .links a { color: #0047a3; font-weight: 600; text-decoration: none; }
         .links a:hover { text-decoration: underline; }
 
-        /* Estilos do Pop-up (agora dentro desta página) */
+        /* --- ESTILOS CORRIGIDOS PARA VISUALIZAÇÃO DE SENHA --- */
+        .password-wrapper {
+            position: relative;
+            margin-bottom: 20px; /* Mantém o espaçamento do formulário */
+        }
+        .password-wrapper .input-field {
+            margin-bottom: 0; /* Remove a margem do input interno */
+            padding-right: 45px; /* Espaço para o ícone */
+        }
+        .password-wrapper .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%); /* Centraliza verticalmente o ícone */
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        
+        /* Estilos do Pop-up */
         .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1050; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
         .popup-overlay.visible { opacity: 1; pointer-events: auto; }
         .popup-content { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
@@ -40,7 +58,10 @@
         <h1>Bem-vindo de volta!</h1>
         <form id="loginForm">
             <input class="input-field" type="email" placeholder="Email" id="email" required>
-            <input class="input-field" type="password" placeholder="Senha" id="senha" required>
+            <div class="password-wrapper">
+                <input class="input-field" type="password" placeholder="Senha" id="senha" required>
+                <i class="fas fa-eye toggle-password"></i>
+            </div>
             <button type="submit" class="btn-login">Entrar</button>
         </form>
         <div class="links">
@@ -57,7 +78,6 @@
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        // LÓGICA DO POP-UP AGORA ESTÁ AQUI DENTRO
         function showPopup(message, type = 'error') {
             return new Promise((resolve) => {
                 const overlay = document.createElement('div');
@@ -72,6 +92,17 @@
                 overlay.querySelector('.btn-ok')?.addEventListener('click', () => closePopup(true));
             });
         }
+        
+        document.querySelector('.toggle-password').addEventListener('click', function () {
+            const passwordInput = document.getElementById('senha');
+            const icon = this;
+            
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
 
         document.getElementById("loginForm").addEventListener("submit", async (e) => {
             e.preventDefault();

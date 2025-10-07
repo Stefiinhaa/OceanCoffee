@@ -42,6 +42,10 @@
             gap: 1.5rem;
             padding: 1.5rem;
         }
+        .stat-card-link {
+            text-decoration: none;
+            color: inherit;
+        }
         .stat-card {
             background-color: #ffffff;
             padding: 1.5rem;
@@ -51,6 +55,7 @@
             align-items: center;
             gap: 1.5rem;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
         }
         .stat-card:hover {
             transform: translateY(-5px);
@@ -93,6 +98,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        #statusPieChart {
+            cursor: pointer; /* Adiciona o cursor de ponteiro ao passar sobre o gráfico */
         }
         .requests-list { list-style: none; padding: 0; margin-top: 1rem; }
         .requests-list li {
@@ -153,27 +161,33 @@
         <div class="header" id="mainHeader"><span>Dashboard</span></div>
         
         <div class="dashboard-grid">
-            <div class="stat-card">
-                <div class="icon-container users"><i class="fas fa-users"></i></div>
-                <div class="info">
-                    <h3>Total de Usuários</h3>
-                    <p id="total-users">0</p>
+            <a href="admin.html" class="stat-card-link">
+                <div class="stat-card">
+                    <div class="icon-container users"><i class="fas fa-users"></i></div>
+                    <div class="info">
+                        <h3>Total de Usuários</h3>
+                        <p id="total-users">0</p>
+                    </div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon-container pending"><i class="fas fa-inbox"></i></div>
-                <div class="info">
-                    <h3>Solicitações Pendentes</h3>
-                    <p id="pending-requests">0</p>
+            </a>
+            <a href="Solicitações.html" class="stat-card-link">
+                <div class="stat-card">
+                    <div class="icon-container pending"><i class="fas fa-inbox"></i></div>
+                    <div class="info">
+                        <h3>Solicitações Pendentes</h3>
+                        <p id="pending-requests">0</p>
+                    </div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon-container approved"><i class="fas fa-check-circle"></i></div>
-                <div class="info">
-                    <h3>Anúncios Aprovados</h3>
-                    <p id="approved-ads">0</p>
+            </a>
+            <a href="Aprovados.html" class="stat-card-link">
+                <div class="stat-card">
+                    <div class="icon-container approved"><i class="fas fa-check-circle"></i></div>
+                    <div class="info">
+                        <h3>Anúncios Aprovados</h3>
+                        <p id="approved-ads">0</p>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="dashboard-row">
@@ -271,7 +285,7 @@
             }
 
             const ctx = document.getElementById('statusPieChart').getContext('2d');
-            new Chart(ctx, {
+            const statusChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: ['Aprovados', 'Pendentes', 'Rejeitados'],
@@ -279,9 +293,9 @@
                         label: 'Status dos Anúncios',
                         data: [approvedCount || 0, pendingCount || 0, rejectedCount || 0],
                         backgroundColor: [
-                            '#28a745', // Verde para Aprovados
-                            '#ffc107', // Amarelo para Pendentes
-                            '#dc3545'  // Vermelho para Rejeitados
+                            '#28a745',
+                            '#ffc107',
+                            '#dc3545'
                         ],
                         borderColor: '#ffffff',
                         borderWidth: 3
@@ -293,6 +307,20 @@
                     plugins: {
                         legend: {
                             position: 'top',
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const chartElement = elements[0];
+                            const index = chartElement.index;
+                            const label = statusChart.data.labels[index];
+
+                            if (label === 'Aprovados') {
+                                window.location.href = 'Aprovados.html';
+                            } else if (label === 'Pendentes') {
+                                window.location.href = 'Solicitações.html';
+                            }
+                            // Nenhuma ação para 'Rejeitados' por enquanto
                         }
                     }
                 }
@@ -314,7 +342,6 @@
                 mainHeader.classList.toggle("shifted");
             });
 
-            // Lógica de logout
             document.querySelector(".menu-item2").addEventListener("click", async (e) => {
                 e.preventDefault();
                 await supabase.auth.signOut();

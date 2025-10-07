@@ -49,7 +49,6 @@
         border-radius: 12px; 
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
         overflow-x: auto; 
-       /* FIX: Adicionado para evitar que o container encolha */
     }
     .search-bar-container { margin: 20px 30px 0 30px; text-align: center; }
     .search-bar-container input { padding: 10px 15px; width: 100%; max-width: 500px; border: 2px solid #0047a3; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
@@ -61,6 +60,39 @@
     tr:hover td { background-color: #dbeaff; }
     .btn-detalhes { padding: 8px 16px; border: none; background-color: #007bff; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
     .btn-detalhes:hover { background-color: #0056b3; }
+
+    /* --- PAGINAÇÃO --- */
+    .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; }
+    .pagination-info { font-size: 14px; color: #666; }
+    .pagination-controls { display: flex; align-items: center; gap: 5px; }
+    .pagination-controls button {
+        background-color: #f0f0f0;
+        color: #333;
+        border: 1px solid #ccc;
+        padding: 8px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+    }
+    .pagination-controls button:hover:not(:disabled) {
+        background-color: #007bff;
+        color: white;
+    }
+    .pagination-controls button:disabled {
+        background-color: #e9e9e9;
+        color: #aaa;
+        cursor: not-allowed;
+    }
+    .pagination-controls button.active {
+        background-color: #0056b3;
+        color: white;
+        border-color: #0056b3;
+    }
+    .pagination-controls .ellipsis {
+        padding: 8px 5px;
+        color: #666;
+    }
+    
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); z-index: 2000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; padding: 20px; }
     .modal-overlay.visible { display: flex; opacity: 1; }
     .modal-content { background-color: #fff; padding: 0; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); width: 100%; max-width: 1100px; max-height: 90vh; display: flex; flex-direction: column; position: relative; transform: scale(0.95); transition: transform 0.3s ease; }
@@ -139,14 +171,15 @@
 
     <div class="content" id="mainContent">
         <div class="header" id="mainHeader"><span>Anúncios Aprovados</span></div>
-        <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por categoria ou nome..." /></div>
+        <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por produto ou usuário..." /></div>
         <div class="tabela-container">
             <table>
                 <thead>
-                    <tr><th>ID</th><th>Usuário</th><th>Categoria</th><th>Data de Aprovação</th><th>Ações</th></tr>
+                    <tr><th>#</th><th>Usuário</th><th>Produto</th><th>Data de Aprovação</th><th>Ações</th></tr>
                 </thead>
                 <tbody></tbody>
             </table>
+            <div id="pagination-container" class="pagination-container"></div>
         </div>
     </div> 
     
@@ -182,11 +215,14 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     let todosAprovados = []; 
+    let aprovadosFiltrados = [];
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    
     let imagensCarrosselAtual = [];
     let carrosselAtualIndex = 0;
     let fullscreenIndex = 0;
 
-    // --- FUNÇÕES DE POP-UP E TOAST ---
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast-notification ${type}`;
@@ -218,29 +254,40 @@
         });
     }
 
-    // --- LÓGICA DA PÁGINA ---
     async function carregarAprovados() {
-        const { data, error } = await supabase.from("aprovados").select("*").order("data_aprovacao", { ascending: false });
+        const { data, error, count } = await supabase.from("aprovados").select("*", { count: 'exact' }).order("data_aprovacao", { ascending: false });
         if (error) { 
             showToast("Erro ao carregar anúncios aprovados", "error");
             console.error("Erro:", error.message); 
             return;
         }
         todosAprovados = data || [];
-        renderizarTabela(todosAprovados);
+        aprovadosFiltrados = todosAprovados;
+        currentPage = 1;
+        displayPage();
+    }
+
+    function displayPage() {
+        renderizarTabela(aprovadosFiltrados);
+        setupPagination(aprovadosFiltrados);
     }
 
     function renderizarTabela(anuncios) {
         const tbody = document.querySelector("tbody");
         tbody.innerHTML = "";
-        if (!anuncios || anuncios.length === 0) {
+        
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const paginatedItems = anuncios.slice(startIndex, startIndex + rowsPerPage);
+
+        if (paginatedItems.length === 0) {
             tbody.innerHTML = `<tr><td colspan="5">Nenhum anúncio aprovado encontrado.</td></tr>`;
             return;
         }
-        anuncios.forEach((anuncio, index) => {
+        paginatedItems.forEach((anuncio, index) => {
             const tr = document.createElement("tr");
+            const itemIndex = startIndex + index + 1;
             tr.innerHTML = `
-                <td>${index + 1}</td>
+                <td>${itemIndex}</td>
                 <td>${anuncio.nome_usuario || "Não Informado"}</td>
                 <td>${anuncio.produto || "-"}</td>
                 <td>${new Date(anuncio.data_aprovacao).toLocaleDateString("pt-BR")}</td>
@@ -248,6 +295,85 @@
             `;
             tbody.appendChild(tr);
         });
+    }
+
+    function setupPagination(anuncios) {
+        const paginationContainer = document.getElementById("pagination-container");
+        paginationContainer.innerHTML = "";
+        const pageCount = Math.ceil(anuncios.length / rowsPerPage);
+        if (pageCount <= 1) return;
+
+        const pageInfo = document.createElement('div');
+        pageInfo.className = 'pagination-info';
+        pageInfo.textContent = `Mostrando ${Math.min((currentPage - 1) * rowsPerPage + 1, anuncios.length)} a ${Math.min(currentPage * rowsPerPage, anuncios.length)} de ${anuncios.length} anúncios`;
+
+        const controls = document.createElement('div');
+        controls.className = 'pagination-controls';
+
+        const createButton = (text, page, isDisabled = false, isActive = false) => {
+            const button = document.createElement('button');
+            button.innerHTML = text;
+            button.disabled = isDisabled;
+            if (isActive) button.classList.add('active');
+            if (page) {
+                button.addEventListener('click', () => {
+                    currentPage = page;
+                    displayPage();
+                });
+            }
+            return button;
+        };
+        
+        const createEllipsis = () => {
+            const span = document.createElement('span');
+            span.className = 'ellipsis';
+            span.textContent = '...';
+            return span;
+        };
+
+        controls.appendChild(createButton('&laquo; Anterior', currentPage - 1, currentPage === 1));
+
+        const maxVisibleButtons = 5;
+        let startPage, endPage;
+
+        if (pageCount <= maxVisibleButtons) {
+            startPage = 1;
+            endPage = pageCount;
+        } else {
+            const maxPagesShown = maxVisibleButtons - 2;
+            let maxPagesBeforeCurrent = Math.floor(maxPagesShown / 2);
+            let maxPagesAfterCurrent = Math.ceil(maxPagesShown / 2) - 1;
+
+            if (currentPage <= maxPagesBeforeCurrent) {
+                startPage = 1;
+                endPage = maxPagesShown;
+            } else if (currentPage + maxPagesAfterCurrent >= pageCount) {
+                startPage = pageCount - maxPagesShown + 1;
+                endPage = pageCount;
+            } else {
+                startPage = currentPage - maxPagesBeforeCurrent;
+                endPage = currentPage + maxPagesAfterCurrent;
+            }
+        }
+
+        if (startPage > 1) {
+            controls.appendChild(createButton('1', 1));
+            if (startPage > 2) controls.appendChild(createEllipsis());
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            controls.appendChild(createButton(i, i, false, i === currentPage));
+        }
+
+        if (endPage < pageCount) {
+            if (endPage < pageCount - 1) controls.appendChild(createEllipsis());
+            controls.appendChild(createButton(pageCount, pageCount));
+        }
+
+        controls.appendChild(createButton('Próximo &raquo;', currentPage + 1, currentPage === pageCount));
+
+        paginationContainer.appendChild(pageInfo);
+        paginationContainer.appendChild(controls);
     }
     
     // --- FUNÇÕES DO MODAL ---
@@ -273,7 +399,6 @@
     window.mudarImagemModal=(e,t)=>{e.stopPropagation(),(carrosselAtualIndex=(carrosselAtualIndex+t+imagensCarrosselAtual.length)%imagensCarrosselAtual.length,document.getElementById("carrossel-img-modal").src=imagensCarrosselAtual[carrosselAtualIndex],document.getElementById("carrossel-img-modal").setAttribute("onclick",`abrirModalFullscreen(${carrosselAtualIndex})`))},window.fecharModalDetalhes=()=>document.getElementById("detalhes-modal").classList.remove("visible"),window.abrirModalFullscreen=e=>{event&&event.stopPropagation(),!imagensCarrosselAtual||0===imagensCarrosselAtual.length||(fullscreenIndex=e,atualizarImagemFullscreen(),document.getElementById("fullscreen-modal").classList.add("visible"))},window.fecharModalFullscreen=()=>{event&&event.stopPropagation(),document.getElementById("fullscreen-modal").classList.remove("visible")},window.mudarImagemFullscreen=e=>{event&&event.stopPropagation(),fullscreenIndex=(fullscreenIndex+e+imagensCarrosselAtual.length)%imagensCarrosselAtual.length,atualizarImagemFullscreen()};
     function atualizarImagemFullscreen(){!imagensCarrosselAtual||0===imagensCarrosselAtual.length||(document.getElementById("fullscreen-image").src=imagensCarrosselAtual[fullscreenIndex],document.getElementById("fullscreen-counter").textContent=`${fullscreenIndex+1} / ${imagensCarrosselAtual.length}`)}
     
-    // --- AÇÃO DE EXCLUSÃO ATUALIZADA ---
     window.confirmarExclusao = async (id) => {
         fecharModalDetalhes();
         const confirmado = await showConfirmationPopup('Excluir Anúncio','Tem certeza que deseja EXCLUIR PERMANENTEMENTE este anúncio? A ação não pode ser desfeita.');
@@ -298,7 +423,6 @@
         }
     }
     
-    // --- INICIALIZAÇÃO DA PÁGINA ---
     document.addEventListener("DOMContentLoaded", async () => {
         try {
             const { data: { user } } = await supabase.auth.getUser();
@@ -312,11 +436,19 @@
         }
 
         await carregarAprovados();
-        document.getElementById("searchInput").addEventListener("input",(e)=>{const t=e.target.value.toLowerCase(),o=todosAprovados.filter(e=>(e.produto||"").toLowerCase().includes(t)||(e.nome_usuario||"").toLowerCase().includes(t));renderizarTabela(o)});
+        document.getElementById("searchInput").addEventListener("input",(e)=>{
+            const termo = e.target.value.toLowerCase();
+            aprovadosFiltrados = todosAprovados.filter(anuncio =>
+                (anuncio.produto || "").toLowerCase().includes(termo) ||
+                (anuncio.nome_usuario || "").toLowerCase().includes(termo)
+            );
+            currentPage = 1;
+            displayPage();
+        });
+
         const sidebar=document.getElementById("sidebar"),sidebarToggle=document.getElementById("sidebarToggle"),mainContent=document.getElementById("mainContent"),mainHeader=document.getElementById("mainHeader"),isSidebarCollapsed="true"===localStorage.getItem("sidebarCollapsed");isSidebarCollapsed&&(sidebar.classList.add("collapsed"),mainContent.classList.add("shifted"),mainHeader.classList.add("shifted")),sidebarToggle.addEventListener("click",()=>{sidebar.classList.toggle("collapsed"),mainContent.classList.toggle("shifted"),mainHeader.classList.toggle("shifted"),localStorage.setItem("sidebarCollapsed",sidebar.classList.contains("collapsed"))}),document.querySelector(".menu-item2").addEventListener("click",async e=>{e.preventDefault(),await supabase.auth.signOut(),window.location.replace("index.html")}),window.addEventListener("keydown",e=>{const t=document.getElementById("fullscreen-modal");t.classList.contains("visible")?("Escape"===e.key&&fecharModalFullscreen(),"ArrowRight"===e.key&&mudarImagemFullscreen(1),"ArrowLeft"===e.key&&mudarImagemFullscreen(-1)):document.getElementById("detalhes-modal").classList.contains("visible")&&"Escape"===e.key&&fecharModalDetalhes()}),document.getElementById("detalhes-modal").addEventListener("click",e=>{e.target.id==="detalhes-modal"&&fecharModalDetalhes()});
     });
 </script>
 </body>
 
 </html>
-

@@ -274,6 +274,39 @@
         .new-ad-btn { display: inline-block; text-decoration: none; background-color: var(--color-primary); color: white; padding: 0.875rem 1.5rem; border-radius: 8px; font-weight: 500; transition: background-color 0.2s; }
         .new-ad-btn:hover { background-color: #00337a; }
         
+        /* --- PAGINAÇÃO (NOVO ESTILO) --- */
+        .pagination-container { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; margin-top: 1rem; border-top: 1px solid var(--color-border); }
+        .pagination-info { font-size: 0.9rem; color: var(--color-text-muted); }
+        .pagination-controls { display: flex; align-items: center; gap: 5px; }
+        .pagination-controls button {
+            background-color: var(--color-surface);
+            color: var(--color-text-muted);
+            border: 1px solid var(--color-border);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .pagination-controls button:hover:not(:disabled) {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        .pagination-controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .pagination-controls button.active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        .pagination-controls .ellipsis {
+            padding: 8px 5px;
+            color: var(--color-text-muted);
+        }
+
         /* ESTILOS DOS POP-UPS */
         .popup-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
         .popup { display: flex; align-items: center; min-width: 300px; padding: 16px 22px; border-radius: 8px; color: white; font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 500; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); transform: translateX(calc(100% + 20px)); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: all; }
@@ -304,17 +337,16 @@
             .page-header h1 { font-size: 1.5rem; }
             .sair{text-decoration: none;}
 
-            /* --- MELHORIAS NO LAYOUT DO CARD PARA MOBILE --- */
             .ad-card {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .ad-card > * { /* Aplica a todos os filhos diretos do card */
+            .ad-card > * {
                 width: 100%;
             }
             .ad-image {
                 width: 100%;
-                height: 150px; /* Altura fixa para a imagem no mobile */
+                height: 150px;
                 margin-bottom: 0.5rem;
             }
             .ad-status-actions {
@@ -323,7 +355,6 @@
                 align-items: center;
                 margin-top: 0.5rem;
             }
-            /* --- FIM DAS MELHORIAS --- */
 
             .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; height: 60px; background-color: var(--color-surface); border-bottom: 1px solid var(--color-border); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
             .mobile-header .logo-img { height: 35px; }
@@ -389,6 +420,7 @@
                 <p>Que tal criar seu primeiro anúncio e começar a vender?</p>
                 <a href="anuncie.html" class="new-ad-btn"><i class="fas fa-plus-circle"></i> Anunciar Agora</a>
             </div>
+            <div id="pagination-container" class="pagination-container"></div>
         </main>
     </div>
 
@@ -454,6 +486,9 @@
             const noAdsMessage = document.getElementById('no-ads-message');
             const filterBar = document.getElementById('filter-bar');
             let allUserAds = [];
+            let filteredAds = [];
+            let currentPage = 1;
+            const rowsPerPage = 5; // Anúncios por página
 
             async function loadAds() {
                 adList.innerHTML = '<p style="text-align: center; padding: 2rem;">Carregando...</p>';
@@ -475,8 +510,7 @@
                     allUserAds = [...mappedApproved, ...mappedOthers];
                     allUserAds.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                    const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
-                    filterAndRenderAds(currentFilter);
+                    displayPage();
 
                 } catch (error) {
                     console.error("Erro ao carregar anúncios:", error);
@@ -485,24 +519,28 @@
                 }
             }
 
-            function filterAndRenderAds(filter) {
-                let adsToRender = allUserAds;
-                if (filter !== 'todos') {
-                    adsToRender = allUserAds.filter(ad => ad.status === filter);
+            function displayPage() {
+                const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
+                filteredAds = allUserAds;
+                if (currentFilter !== 'todos') {
+                    filteredAds = allUserAds.filter(ad => ad.status === currentFilter);
                 }
-                renderAds(adsToRender, filter);
+                renderAds(filteredAds);
+                setupPagination(filteredAds);
             }
-
-            function renderAds(ads, filter) {
+            
+            function renderAds(ads) {
                 adList.innerHTML = '';
+                const startIndex = (currentPage - 1) * rowsPerPage;
+                const paginatedItems = ads.slice(startIndex, startIndex + rowsPerPage);
 
                 if (ads.length === 0) {
                     noAdsMessage.style.display = 'block';
                     const filterText = { todos: 'anúncios', aprovados: 'anúncios aprovados', pendentes: 'anúncios pendentes', rejeitados: 'anúncios rejeitados' };
-                    noAdsMessage.querySelector('h2').textContent = `Você não tem ${filterText[filter]}.`;
+                    noAdsMessage.querySelector('h2').textContent = `Você não tem ${filterText[document.querySelector('.filter-btn.active').dataset.filter]}.`;
                 } else {
                     noAdsMessage.style.display = 'none';
-                    ads.forEach(ad => {
+                    paginatedItems.forEach(ad => {
                         const adCard = document.createElement('div');
                         adCard.className = 'ad-card';
                         adCard.dataset.id = ad.id;
@@ -550,11 +588,91 @@
                 }
             }
 
+            function setupPagination(ads) {
+                const paginationContainer = document.getElementById("pagination-container");
+                paginationContainer.innerHTML = "";
+                const pageCount = Math.ceil(ads.length / rowsPerPage);
+                if (pageCount <= 1) return;
+
+                const pageInfo = document.createElement('div');
+                pageInfo.className = 'pagination-info';
+                pageInfo.textContent = `Mostrando ${Math.min((currentPage - 1) * rowsPerPage + 1, ads.length)} a ${Math.min(currentPage * rowsPerPage, ads.length)} de ${ads.length} anúncios`;
+
+                const controls = document.createElement('div');
+                controls.className = 'pagination-controls';
+
+                const createButton = (text, page, isDisabled = false, isActive = false) => {
+                    const button = document.createElement('button');
+                    button.innerHTML = text;
+                    button.disabled = isDisabled;
+                    if (isActive) button.classList.add('active');
+                    if (page) {
+                        button.addEventListener('click', () => {
+                            currentPage = page;
+                            displayPage();
+                        });
+                    }
+                    return button;
+                };
+                
+                const createEllipsis = () => {
+                    const span = document.createElement('span');
+                    span.className = 'ellipsis';
+                    span.textContent = '...';
+                    return span;
+                };
+
+                controls.appendChild(createButton('&laquo; Anterior', currentPage - 1, currentPage === 1));
+
+                const maxVisibleButtons = 5;
+                let startPage, endPage;
+
+                if (pageCount <= maxVisibleButtons) {
+                    startPage = 1;
+                    endPage = pageCount;
+                } else {
+                    const maxPagesShown = maxVisibleButtons - 2;
+                    let maxPagesBeforeCurrent = Math.floor(maxPagesShown / 2);
+                    let maxPagesAfterCurrent = Math.ceil(maxPagesShown / 2) - 1;
+
+                    if (currentPage <= maxPagesBeforeCurrent) {
+                        startPage = 1;
+                        endPage = maxPagesShown;
+                    } else if (currentPage + maxPagesAfterCurrent >= pageCount) {
+                        startPage = pageCount - maxPagesShown + 1;
+                        endPage = pageCount;
+                    } else {
+                        startPage = currentPage - maxPagesBeforeCurrent;
+                        endPage = currentPage + maxPagesAfterCurrent;
+                    }
+                }
+
+                if (startPage > 1) {
+                    controls.appendChild(createButton('1', 1));
+                    if (startPage > 2) controls.appendChild(createEllipsis());
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    controls.appendChild(createButton(i, i, false, i === currentPage));
+                }
+
+                if (endPage < pageCount) {
+                    if (endPage < pageCount - 1) controls.appendChild(createEllipsis());
+                    controls.appendChild(createButton(pageCount, pageCount));
+                }
+
+                controls.appendChild(createButton('Próximo &raquo;', currentPage + 1, currentPage === pageCount));
+
+                paginationContainer.appendChild(pageInfo);
+                paginationContainer.appendChild(controls);
+            }
+            
             filterBar.addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter-btn')) {
                     document.querySelector('.filter-btn.active').classList.remove('active');
                     e.target.classList.add('active');
-                    filterAndRenderAds(e.target.dataset.filter);
+                    currentPage = 1;
+                    displayPage();
                 }
             });
 
@@ -594,8 +712,7 @@
                         }
                         showPopup('Anúncio excluído com sucesso!', 'success');
                         allUserAds = allUserAds.filter(ad => !(ad.id == adId && ad.dataTable == adTable));
-                        const currentFilter = document.querySelector('.filter-btn.active').dataset.filter;
-                        filterAndRenderAds(currentFilter);
+                        displayPage();
                     }
                 }
             });
