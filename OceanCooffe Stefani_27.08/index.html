@@ -341,7 +341,6 @@
   <script>
     function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-    // --- SCRIPT PARA O MENU HAMBURGER ---
     document.addEventListener('DOMContentLoaded', () => {
         const menuToggle = document.getElementById('menu-toggle');
         const mobileNav = document.getElementById('mobile-nav');
@@ -367,11 +366,11 @@
   </script>
 
   <script type="module">
-    // --- SEU SCRIPT DO SUPABASE PARA OS PRODUTOS EM DESTAQUE ---
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
     const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
     const supabase = createClient(supabaseUrl, supabaseKey);
+
     async function loadRecentProducts() {
         const grid = document.getElementById('recent-products-grid');
         if (!grid) return;
@@ -389,15 +388,17 @@
         data.forEach(product => {
             const productCard = `
                 <article class="equipamentos-destaque-product-card">
-                    <div class="equipamentos-destaque-product-card__image-container">
+                    <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__image-container">
                         <img src="${product.imagens[0] || 'IMG/placeholder.png'}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
-                    </div>
+                    </a>
                     <div class="equipamentos-destaque-product-card__content">
-                        <h3 class="equipamentos-destaque-product-card__title">${product.produto}</h3>
+                        <h3 class="equipamentos-destaque-product-card__title">
+                           <a href="MarketPlace.html?id=${product.id}" style="text-decoration: none; color: inherit;">${product.produto}</a>
+                        </h3>
                         <p class="equipamentos-destaque-product-card__description">${product.descricao.substring(0, 100)}...</p>
                         <div class="equipamentos-destaque-product-card__footer">
                             <span class="equipamentos-destaque-product-card__price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)}</span>
-                            <a href="Market.html" class="equipamentos-destaque-product-card__button">Saiba Mais</a>
+                            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">Saiba Mais</a>
                         </div>
                     </div>
                 </article>

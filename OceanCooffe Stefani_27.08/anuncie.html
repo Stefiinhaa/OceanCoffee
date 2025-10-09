@@ -209,7 +209,6 @@
         }
         protegerPagina();
         
-        // --- FUNÇÕES DE POP-UP E CONFIRMAÇÃO (IDÊNTICAS AO PERFIL.HTML) ---
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
         function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
         function showConfirmationPopup(title, message) { return new Promise((resolve) => { const o = document.createElement('div'); o.className = 'confirmation-overlay'; o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">Cancelar</button><button class="confirmation-btn-confirm">Sim, Sair</button></div></div>`; const c = (r) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(r); }); }; o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => c(false)); o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => c(true)); document.body.appendChild(o); requestAnimationFrame(() => o.classList.add('show')); }); }
@@ -232,10 +231,21 @@
             const precoInput = document.getElementById('preco');
             const telefoneInput = document.getElementById('telefone');
             
-            IMask(precoInput, {
-                mask: 'R$ num',
-                blocks: { num: { mask: Number, thousandsSeparator: '.', radix: ',', mapToRadix: ['.'] } }
+            // --- LÓGICA DE FORMATAÇÃO DE PREÇO (ESTILO BANCO) ---
+            precoInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/\D/g, '');
+                value = (parseInt(value, 10) / 100).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
+                e.target.value = value;
             });
+            precoInput.addEventListener('focus', (e) => {
+                if (!e.target.value) {
+                    e.target.value = 'R$ 0,00';
+                }
+            });
+
             IMask(telefoneInput, { mask: [ { mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
 
             document.querySelectorAll('input[type="file"]').forEach(input => {
@@ -273,7 +283,7 @@
                     const descricao = document.getElementById("descricao").value.trim();
                     const contato = telefoneInput.value.replace(/\D/g, '');
 
-                    if (!produto || !local || isNaN(precoNumerico) || !descricao || !contato) throw new Error("Preencha todos os campos obrigatórios.");
+                    if (!produto || !local || isNaN(precoNumerico) || precoNumerico <= 0 || !descricao || !contato) throw new Error("Preencha todos os campos obrigatórios com valores válidos.");
                     
                     const files = [document.getElementById('imagem1').files[0], document.getElementById('imagem2').files[0], document.getElementById('imagem3').files[0]].filter(Boolean);
                     if (files.length === 0) throw new Error("Selecione pelo menos a Imagem Principal.");
