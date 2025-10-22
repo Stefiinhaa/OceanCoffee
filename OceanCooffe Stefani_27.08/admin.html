@@ -192,17 +192,6 @@
         let currentPage = 1;
         const rowsPerPage = 10;
         
-        function showWelcomeToast(name) {
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification success';
-            toast.innerHTML = `<i class="fas fa-check-circle"></i><span>Bem-vindo(a), ${name}!</span>`;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.add('fade-out');
-                toast.addEventListener('animationend', () => toast.remove());
-            }, 100); 
-        }
 
         function showPopup(message, type = 'error') {
             return new Promise((resolve) => {
@@ -398,11 +387,7 @@
         }
         
         document.addEventListener("DOMContentLoaded", async () => {
-            const adminName = localStorage.getItem("bemVindo");
-            if (adminName) {
-                showWelcomeToast(adminName);
-                localStorage.removeItem("bemVindo"); 
-            }
+            
 
             try {
                 const { data: { user } } = await supabase.auth.getUser();
