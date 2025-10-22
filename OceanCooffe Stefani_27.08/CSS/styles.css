@@ -109,6 +109,7 @@ body {
 
 .Primeirasessao{
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
  
   
@@ -987,4 +988,33 @@ text-align: center;
     .carousel-container {
       height: 219px;
     }
+   
+}
+
+@media (max-width: 576px) {
+   .texto1 {
+    font-family: Garamond;
+    font-size: 60px;
+    text-align: center;
+    font-weight: bolder;
+  margin-left: 20px;
+    color: white;
+    line-height: 1.0;
+}
+
+.sessao {
+    margin-top: 6px;
+    margin-right: 23px;
+}
+
+.frase {
+
+    margin-left: 66px;
+}
+
+.Pacote {
+    width: 80%;
+    /* margin-left: 30px; */
+    margin-top: 40px;
+}
 }
