@@ -991,7 +991,7 @@ text-align: center;
    
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
    .texto1 {
     font-family: Garamond;
     font-size: 60px;
