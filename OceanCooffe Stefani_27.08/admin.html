@@ -8,75 +8,45 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
+ 
+ <style>
     /* CSS COMPLETO E UNIFICADO */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; height: 100vh; background-color: #f4f7f6; overflow: hidden; }
 
     /* --- SIDEBAR --- */
     .sidebar {
-        width: 250px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Ajustado para space-between */
-        background-color: #5ce1e6;
-        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        position: fixed;
-        height: 100%;
-        left: 0;
-        top: 0;
-        z-index: 1001;
-        transition: width 0.3s ease, left 0.3s ease; /* Adicionado left na transição */
+        width: 250px; display: flex; flex-direction: column; justify-content: space-between;
+        background-color: #5ce1e6; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        position: fixed; height: 100%; left: 0; top: 0; z-index: 1001;
+        transition: width 0.3s ease, left 0.3s ease;
     }
-    .sidebar.collapsed {
-        width: 70px;
-    }
-    /* Estilos adicionados para sidebar no mobile */
+    .sidebar.collapsed { width: 70px; }
      @media (max-width: 992px) {
-        .sidebar {
-            left: -250px; /* Começa escondida */
-            z-index: 1100; /* Acima do overlay */
-        }
-        .sidebar.is-open {
-            left: 0; /* Mostra */
-        }
-        /* Força a sidebar a parecer expandida quando aberta no mobile */
+        .sidebar { left: -250px; z-index: 1100; }
+        .sidebar.is-open { left: 0; }
         .sidebar.collapsed { width: 250px; }
         .sidebar.collapsed .logo { padding: 20px 0; border-bottom-color: rgba(255, 255, 255, 0.2); opacity: 1; height: auto; overflow: visible; pointer-events: auto;}
         .sidebar.collapsed .logo img { opacity: 1; width: auto; max-width: 150px; }
         .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item-logout { justify-content: flex-start; padding: 12px 25px; }
         .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 1; width: auto; }
-        .sidebar-bottom { display: none; } /* Esconde botão colapsar desktop */
+        .sidebar-bottom { display: none; }
      }
 
-
     .logo {
-        text-align: center;
-        padding: 20px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        transition: padding 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, height 0.3s ease; /* Adicionado height e opacity */
-        flex-shrink: 0; /* Evita que o logo encolha */
+        text-align: center; padding: 20px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        transition: padding 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, height 0.3s ease;
+        flex-shrink: 0;
     }
     .sidebar.collapsed .logo {
-        padding: 10px 0;
-        border-bottom-color: transparent;
-        /* Adicionado para esconder o logo quando colapsado no desktop */
-        opacity: 0;
-        height: 0;
-        overflow: hidden;
-        pointer-events: none;
+        padding: 10px 0; border-bottom-color: transparent; opacity: 0; height: 0;
+        overflow: hidden; pointer-events: none;
     }
-    .logo img {
-        max-width: 150px;
-        height: auto;
-        transition: opacity 0.2s ease, width 0.3s ease;
-    }
-     /* Removido o estilo específico de .sidebar.collapsed .logo img pois o logo inteiro some */
+    .logo img { max-width: 150px; height: auto; transition: opacity 0.2s ease, width 0.3s ease; }
 
-    .menu { display: flex; flex-direction: column; gap: 5px; padding: 20px 0; flex-grow: 1; overflow-y: auto; } /* Adicionado overflow */
-    .menu-item, .menu-item-logout { /* Unificado com logout */
-        display: flex; align-items: center; gap: 12px;
-        padding: 12px 25px; border-radius: 0 25px 25px 0;
+    .menu { display: flex; flex-direction: column; gap: 5px; padding: 20px 0; flex-grow: 1; overflow-y: auto; }
+    .menu-item, .menu-item-logout {
+        display: flex; align-items: center; gap: 12px; padding: 12px 25px; border-radius: 0 25px 25px 0;
         color: #333; font-weight: 600; cursor: pointer;
         transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, padding 0.3s ease;
         text-decoration: none; white-space: nowrap; overflow: hidden;
@@ -84,205 +54,198 @@
     .menu-item span, .menu-item-logout span { transition: opacity 0.3s ease; }
     .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item-logout { justify-content: center; padding: 12px 0; }
     .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 0; width: 0; }
-     /* Unificado estilo de ícone */
      .menu-item i, .menu-item-logout i, .menu-item svg, .menu-item-logout svg {
-        width: 22px; height: 22px; fill: #333; color: #333; /* Adicionado color para Font Awesome */
-        transition: fill 0.3s ease, color 0.3s ease; /* Adicionado color */
-        flex-shrink: 0; text-align: center; font-size: 1.2rem; /* Adicionado font-size */
+        width: 22px; height: 22px; fill: #333; color: #333;
+        transition: fill 0.3s ease, color 0.3s ease;
+        flex-shrink: 0; text-align: center; font-size: 1.2rem;
      }
-
     .menu-item:hover, .menu-item-logout:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; transform: translateX(5px); }
     .sidebar.collapsed .menu-item:hover, .sidebar.collapsed .menu-item-logout:hover { transform: none; }
     .menu-item.selected { background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2); }
-     /* Unificado estilo de ícone selecionado */
     .menu-item.selected i, .menu-item.selected svg { fill: white; color: white; }
-    .menu-item-logout { margin-top: auto; } /* Mantém logout no final */
+    .menu-item-logout { margin-top: auto; }
 
-    /* Botão inferior para colapsar */
-    .sidebar-bottom { /* Renomeado de menu-bottom */
+    .sidebar-bottom {
         background-color: #0cc0df; text-align: center; padding: 15px 0;
         border-top: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
-        transition: background 0.3s ease; flex-shrink: 0; /* Adicionado flex-shrink */
+        transition: background 0.3s ease; flex-shrink: 0;
     }
     .sidebar-bottom:hover { background-color: #08a3bd; }
     .sidebar-bottom svg { width: 28px; height: 28px; fill: #333; }
 
     /* --- CONTEÚDO PRINCIPAL --- */
     .content {
-        flex: 1;
-        margin-left: 250px;
-        /* padding-top removido, será controlado pelo main-content */
-        position: relative; /* Mudado para relative */
-        /* overflow-y removido, será controlado pelo main-content */
-        transition: margin-left 0.3s ease;
-        height: 100vh; /* Ocupa altura total */
-        display: flex; /* Para header fixo e conteúdo rolável */
-        flex-direction: column;
-        overflow: hidden; /* Evita scroll duplo no body */
+        flex: 1; margin-left: 250px; position: relative;
+        transition: margin-left 0.3s ease; height: 100vh;
+        display: flex; flex-direction: column; overflow: hidden;
     }
-    .content.shifted {
-        margin-left: 70px;
-    }
+    .content.shifted { margin-left: 70px; }
      @media (max-width: 992px) {
          .content { margin-left: 0; height: auto; min-height: 100vh; }
          .content.shifted { margin-left: 0; }
      }
 
-
     /* --- HEADER --- */
     .header {
         width: calc(100% - 250px); height: 60px;
         background: linear-gradient(to right, #0047a3, #3ac0dd); color: white;
-        display: flex; align-items: center; justify-content: space-between; /* Ajustado */
-        padding: 0 1.5rem; /* Adicionado padding */
-        position: fixed; top: 0; left: 250px; z-index: 1000;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 1.5rem; position: fixed; top: 0; left: 250px; z-index: 1000;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        transition: left 0.3s ease, width 0.3s ease;
-        flex-shrink: 0; /* Evita que o header encolha */
+        transition: left 0.3s ease, width 0.3s ease; flex-shrink: 0;
     }
-    .header.shifted {
-        left: 70px; width: calc(100% - 70px);
-    }
-     /* Novo: Título do Header */
+    .header.shifted { left: 70px; width: calc(100% - 70px); }
     .header-title {
-        font-size: 22px; font-weight: bold;
-        position: absolute; left: 50%; transform: translateX(-50%); /* Centralizado */
-        white-space: nowrap; /* Evita quebra de linha */
+        font-size: 22px; font-weight: bold; position: absolute;
+        left: 50%; transform: translateX(-50%); white-space: nowrap;
     }
-     /* Novo: Botão Hamburger (oculto por padrão) */
      .menu-toggle-mobile {
-         display: none; /* Oculto no desktop */
-         background: none; border: none; color: white;
-         font-size: 1.8rem; cursor: pointer; padding: 0.5rem;
-         z-index: 1001; /* Garante que fique clicável sobre o header */
+         display: none; background: none; border: none; color: white;
+         font-size: 1.8rem; cursor: pointer; padding: 0.5rem; z-index: 1001;
      }
       @media (max-width: 992px) {
-         .header { width: 100%; left: 0; padding: 0 1rem; position: fixed; /* Garante que fique fixo no mobile */}
+         .header { width: 100%; left: 0; padding: 0 1rem; position: fixed; }
          .header.shifted { width: 100%; left: 0; }
-         .header-title { display: none; } /* Esconde título no mobile */
-         .menu-toggle-mobile { display: block; } /* Mostra hamburger no mobile */
+         .header-title { display: none; }
+         .menu-toggle-mobile { display: block; }
      }
 
-     /* Novo: Área de conteúdo rolável */
      .main-content {
-         flex-grow: 1; /* Ocupa o espaço restante */
-         overflow-y: auto; /* Permite rolar apenas esta área */
-         padding: 1.5rem; /* Padding interno */
-         margin-top: 60px; /* Espaço para o header fixo */
-         background-color: #f4f7f6; /* Cor de fundo */
+         flex-grow: 1; overflow-y: auto; padding: 1.5rem;
+         margin-top: 60px; background-color: #f4f7f6;
      }
       @media (max-width: 992px) {
          .main-content { margin-top: 60px; padding: 1rem; }
       }
 
     /* --- TABELA E PESQUISA --- */
-     /* Removido padding-top do content, agora o main-content controla */
     .tabela-container {
-        width: 100%; /* Ocupa toda a largura do main-content */
-        /* margin removido, padding do main-content cuida do espaçamento */
-        background-color: #ffffff; padding: 25px; border-radius: 12px;
+        width: 100%; background-color: #ffffff; padding: 25px; border-radius: 12px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); overflow-x: auto;
     }
-    .search-bar-container {
-        margin-bottom: 1.5rem; /* Espaço abaixo da busca */
-        text-align: center;
-    }
+    .search-bar-container { margin-bottom: 1.5rem; text-align: center; }
     .search-bar-container input { padding: 10px 15px; width: 100%; max-width: 500px; border: 2px solid #0047a3; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
     .search-bar-container input:focus { border-color: #3ac0dd; box-shadow: 0 0 8px rgba(58, 192, 221, 0.5); }
+
     table {
-        table-layout: fixed; /* Ajuda a controlar melhor as larguras */
-        width: 100%; border-collapse: collapse; text-align: left; /* Alinha texto à esquerda */
+        table-layout: fixed; /* Essencial para text-overflow funcionar bem */
+        width: 100%; border-collapse: collapse; text-align: left;
     }
-    th { background-color: #0047a3; color: white; padding: 15px 10px; border: 1px solid rgba(255, 255, 255, 0.3); font-size: 16px; font-weight: 700; text-transform: uppercase; text-align: left; /* Alinha cabeçalho à esquerda */ }
+    th {
+        background-color: #0047a3; color: white; padding: 15px 10px; border: 1px solid rgba(255, 255, 255, 0.3);
+        font-size: 16px; font-weight: 700; text-transform: uppercase; text-align: left;
+        white-space: nowrap; /* Evita que o cabeçalho quebre linha */
+    }
     td {
-        padding: 12px 10px; /* Padding original */
+        padding: 14px 10px; /* Aumentei padding vertical */
         border: 1px solid #e0e0e0; font-size: 15px; color: #333;
-        word-wrap: break-word; /* Permite que palavras longas quebrem */
-        overflow-wrap: break-word; /* Alternativa/complemento para word-wrap */
-        hyphens: auto; /* Tenta adicionar hífens se necessário */
-        vertical-align: middle; /* Alinha conteúdo verticalmente */
+        vertical-align: middle;
+        /* --- ESTILOS PARA TRUNCAR TEXTO --- */
+        white-space: nowrap;   /* Impede a quebra de linha */
+        overflow: hidden;        /* Esconde o conteúdo que transborda */
+        text-overflow: ellipsis; /* Adiciona "..." ao final */
     }
+    /* Permite quebra nos selects quando em modo de edição */
+    td select.input_edicao {
+        white-space: normal;
+        text-overflow: clip; /* Ou initial */
+    }
+    /* Remove truncamento para inputs quando em modo de edição */
+    td input.input_edicao {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip; /* Ou initial */
+    }
+
+
     tr:nth-child(even) td { background-color: #f7f7f7; }
     tr:hover td { background-color: #dbeaff; }
 
-    /* Definir larguras relativas (ajuste conforme necessário) - 4 COLUNAS */
-    th:nth-child(1), td:nth-child(1) { width: 30%; } /* Nome */
-    th:nth-child(2), td:nth-child(2) { width: 35%; } /* Email */
-    th:nth-child(3), td:nth-child(3) { width: 10%; text-align: center; } /* Tipo - Centralizado*/
-    th:nth-child(4), td:nth-child(4) { width: 25%; text-align: center; } /* Ações - Centralizado*/
+    /* Larguras das Colunas - Desktop (Ajustadas) */
+    th:nth-child(1), td:nth-child(1) { width: 35%; } /* Nome */
+    th:nth-child(2), td:nth-child(2) { width: 40%; } /* Email */
+    th:nth-child(3), td:nth-child(3) { width: 10%; text-align: center; } /* Tipo */
+    th:nth-child(4), td:nth-child(4) { width: 15%; text-align: center; } /* Ações */
 
-    /* --- AJUSTES PARA AÇÕES --- */
-     td:nth-child(4) { /* Ações agora é a 4ª coluna */
-         white-space: nowrap; /* Impede que os botões quebrem linha entre si */
-         text-align: center; /* Centraliza os botões */
-     }
-     td:nth-child(4) button { /* Ações agora é a 4ª coluna */
-         margin: 2px 3px; /* Espaçamento menor entre botões */
-         padding: 6px 10px; /* Botões um pouco menores */
-     }
-     /* Centraliza o conteúdo do select de Tipo quando editando */
-     td:nth-child(3) select.input_edicao { text-align: center; }
+    td:nth-child(3) select.input_edicao { text-align: center; }
+
+    /* --- ESTILOS PARA ÍCONES DE AÇÃO --- */
+    .actions-cell { text-align: center; white-space: nowrap; }
+    /* Adiciona overflow: visible para a célula de ações para garantir que os ícones não sejam cortados */
+    td:nth-child(4) { overflow: visible; }
+
+    .action-icon {
+        display: inline-block; padding: 8px 10px; margin: 0 4px; border-radius: 5px;
+        color: white; font-size: 14px; text-decoration: none;
+        transition: all 0.2s ease-in-out; vertical-align: middle; cursor: pointer;
+    }
+    .action-icon:hover { transform: scale(1.1); opacity: 0.9; }
+    .action-icon i { display: block; }
+    .action-icon.alterar { background-color: #00b86b; }
+    .action-icon.salvar { background-color: #007bff; }
+    .action-icon.excluir { background-color: #e60000; }
+    button.alterar, button.salvar, button.excluir { display: none; }
 
 
     /* Ajustes específicos para telas menores */
     @media (max-width: 768px) {
+        table { table-layout: auto; } /* Deixa navegador ajustar melhor */
         th, td {
-            padding: 10px 5px; /* Padding ainda menor */
-            font-size: 14px; /* Fonte ligeiramente menor */
-            text-align: left; /* Garante alinhamento à esquerda */
+            padding: 12px 6px; /* Ajustado padding */
+            font-size: 14px; text-align: left;
+            white-space: nowrap; /* Mantém nowrap para truncar */
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-         th:nth-child(1), td:nth-child(1) { width: 35%; } /* Nome */
-         th:nth-child(2), td:nth-child(2) { width: 40%; } /* Email */
-         th:nth-child(3), td:nth-child(3) { width: auto; text-align: center; } /* Tipo - Auto e Centralizado */
-         th:nth-child(4), td:nth-child(4) { width: auto; min-width: 110px; text-align: center;} /* Ações - Auto com min-width e Centralizado */
+        /* Força centralização para Tipo e Ações no mobile */
+         th:nth-child(3), td:nth-child(3),
+         th:nth-child(4), td:nth-child(4) {
+             text-align: center;
+             white-space: nowrap; /* Necessário para centralizar ícones lado a lado */
+         }
+         th:nth-child(4), td:nth-child(4) {
+             width: auto; /* Deixa largura automática */
+             min-width: 80px; /* Espaço mínimo para ícones */
+             overflow: visible; /* Garante que ícones não cortem */
+         }
+         th:nth-child(1), td:nth-child(1) { width: 30%; } /* Reduzido Nome */
+         th:nth-child(2), td:nth-child(2) { width: 35%; } /* Reduzido Email */
 
-        .alterar, .salvar, .excluir {
-            padding: 5px 8px; /* Botões ainda menores */
-            font-size: 13px;
-        }
+         .action-icon { padding: 6px 8px; margin: 0 2px; font-size: 13px; }
+         /* Remove nowrap dos inputs/selects em edição no mobile */
+         td input.input_edicao, td select.input_edicao {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+         }
     }
 
-    /* --- BOTÕES --- */
-    .btn-detalhes { padding: 8px 16px; border: none; background-color: #007bff; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; }
-    .btn-detalhes:hover { background-color: #0056b3; }
+    /* --- BOTÕES (Mantido para Popups) --- */
     button { padding: 8px 15px; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 14px; transition: all 0.2s ease-in-out; margin: 0 3px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
     button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
     button:disabled { cursor: not-allowed; background-color: #a0a0a0; transform: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);}
-    .alterar { background-color: #00b86b; } .alterar:hover { background-color: #019655; }
-    .excluir { background-color: #e60000; } .excluir:hover { background-color: #b80000; }
-    .salvar { background-color: #007bff; } .salvar:hover { background-color: #0056b3; }
+    .popup-buttons .btn-confirm { background-color: #dc3545; } .popup-buttons .btn-confirm:hover { background-color: #c82333; }
+    .popup-buttons .btn-cancel { background-color: #6c757d; } .popup-buttons .btn-cancel:hover { background-color: #5a6268; }
+    .popup-buttons .btn-ok { background-color: #007bff; } .popup-buttons .btn-ok:hover { background-color: #0056b3; }
 
-    /* --- PAGINAÇÃO (NOVO ESTILO) --- */
-    .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; }
-    .pagination-info { font-size: 14px; color: #666; }
-    .pagination-controls { display: flex; align-items: center; gap: 5px; }
+    /* --- PAGINAÇÃO --- */
+    .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; flex-wrap: wrap; gap: 10px;} /* Permite quebra de linha */
+    .pagination-info { font-size: 14px; color: #666; white-space: nowrap;}
+    .pagination-controls { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; } /* Impede quebra nos controles */
     .pagination-controls button {
-        background-color: #f0f0f0;
-        color: #333;
-        border: 1px solid #ccc;
-        padding: 8px 14px;
-        border-radius: 5px;
-        cursor: pointer;
+        background-color: #f0f0f0; color: #333; border: 1px solid #ccc;
+        padding: 8px 14px; border-radius: 5px; cursor: pointer;
         transition: background-color 0.2s, color 0.2s;
     }
-    .pagination-controls button:hover:not(:disabled) {
-        background-color: #007bff;
-        color: white;
-    }
-    .pagination-controls button:disabled {
-        background-color: #e9e9e9;
-        color: #aaa;
-        cursor: not-allowed;
-    }
-    .pagination-controls button.active {
-        background-color: #0056b3;
-        color: white;
-        border-color: #0056b3;
-    }
-    .pagination-controls .ellipsis {
-        padding: 8px 5px;
-        color: #666;
-    }
+    .pagination-controls button:hover:not(:disabled) { background-color: #007bff; color: white; }
+    .pagination-controls button:disabled { background-color: #e9e9e9; color: #aaa; cursor: not-allowed; }
+    .pagination-controls button.active { background-color: #0056b3; color: white; border-color: #0056b3; }
+    .pagination-controls .ellipsis { padding: 8px 5px; color: #666; }
+     @media (max-width: 480px) { /* Ajuste fino para paginação em telas muito pequenas */
+        .pagination-container { justify-content: center; }
+        .pagination-info { width: 100%; text-align: center; margin-bottom: 10px; }
+     }
+
 
     /* --- POP-UPS E TOASTS --- */
     .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1050; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
@@ -290,24 +253,16 @@
     .popup-content { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); text-align: center; max-width: 400px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
     .popup-overlay.visible .popup-content { transform: scale(1); }
     .popup-icon { font-size: 48px; margin-bottom: 20px; }
-    .popup-icon.success { color: #28a745; }
-    .popup-icon.error { color: #dc3545; }
-    .popup-icon.confirm { color: #ffc107; }
+    .popup-icon.success { color: #28a745; } .popup-icon.error { color: #dc3545; } .popup-icon.confirm { color: #ffc107; }
     .popup-content h3 { margin-top: 0; margin-bottom: 15px; font-size: 22px; color: #333; line-height: 1.4; }
     .popup-buttons { margin-top: 25px; display: flex; justify-content: center; gap: 15px; }
-    .popup-buttons button { padding: 10px 25px; border-radius: 6px; font-weight: bold; }
-    .popup-buttons .btn-confirm { background-color: #dc3545; } .popup-buttons .btn-confirm:hover { background-color: #c82333; }
-    .popup-buttons .btn-cancel { background-color: #6c757d; } .popup-buttons .btn-cancel:hover { background-color: #5a6268; }
-    .popup-buttons .btn-ok { background-color: #007bff; } .popup-buttons .btn-ok:hover { background-color: #0056b3; }
     .toast-notification { position: fixed; top: 20px; right: 20px; background-color: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease forwards; }
-    .toast-notification.fade-out { animation: fadeOut 0.5s ease 2.5s forwards; } /* Inicia fadeOut após 2.5s */
-    .toast-notification.success { background-color: #28a745; }
-    .toast-notification.error { background-color: #dc3545; }
+    .toast-notification.fade-out { animation: fadeOut 0.5s ease 2.5s forwards; }
+    .toast-notification.success { background-color: #28a745; } .toast-notification.error { background-color: #dc3545; }
     .toast-notification i { font-size: 24px; }
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(100%); } }
 
-     /* Novo: Overlay para menu mobile */
     .nav-overlay {
         display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background-color: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
@@ -321,24 +276,30 @@
             <div class="logo"><a href="index.html"><img src="IMG/ocean coffee.png" alt="Logo Ocean Coffee"></a></div>
             <div class="menu">
                 <a href="dashboard.html" class="menu-item">
-                    <i class="fas fa-tachometer-alt fa-fw"></i> <span>Dashboard</span>
+                    <i class="fas fa-tachometer-alt fa-fw"></i>
+                    <span>Dashboard</span>
                 </a>
                 <a href="admin.html" class="menu-item selected">
-                    <i class="fas fa-users fa-fw"></i> <span>Usuários</span>
+                    <i class="fas fa-users fa-fw"></i>
+                    <span>Usuários</span>
                 </a>
                 <a href="Solicitações.html" class="menu-item">
-                    <i class="fas fa-inbox fa-fw"></i> <span>Solicitações</span>
+                    <i class="fas fa-inbox fa-fw"></i>
+                    <span>Solicitações</span>
                 </a>
                 <a href="Aprovados.html" class="menu-item">
-                    <i class="fas fa-check-circle fa-fw"></i> <span>Aprovados</span>
+                    <i class="fas fa-check-circle fa-fw"></i>
+                    <span>Aprovados</span>
                 </a>
             </div>
         </div>
          <div>
-             <a href="#" class="menu-item-logout"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+             <a href="#" class="menu-item-logout">
+                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
                  <span>Logout</span>
              </a>
-            <div class="sidebar-bottom" id="sidebarToggle"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
+            <div class="sidebar-bottom" id="sidebarToggle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
             </div>
          </div>
     </div>
@@ -351,13 +312,14 @@
                  <i class="fas fa-bars"></i>
              </button>
              <span class="header-title" id="headerTitle">Contas Registradas</span>
-             <div></div> </div>
+             <div></div>
+        </div>
 
-         <div class="main-content">
+        <div class="main-content">
             <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail..." /></div>
             <div class="tabela-container">
                 <table>
-                     <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Ações</th></tr></thead>
+                    <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Ações</th></tr></thead>
                     <tbody></tbody>
                 </table>
                 <div id="pagination-container" class="pagination-container"></div>
@@ -378,9 +340,8 @@
         const rowsPerPage = 10;
 
 
-        function showPopup(message, type = 'error') {
-            // ... (código da função showPopup sem alterações)
-            return new Promise((resolve) => {
+        function showPopup(message, type = 'error') { /* ... (sem alterações) ... */
+             return new Promise((resolve) => {
                 const overlay = document.createElement('div');
                 overlay.className = 'popup-overlay';
                 let iconClass = '', buttonsHtml = '';
@@ -411,10 +372,8 @@
                 overlay.querySelector('.btn-cancel')?.addEventListener('click', () => closePopup(false));
             });
         }
-
-        function showToast(message, type = 'success') {
-            // ... (código da função showToast sem alterações)
-            const toast = document.createElement('div');
+        function showToast(message, type = 'success') { /* ... (sem alterações) ... */
+             const toast = document.createElement('div');
             toast.className = `toast-notification ${type}`;
             const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
             toast.innerHTML = `<i class="fas ${iconClass}"></i><span>${message}</span>`;
@@ -422,23 +381,20 @@
             setTimeout(() => {
                 toast.classList.add('fade-out');
                 toast.addEventListener('animationend', () => toast.remove());
-            }, 3000); // Ajustado para 3 segundos
+            }, 3000);
         }
-
-        async function listarUsuarios() {
-            // ... (código da função listarUsuarios sem alterações, exceto o colspan)
+        async function listarUsuarios() { /* ... (sem alterações) ... */
             const tbody = document.querySelector("tbody");
-            tbody.innerHTML = `<tr><td colspan="4">Carregando usuários...</td></tr>`; // Colspan 4
+            tbody.innerHTML = `<tr><td colspan="4">Carregando usuários...</td></tr>`;
             const { data, error, count } = await supabase.from("usuarios").select("*", { count: 'exact' }).order('nome', { ascending: true });
 
             if (error) {
                 console.error("Erro ao carregar usuários:", error);
-                tbody.innerHTML = `<tr><td colspan="4">Erro ao carregar usuários.</td></tr>`; // Colspan 4
+                tbody.innerHTML = `<tr><td colspan="4">Erro ao carregar usuários.</td></tr>`;
                 return;
             }
             allUsers = data || [];
             filteredUsers = allUsers;
-            // Atualiza o título do header (agora no span correto)
             const headerTitleSpan = document.getElementById('headerTitle');
              if (headerTitleSpan) {
                 headerTitleSpan.textContent = `Contas Registradas (${count || 0})`;
@@ -446,27 +402,22 @@
             currentPage = 1;
             displayPage();
         }
-
-        function displayPage() {
-            // ... (código da função displayPage sem alterações)
-            renderizarTabela(filteredUsers);
+        function displayPage() { /* ... (sem alterações) ... */
+             renderizarTabela(filteredUsers);
             setupPagination(filteredUsers);
         }
-
-        function renderizarTabela(usersToRender) {
-             // Atualizado para remover Status
-             const tbody = document.querySelector("tbody");
+        function renderizarTabela(usersToRender) { /* ... (sem alterações - já usa ícones) ... */
+            const tbody = document.querySelector("tbody");
             tbody.innerHTML = "";
             const startIndex = (currentPage - 1) * rowsPerPage;
             const paginatedUsers = usersToRender.slice(startIndex, startIndex + rowsPerPage);
 
             if (paginatedUsers.length === 0 && currentPage === 1) {
-                tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado.</td></tr>`; // Colspan 4
+                tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado.</td></tr>`;
                 return;
             }
 
             paginatedUsers.forEach((usuario) => {
-                // Removido 'status' da desestruturação e do HTML
                 const { id, nome, email, tipo = "Comum" } = usuario;
                 const tr = document.createElement("tr");
                 tr.dataset.userId = id;
@@ -474,15 +425,17 @@
                     <td><span>${nome}</span><input class="input_edicao" type="text" style="display:none" value="${nome}"></td>
                     <td><span>${email}</span><input class="input_edicao" type="email" style="display:none" value="${email}"></td>
                     <td><span>${tipo}</span><select class="input_edicao" style="display:none"><option value="Comum" ${tipo === "Comum" ? "selected" : ""}>Comum</option><option value="Administrador" ${tipo === "Administrador" ? "selected" : ""}>Administrador</option></select></td>
-                    <td><button class="alterar">Alterar</button><button class="salvar" style="display:none">Salvar</button><button class="excluir">Excluir</button></td>
+                    <td class="actions-cell">
+                        <a href="#" class="action-icon alterar" title="Alterar"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="#" class="action-icon salvar" title="Salvar" style="display:none;"><i class="fas fa-save"></i></a>
+                        <a href="#" class="action-icon excluir" title="Excluir"><i class="fas fa-trash-alt"></i></a>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        function setupPagination(users) {
-            // ... (código da função setupPagination sem alterações)
-            const paginationContainer = document.getElementById("pagination-container");
+         }
+        function setupPagination(users) { /* ... (sem alterações) ... */
+             const paginationContainer = document.getElementById("pagination-container");
             paginationContainer.innerHTML = "";
             const pageCount = Math.ceil(users.length / rowsPerPage);
             if (pageCount <= 1) return;
@@ -515,19 +468,16 @@
                 return span;
             };
 
-            // Botão "Anterior"
             controls.appendChild(createButton('&laquo; Anterior', currentPage - 1, currentPage === 1));
 
-            const maxVisibleButtons = 5; // Total de botões numéricos visíveis
+            const maxVisibleButtons = 5;
             let startPage, endPage;
 
             if (pageCount <= maxVisibleButtons) {
-                // Mostra todos os números se não houver muitos
                 startPage = 1;
                 endPage = pageCount;
             } else {
-                // Lógica para mostrar botões com elipses
-                const maxPagesShown = maxVisibleButtons - 2; // Deixa espaço para "1" e "pageCount"
+                const maxPagesShown = maxVisibleButtons - 2;
                 let maxPagesBeforeCurrent = Math.floor(maxPagesShown / 2);
                 let maxPagesAfterCurrent = Math.ceil(maxPagesShown / 2) - 1;
 
@@ -543,36 +493,26 @@
                 }
             }
 
-            // Sempre mostrar a primeira página
             if (startPage > 1) {
                 controls.appendChild(createButton('1', 1));
-                if (startPage > 2) {
-                    controls.appendChild(createEllipsis());
-                }
+                if (startPage > 2) controls.appendChild(createEllipsis());
             }
 
-            // Números de página intermediários
             for (let i = startPage; i <= endPage; i++) {
                 controls.appendChild(createButton(i, i, false, i === currentPage));
             }
 
-            // Sempre mostrar a última página
             if (endPage < pageCount) {
-                if (endPage < pageCount - 1) {
-                    controls.appendChild(createEllipsis());
-                }
+                if (endPage < pageCount - 1) controls.appendChild(createEllipsis());
                 controls.appendChild(createButton(pageCount, pageCount));
             }
 
-            // Botão "Próximo"
             controls.appendChild(createButton('Próximo &raquo;', currentPage + 1, currentPage === pageCount));
 
             paginationContainer.appendChild(pageInfo);
             paginationContainer.appendChild(controls);
         }
-
-        function filterUsers(searchTerm) {
-            // ... (código da função filterUsers sem alterações)
+        function filterUsers(searchTerm) { /* ... (sem alterações) ... */
              const termo = searchTerm.toLowerCase();
             filteredUsers = allUsers.filter(user =>
                 (user.nome || '').toLowerCase().includes(termo) ||
@@ -580,48 +520,48 @@
             );
             currentPage = 1;
             displayPage();
-        }
+         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            // ... (código de verificação de admin sem alterações)
+        document.addEventListener("DOMContentLoaded", async () => { /* ... (sem alterações na lógica principal) ... */
              try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) { throw new Error("Você precisa estar logado para acessar esta página."); }
-                const { data: usuarioData, error } = await supabase.from("usuarios").select("tipo").eq("user_id", user.id).single(); // Removido throwOnError para tratar erro manualmente
+                const { data: usuarioData, error } = await supabase.from("usuarios").select("tipo").eq("user_id", user.id).single();
                 if (error || !usuarioData) {
-                    console.error("Erro ao buscar dados do usuário:", error); // Log do erro
+                    console.error("Erro ao buscar dados do usuário:", error);
                     throw new Error("Não foi possível verificar suas permissões.");
                  }
                 if (usuarioData.tipo !== "Administrador") { throw new Error("Acesso restrito! Apenas administradores podem acessar esta página."); }
             } catch (err) {
                 await showPopup(err.message, 'error');
-                // Adiciona um pequeno delay antes de redirecionar para garantir que o popup seja visto
                  setTimeout(() => { window.location.replace("index.html"); }, 1500);
-                return; // Impede a execução do restante do código
+                return;
             }
 
             await listarUsuarios();
 
             document.getElementById("searchInput").addEventListener("input", (e) => filterUsers(e.target.value));
 
-            document.querySelector("tbody").addEventListener("click", async (e) => {
-                // Atualizado para remover Status
+            document.querySelector("tbody").addEventListener("click", async (e) => { /* ... (sem alterações - já usa ícones) ... */
                  const target = e.target;
-                const tr = target.closest("tr");
-                if (!tr) return;
+                const actionLink = target.closest('.action-icon');
+                if (!actionLink) return;
 
+                e.preventDefault();
+
+                const tr = actionLink.closest("tr");
+                if (!tr) return;
                 const userId = tr.dataset.userId;
 
-                if (target.classList.contains("alterar")) {
+                if (actionLink.classList.contains("alterar")) {
                     tr.querySelectorAll("span").forEach(el => el.style.display = "none");
-                    tr.querySelectorAll("input, select").forEach(el => el.style.display = "inline-block");
-                    target.style.display = "none";
-                    tr.querySelector(".salvar").style.display = "inline-block";
+                    tr.querySelectorAll(".input_edicao").forEach(el => el.style.display = "inline-block");
+                    actionLink.style.display = "none";
+                    tr.querySelector(".action-icon.salvar").style.display = "inline-block";
                 }
 
-                if (target.classList.contains("salvar")) {
+                if (actionLink.classList.contains("salvar")) {
                     const inputs = tr.querySelectorAll(".input_edicao");
-                    // Removido Status de updatedData
                     const updatedData = {
                         nome: inputs[0].value.trim(),
                         email: inputs[1].value.trim(),
@@ -631,39 +571,32 @@
                         await showPopup("Nome e E-mail não podem ser vazios.", 'error');
                         return;
                     }
-                     target.disabled = true; // Desabilita botão salvar
-                     target.textContent = 'Salvando...';
+                    actionLink.style.pointerEvents = 'none';
+                    actionLink.style.opacity = '0.5';
                     const { error } = await supabase.from("usuarios").update(updatedData).eq("id", userId);
-                     target.disabled = false; // Reabilita botão salvar
-                     target.textContent = 'Salvar';
+                    actionLink.style.pointerEvents = 'auto';
+                    actionLink.style.opacity = '1';
+
                     if (error) {
                         await showPopup(`Erro ao atualizar: ${error.message}`, 'error');
                     } else {
                         showToast("Usuário atualizado com sucesso!");
-                        // Não chama listarUsuarios() aqui para manter a página atual e filtro
-                        // Apenas atualiza a UI da linha editada (removido Status)
                         tr.querySelectorAll("span")[0].textContent = updatedData.nome;
                         tr.querySelectorAll("span")[1].textContent = updatedData.email;
                         tr.querySelectorAll("span")[2].textContent = updatedData.tipo;
-                        // Oculta inputs/selects e mostra spans
                         tr.querySelectorAll("span").forEach(el => el.style.display = "inline-block");
-                        tr.querySelectorAll("input, select").forEach(el => el.style.display = "none");
-                        tr.querySelector(".alterar").style.display = "inline-block";
-                        target.style.display = "none";
-                        // Atualiza allUsers se necessário para futuras filtragens
-                         const userIndex = allUsers.findIndex(u => u.id == userId);
-                         if (userIndex > -1) {
-                            // Atualiza os dados locais sem o status
+                        tr.querySelectorAll(".input_edicao").forEach(el => el.style.display = "none");
+                        tr.querySelector(".action-icon.alterar").style.display = "inline-block";
+                        actionLink.style.display = "none";
+                        const userIndex = allUsers.findIndex(u => u.id == userId);
+                        if (userIndex > -1) {
                             const { status, ...restOfUserData } = allUsers[userIndex];
                             allUsers[userIndex] = { ...restOfUserData, ...updatedData };
-                         }
-                         filterUsers(document.getElementById("searchInput").value); // Re-filtra para garantir consistência
-                         displayPage(); // Redesenha a página atual
+                        }
                     }
                 }
 
-                if (target.classList.contains("excluir")) {
-                    // ... (lógica de exclusão sem alterações)
+                if (actionLink.classList.contains("excluir")) {
                     const confirmed = await showPopup("Deseja realmente excluir este usuário?", 'confirm');
                     if (confirmed) {
                         const { error } = await supabase.from("usuarios").delete().eq("id", userId);
@@ -671,77 +604,59 @@
                             await showPopup(`Erro ao excluir: ${error.message}`, 'error');
                         } else {
                             showToast("Usuário excluído com sucesso.");
-                             // Remove da lista local e redesenha a página
                              allUsers = allUsers.filter(u => u.id != userId);
-                             filterUsers(document.getElementById("searchInput").value); // Re-filtra
-                             // Ajusta currentPage se a última página ficou vazia
+                             filterUsers(document.getElementById("searchInput").value);
                              const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
                              if (currentPage > totalPages && totalPages > 0) {
                                 currentPage = totalPages;
+                             } else if (filteredUsers.length === 0) {
+                                currentPage = 1;
                              }
-                             displayPage(); // Redesenha a página atual
+                             displayPage();
                         }
                     }
                 }
-            });
+             });
 
-            // --- Lógica de toggle da Sidebar (Desktop e Mobile) ---
-            // ... (código da lógica da sidebar sem alterações)
-             const sidebar = document.getElementById("sidebar");
-            const sidebarToggle = document.getElementById("sidebarToggle"); // Botão Desktop
+             const sidebar = document.getElementById("sidebar"); /* ... (restante da lógica da sidebar sem alterações) ... */
+            const sidebarToggle = document.getElementById("sidebarToggle");
             const mainContent = document.getElementById("mainContent");
             const mainHeader = document.getElementById("mainHeader");
-            const menuToggleMobile = document.getElementById('menu-toggle-mobile'); // Botão Mobile
-            const navOverlay = document.getElementById('nav-overlay'); // Overlay
-
-             // Função para aplicar estado colapsado no desktop
+            const menuToggleMobile = document.getElementById('menu-toggle-mobile');
+            const navOverlay = document.getElementById('nav-overlay');
              const applyDesktopCollapsedState = () => {
-                 if (window.innerWidth <= 992) return; // Só aplica no desktop
+                 if (window.innerWidth <= 992) return;
                  const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
                  sidebar.classList.toggle("collapsed", isCollapsed);
                  mainContent.classList.toggle("shifted", isCollapsed);
                  mainHeader.classList.toggle("shifted", isCollapsed);
              };
-
-             // Aplica estado inicial no desktop
              applyDesktopCollapsedState();
-
-             // Listener para botão toggle desktop
              sidebarToggle.addEventListener("click", () => {
-                 if (window.innerWidth > 992) { // Só funciona no desktop
+                 if (window.innerWidth > 992) {
                     sidebar.classList.toggle("collapsed");
                     mainContent.classList.toggle("shifted");
                     mainHeader.classList.toggle("shifted");
                     localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
                  }
              });
-
-             // Listener para botão toggle mobile (hamburger)
              const closeMobileMenu = () => { sidebar.classList.remove('is-open'); navOverlay.classList.remove('is-open'); };
              menuToggleMobile.addEventListener('click', () => { sidebar.classList.add('is-open'); navOverlay.classList.add('is-open'); });
              navOverlay.addEventListener('click', closeMobileMenu);
-
-             // Fecha menu mobile ao clicar num item (exceto logout talvez)
              sidebar.querySelectorAll('.menu-item').forEach(item => {
                  item.addEventListener('click', () => { if (window.innerWidth <= 992) closeMobileMenu(); });
              });
-
-            // Listener para Logout (agora na classe .menu-item-logout)
             document.querySelector(".menu-item-logout").addEventListener("click", async (e) => {
                 e.preventDefault();
-                 if (window.innerWidth <= 992) closeMobileMenu(); // Fecha menu mobile antes de sair
+                 if (window.innerWidth <= 992) closeMobileMenu();
                  await supabase.auth.signOut();
                 window.location.replace("index.html");
             });
-
-             // Listener para resize da janela
              window.addEventListener('resize', () => {
                  if (window.innerWidth > 992) {
-                     // Se redimensionar para desktop, fecha menu mobile e aplica estado desktop
                      closeMobileMenu();
                      applyDesktopCollapsedState();
                  } else {
-                     // Se redimensionar para mobile, remove classes desktop se existirem
                      sidebar.classList.remove("collapsed");
                      mainContent.classList.remove("shifted");
                      mainHeader.classList.remove("shifted");
