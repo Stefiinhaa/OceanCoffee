@@ -991,7 +991,7 @@ text-align: center;
    
 }
 
-@media (max-width: 768px) {
+@media (max-width: 576px) {
    .texto1 {
     font-family: Garamond;
     font-size: 60px;
@@ -1013,7 +1013,7 @@ text-align: center;
 }
 
 .Pacote {
-    width: 80%;
+    width: 70%;
     /* margin-left: 30px; */
     margin-top: 40px;
 }
