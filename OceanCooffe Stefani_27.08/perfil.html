@@ -107,7 +107,7 @@
                  border-bottom: 1px solid var(--color-border); /* Adiciona borda inferior */
                  text-align: center; /* Centraliza o conteúdo */
             }
-             /* Novo: Garante que a imagem do logo não seja excessivamente grande */
+             /* Garante que a imagem do logo não seja excessivamente grande */
              .mobile-nav .sidebar-header .logo-img {
                  height: 40px; /* Ajuste a altura conforme necessário */
                  width: auto;
@@ -297,7 +297,12 @@
             const navOverlay = document.getElementById('nav-overlay');
 
             let originalProfileData = {};
-            const telefoneMask = IMask(telefoneInput, { mask: [ { mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
+            // Garante que a máscara seja aplicada apenas se o elemento existir
+             let telefoneMask = null;
+             if (telefoneInput) {
+                telefoneMask = IMask(telefoneInput, { mask: [ { mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
+             }
+
 
             // --- Funções ---
             async function loadProfile() {
@@ -307,14 +312,20 @@
                     if (profile) {
                         originalProfileData = { ...profile };
                         const firstName = profile.nome.split(' ')[0];
-                        document.getElementById('welcome-message').textContent = firstName;
-                        document.getElementById('user-email-sidebar').textContent = profile.email;
-                        document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
-                        document.getElementById('mobile-welcome-message').textContent = `Olá, ${firstName}!`;
+                        // Atualiza elementos da UI apenas se eles existirem
+                        const welcomeMsgEl = document.getElementById('welcome-message');
+                        const emailSidebarEl = document.getElementById('user-email-sidebar');
+                        const avatarEl = document.getElementById('avatar-inicial');
+                        const mobileWelcomeEl = document.getElementById('mobile-welcome-message');
 
-                        nomeInput.value = profile.nome || '';
-                        emailInput.value = profile.email || '';
-                        telefoneMask.value = profile.telefone || ''; // Usa a máscara para definir o valor
+                        if (welcomeMsgEl) welcomeMsgEl.textContent = firstName;
+                        if (emailSidebarEl) emailSidebarEl.textContent = profile.email;
+                        if (avatarEl) avatarEl.textContent = profile.nome.charAt(0).toUpperCase();
+                        if (mobileWelcomeEl) mobileWelcomeEl.textContent = `Olá, ${firstName}!`;
+
+                        if (nomeInput) nomeInput.value = profile.nome || '';
+                        if (emailInput) emailInput.value = profile.email || '';
+                        if (telefoneMask) telefoneMask.value = profile.telefone || ''; // Usa a máscara para definir o valor
                     }
                 } catch (error) {
                     showPopup("Não foi possível carregar seu perfil. Tente recarregar a página.", 'error');
@@ -372,7 +383,7 @@
             // --- Event Listeners ---
             if (editBtn) editBtn.addEventListener("click", () => toggleEditMode(true));
             if (cancelBtn) cancelBtn.addEventListener("click", () => {
-                if (originalProfileData) { // Garante que dados originais foram carregados
+                if (originalProfileData && nomeInput && telefoneMask) { // Garante que dados e elementos existam
                     nomeInput.value = originalProfileData.nome || '';
                     telefoneMask.value = originalProfileData.telefone || ''; // Usa máscara
                 }
@@ -380,6 +391,7 @@
             });
 
             if (saveBtn) saveBtn.addEventListener("click", async () => {
+                if (!nomeInput || !telefoneMask) return; // Garante que elementos existam
                 saveBtn.disabled = true;
                 saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
                 try {
@@ -400,10 +412,13 @@
             if (newPasswordInput) newPasswordInput.addEventListener('input', checkPasswordStrength);
 
             if (savePasswordBtn) savePasswordBtn.addEventListener("click", async () => {
+                 if (!newPasswordInput || !confirmPasswordInput) return; // Garante que elementos existam
                 const newPassword = newPasswordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
                 if (!newPassword || !confirmPassword) { showPopup("Preencha ambos os campos de senha.", 'error'); return; }
                 if (newPassword !== confirmPassword) { showPopup("As senhas não coincidem.", 'error'); return; }
+                 // Verifica força novamente antes de submeter
+                 if (savePasswordBtn.disabled) { showPopup("A senha não atende aos critérios de força.", 'error'); return;}
 
                 savePasswordBtn.disabled = true;
                 savePasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Alterando...';
@@ -418,7 +433,7 @@
                      showPopup(`Erro ao alterar senha: ${error.message}`, 'error');
                      console.error("Erro senha:", error);
                 } finally {
-                    savePasswordBtn.disabled = false; // Reabilita mesmo com erro, mas a validação inicial do checkPasswordStrength pode desabilitar de novo
+                     // savePasswordBtn.disabled = false; // Removido - deixa checkPasswordStrength controlar
                     savePasswordBtn.innerHTML = '<i class="fas fa-key"></i> Alterar Senha';
                     checkPasswordStrength(); // Garante estado correto do botão pós-tentativa
                 }
@@ -451,7 +466,7 @@
                 if (navOverlay) navOverlay.classList.add('is-open');
             });
             if (navOverlay) navOverlay.addEventListener('click', closeMenu);
-             // Fecha ao clicar num link (se houver links no UL)
+             // Fecha ao clicar num link
              const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
              mobileNavLinks.forEach(link => {
                 link.addEventListener('click', closeMenu);
@@ -461,7 +476,7 @@
             await loadProfile();
              // Seta o estado inicial dos controles (modo visualização)
              toggleEditMode(false);
-             // Verifica força inicial da senha (caso haja algo pré-preenchido, embora não deva)
+             // Verifica força inicial da senha
              checkPasswordStrength();
 
         });
