@@ -17,7 +17,7 @@
             width: 250px;
             display: flex;
             flex-direction: column;
-      justify-content: space-between;
+            justify-content: space-between; /* Changed from space-evenly */
             background-color: #5ce1e6; /* Cor ciano original */
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             position: fixed; /* Mantido fixo */
@@ -35,17 +35,22 @@
             text-align: center;
             padding: 20px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            height: 139px; /* Altura consistente com header */
+            /* height: 139px; */ /* REMOVED FIXED HEIGHT - LET CONTENT DEFINE */
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: padding 0.3s ease, border-color 0.3s ease; /* Transição adicionada */
+            transition: padding 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, height 0.3s ease; /* Transição adicionada */
         }
          /* Comportamento do logo ao colapsar - IGUAL AO ADMIN.HTML */
          .sidebar.collapsed .logo {
              padding: 10px 0; /* Padding menor */
              border-bottom-color: transparent; /* Remove borda */
+             /* Added to hide logo when collapsed on desktop */
+              opacity: 0;
+              height: 0;
+              overflow: hidden;
+              pointer-events: none;
          }
         .logo img {
             max-width: 150px;
@@ -53,11 +58,7 @@
             display: block;
             transition: opacity 0.2s ease, width 0.3s ease; /* Transição original */
         }
-         .sidebar.collapsed .logo img {
-            opacity: 0;
-            width: 0; /* Esconde a imagem */
-            pointer-events: none;
-         }
+         /* Removed specific style for .sidebar.collapsed .logo img as the whole logo hides */
 
         .menu { display: flex; flex-direction: column; gap: 5px; padding: 20px 0; flex-grow: 1; overflow-y: auto; }
         /* Estilo dos itens de menu IGUAL AO ADMIN.HTML */
@@ -68,37 +69,36 @@
             color: #333; font-weight: 600; cursor: pointer;
             transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, padding 0.3s ease; /* Transições originais */
             text-decoration: none; white-space: nowrap; overflow: hidden;
-            margin-right: 0; /* Removido margin-right extra */
+            /* margin-right: 0; */ /* Removido margin-right extra */
          }
         .menu-item span, .menu-item-logout span { transition: opacity 0.3s ease; opacity: 1; }
         .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item-logout {
             justify-content: center; padding: 12px 0; /* Padding colapsado original */
-            margin-right: 0;
+            /* margin-right: 0; */
          }
         .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 0; width: 0; }
-        .menu-item i, .menu-item-logout i { /* Ícones com estilo consistente */
-             width: 22px; height: 22px; color: #333;
-             transition: color 0.3s ease; flex-shrink: 0;
+        /* Unified icon style */
+         .menu-item i, .menu-item-logout i, .menu-item svg, .menu-item-logout svg {
+             width: 22px; height: 22px; color: #333; fill: #333; /* Added fill for SVG */
+             transition: color 0.3s ease, fill 0.3s ease; /* Added fill transition */
+             flex-shrink: 0;
              text-align: center; font-size: 1.2rem;
          }
-         /* SVG Logout icon - mantido se você usou SVG no admin.html, senão use <i> */
-         .menu-item-logout svg { width: 22px; height: 22px; fill: #333; transition: fill 0.3s ease; flex-shrink: 0; }
 
-        .menu-item:hover, .menu-item-logout:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; }
+        .menu-item:hover, .menu-item-logout:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; transform: translateX(5px); } /* Added transform */
         .sidebar.collapsed .menu-item:hover, .sidebar.collapsed .menu-item-logout:hover { transform: none; }
         .menu-item.selected { background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2); }
-        .menu-item.selected i { color: white; }
-        .menu-item.selected svg { fill: white; } /* Para o ícone SVG de logout */
+         /* Unified selected icon style */
+        .menu-item.selected i, .menu-item.selected svg { color: white; fill: white; }
         .menu-item-logout { margin-top: auto; }
 
         /* Botão inferior para colapsar - IGUAL AO ADMIN.HTML */
-        .sidebar-bottom {
+        .sidebar-bottom { /* Renamed from menu-bottom */
             background-color: #0cc0df; text-align: center; padding: 15px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
             transition: background 0.3s ease; flex-shrink: 0;
          }
         .sidebar-bottom:hover { background-color: #08a3bd; }
-        /* Usando SVG para o ícone, como no admin.html */
         .sidebar-bottom svg { width: 28px; height: 28px; fill: #333; }
          /* Rotação do ícone SVG ao colapsar (se for o mesmo SVG do admin.html) */
          /* .sidebar.collapsed .sidebar-bottom svg { transform: rotate(180deg); } /* Ajuste se necessário */
@@ -147,7 +147,7 @@
              white-space: nowrap;
         }
 
-        /* Botão Hamburger (mostrado apenas no mobile) */
+        /* Botão Hamburger (oculto por padrão) */
         .menu-toggle-mobile {
              display: none;
              background: none; border: none; color: white;
@@ -179,19 +179,19 @@
         .chart-container, .recent-requests { background-color: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07); }
         .chart-container h2, .recent-requests h2 { font-size: 1.25rem; margin-top: 0; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
         #pieChartContainer { max-height: 350px; display: flex; justify-content: center; align-items: center; margin-top: 1rem; }
-        #statusPieChart { cursor: pointer; }
+        #statusPieChart { max-height: 350px; /* Ensure canvas doesn't overflow */ cursor: pointer; } /* Added max-height here */
         .requests-list { list-style: none; padding: 0; margin-top: 1rem; }
         .requests-list li { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #f0f0f0; }
         .requests-list li:last-child { border-bottom: none; }
         .requests-list .product-info { display: flex; flex-direction: column; }
         .requests-list .product-name { font-weight: 600; color: #333; font-size: 0.95rem;}
         .requests-list .user-name { color: #6c757d; font-size: 0.9rem; }
-        .requests-list .view-link { color: #fff; background-color: #007bff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: background-color 0.2s; border: none; }
+        .requests-list .view-link { color: #fff; background-color: #007bff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: background-color 0.2s; border: none; cursor: pointer;} /* Added cursor pointer */
         .requests-list .view-link:hover { background-color: #0056b3; }
 
          /* Toast Notification */
         .toast-notification { position: fixed; top: 20px; right: 20px; background-color: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease forwards; }
-        .toast-notification.fade-out { animation: fadeOut 0.5s ease 2.5s forwards; }
+        .toast-notification.fade-out { animation: fadeOut 0.5s ease 2.5s forwards; } /* Changed duration */
         .toast-notification.success { background-color: #28a745; }
         .toast-notification.error { background-color: #dc3545; }
         .toast-notification i { font-size: 1.5rem; }
@@ -206,38 +206,40 @@
         .nav-overlay.is-open { display: block; opacity: 1; }
 
         @media (max-width: 992px) {
-             body { display: block; overflow-y: auto;} /* Body volta a rolar */
+             /* body { display: block; overflow-y: auto;} */ /* REMOVED - Let main-content scroll */
+             body { overflow: hidden; } /* Prevent body scroll on mobile */
+
 
              .sidebar {
                  left: -250px; /* Começa escondida */
                  z-index: 1100; /* Acima do overlay */
-                 height: 100vh; /* Ocupa altura total */
+                 /* height: 100vh; */ /* Ocupa altura total */
              }
              .sidebar.is-open {
                  left: 0; /* Mostra */
              }
              /* Mantém a sidebar expandida visualmente quando aberta no mobile */
              .sidebar.collapsed { width: 250px; }
-             .sidebar.collapsed .logo { padding: 20px 0; border-bottom-color: rgba(255, 255, 255, 0.2); } /* Restaura padding e borda */
+             .sidebar.collapsed .logo { padding: 20px 0; border-bottom-color: rgba(255, 255, 255, 0.2); opacity: 1; height: auto; overflow: visible; pointer-events: auto; } /* Restaura */
              .sidebar.collapsed .logo img { opacity: 1; width: auto; max-width: 150px; } /* Mostra logo */
              .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item-logout { justify-content: flex-start; padding: 12px 25px; }
              .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 1; width: auto; }
              .sidebar-bottom { display: none; } /* Esconde botão colapsar desktop */
 
-             .content { margin-left: 0; height: auto; min-height: 100vh;}
+             .content { margin-left: 0; /* height: auto; min-height: 100vh;*/ } /* Keep height 100vh */
              .content.shifted { margin-left: 0; }
 
              .header {
                  width: 100%; left: 0; height: 60px; padding: 0 1rem;
-                 position: fixed;
+                 position: fixed; /* Ensures header stays fixed on mobile */
              }
              .header.shifted { width: 100%; left: 0; }
              .header-title { display: none; } /* Esconde "Dashboard" */
 
              .menu-toggle-mobile { display: block; } /* Mostra Hamburger */
 
-             .main-content { margin-top: 60px; padding: 1rem; }
-             .dashboard-grid, .dashboard-row { padding: 0; gap: 1rem; }
+             .main-content { margin-top: 60px; padding: 1rem; } /* Adjusted padding */
+             .dashboard-grid, .dashboard-row { /* Removed padding: 0; */ gap: 1rem; }
              .stat-card { padding: 1rem; gap: 1rem; }
              .stat-card .icon-container { width: 45px; height: 45px; font-size: 1.5rem; padding: 0.6rem;} /* Ícone um pouco menor */
              .stat-card .info p { font-size: 1.6rem; }
@@ -267,15 +269,13 @@
                     <i class="fas fa-check-circle fa-fw"></i>
                     <span>Aprovados</span>
                 </a>
-            </div>
+                </div>
         </div>
          <div>
-             <a href="#" class="menu-item-logout">
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+             <a href="#" class="menu-item-logout"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
                  <span>Logout</span>
              </a>
-             <div class="sidebar-bottom" id="sidebarToggle">
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
+             <div class="sidebar-bottom" id="sidebarToggle"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1z"/></svg>
              </div>
          </div>
     </div>
@@ -288,8 +288,7 @@
                  <i class="fas fa-bars"></i>
              </button>
              <span class="header-title">Dashboard</span>
-             <div></div>
-        </div>
+             <div></div> </div>
 
         <div class="main-content">
             <div class="dashboard-grid">
@@ -332,7 +331,7 @@
                 <div class="recent-requests">
                     <h2>Últimas Solicitações</h2>
                     <ul class="requests-list" id="requests-list">
-                    </ul>
+                        </ul>
                 </div>
             </div>
         </div>
@@ -340,19 +339,22 @@
 
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+        // Chart.js should be imported via <script> tag in <head>, but keep this structure
 
         const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
 
-        // Funções showWelcomeToast, fetchDashboardStats, fetchRecentRequests, renderStatusPieChart (sem alterações)
+        // --- Utility Functions ---
         function showWelcomeToast(name) {
             const toast = document.createElement('div');
             toast.className = 'toast-notification success';
             toast.innerHTML = `<i class="fas fa-check-circle"></i><span>Bem-vindo(a), ${name}!</span>`;
             document.body.appendChild(toast);
-            setTimeout(() => { toast.classList.add('fade-out'); toast.addEventListener('animationend', () => toast.remove()); }, 3000);
+            setTimeout(() => { toast.classList.add('fade-out'); toast.addEventListener('animationend', () => toast.remove()); }, 3000); // Duration matches fadeOut animation
         }
+
+        // --- Data Fetching Functions ---
         async function fetchDashboardStats() {
              const [ { count: usersCount }, { count: pendingCount }, { count: approvedCount } ] = await Promise.all([
                 supabase.from('usuarios').select('*', { count: 'exact', head: true }),
@@ -367,9 +369,28 @@
             const listElement = document.getElementById('requests-list');
             listElement.innerHTML = '<li>Carregando...</li>';
             const { data, error } = await supabase.from('produtos').select('id, produto, nome_usuario').is('aprovado', null).order('data', { ascending: false }).limit(5);
-            if (error || data.length === 0) { listElement.innerHTML = `<li>${error ? 'Erro ao carregar.' : 'Nenhuma solicitação pendente.'}</li>`; return; }
-            listElement.innerHTML = '';
-            data.forEach(req => { const li = document.createElement('li'); li.innerHTML = `<div class="product-info"><p class="product-name">${req.produto}</p><p class="user-name">por ${req.nome_usuario}</p></div><a href="Solicitações.html" class="view-link">Ver</a>`; listElement.appendChild(li); });
+
+            if (error) {
+                console.error("Erro ao buscar solicitações recentes:", error);
+                listElement.innerHTML = `<li>Erro ao carregar solicitações.</li>`;
+                return;
+            }
+             if (data.length === 0) {
+                 listElement.innerHTML = `<li>Nenhuma solicitação pendente.</li>`;
+                 return;
+             }
+
+            listElement.innerHTML = ''; // Clear loading/error message
+            data.forEach(req => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="product-info">
+                        <p class="product-name">${req.produto}</p>
+                        <p class="user-name">por ${req.nome_usuario}</p>
+                    </div>
+                    <a href="Solicitações.html" class="view-link">Ver</a>`; // Link direto para a página
+                listElement.appendChild(li);
+             });
         }
        async function renderStatusPieChart() {
              const [ { count: approvedCount }, { count: pendingCount }, { count: rejectedCount } ] = await Promise.all([
@@ -377,68 +398,145 @@
                 supabase.from('produtos').select('*', { count: 'exact', head: true }).is('aprovado', null),
                 supabase.from('produtos').select('*', { count: 'exact', head: true }).eq('aprovado', false)
             ]);
-            // Linha CORRETA:
-const ctx = document.getElementById('statusPieChart').getContext('2d');
-            new Chart(ctx, {
+
+            const ctx = document.getElementById('statusPieChart');
+             if (!ctx) {
+                 console.error("Canvas element #statusPieChart not found");
+                 return;
+             }
+             const context = ctx.getContext('2d');
+              if (!context) {
+                 console.error("Could not get 2D context for #statusPieChart");
+                 return;
+             }
+
+             // Destroy previous chart instance if exists
+             if (window.myStatusPieChart instanceof Chart) {
+                 window.myStatusPieChart.destroy();
+             }
+
+
+            window.myStatusPieChart = new Chart(context, { // Store instance globally
                 type: 'pie', data: { labels: ['Aprovados', 'Pendentes', 'Rejeitados'], datasets: [{ data: [approvedCount || 0, pendingCount || 0, rejectedCount || 0], backgroundColor: ['#28a745', '#ffc107', '#dc3545'], borderColor: '#ffffff', borderWidth: 3, hoverOffset: 4 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 20 } }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}` } } },
-                onClick: (evt, elems) => { if (elems.length > 0) { const label = ['Aprovados', 'Pendentes', 'Rejeitados'][elems[0].index]; if (label === 'Aprovados') window.location.href = 'Aprovados.html'; else if (label === 'Pendentes') window.location.href = 'Solicitações.html'; } } }
+                onClick: (evt, elems) => { if (elems.length > 0) { const label = ['Aprovados', 'Pendentes', 'Rejeitados'][elems[0].index]; if (label === 'Aprovados') window.location.href = 'Aprovados.html'; else if (label === 'Pendentes') window.location.href = 'Solicitações.html'; /* Add link for Rejeitados if needed */ } } }
             });
         }
 
+        // --- DOMContentLoaded ---
         document.addEventListener("DOMContentLoaded", () => {
-            const adminName = localStorage.getItem("bemVindo");
-            if (adminName) { showWelcomeToast(adminName); localStorage.removeItem("bemVindo"); }
-
-            fetchDashboardStats();
-            fetchRecentRequests();
-            renderStatusPieChart();
-
-            const sidebar = document.getElementById("sidebar");
-            const sidebarToggle = document.getElementById("sidebarToggle"); // Botão Desktop
-            const mainContent = document.getElementById("mainContent");
-            const mainHeader = document.getElementById("mainHeader");
-            const menuToggleMobile = document.getElementById('menu-toggle-mobile'); // Botão Mobile
-            const navOverlay = document.getElementById('nav-overlay');
-
-            const applyDesktopCollapsedState = () => {
-                 if (window.innerWidth <= 992) return;
-                 const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
-                 sidebar.classList.toggle("collapsed", isCollapsed);
-                 mainContent.classList.toggle("shifted", isCollapsed);
-                 mainHeader.classList.toggle("shifted", isCollapsed);
+            // Check for Admin (essential for security)
+            const checkAdmin = async () => {
+                try {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (!user) throw new Error("Acesso não autorizado.");
+                    const { data: profile, error } = await supabase.from('usuarios').select('tipo, nome').eq('user_id', user.id).single();
+                    if (error || !profile) throw new Error("Perfil não encontrado.");
+                    if (profile.tipo !== 'Administrador') throw new Error("Acesso restrito a administradores.");
+                    return profile.nome; // Return admin name for welcome toast
+                } catch (error) {
+                    alert(error.message);
+                    window.location.replace("index.html"); // Redirect non-admins
+                    return null; // Indicate failure
+                }
             };
 
-            applyDesktopCollapsedState();
+            checkAdmin().then(adminName => {
+                 if (!adminName) return; // Stop execution if check failed
 
-            sidebarToggle.addEventListener("click", () => {
-                 if (window.innerWidth > 992) {
-                    sidebar.classList.toggle("collapsed");
-                    mainContent.classList.toggle("shifted");
-                    mainHeader.classList.toggle("shifted");
-                    localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
+                // Show Welcome Toast if redirected from login
+                const welcomeName = localStorage.getItem("bemVindo");
+                if (welcomeName) {
+                    showWelcomeToast(welcomeName);
+                    localStorage.removeItem("bemVindo");
+                }
+
+                // Fetch data and render chart
+                fetchDashboardStats();
+                fetchRecentRequests();
+                renderStatusPieChart(); // Call chart rendering
+
+                // --- Sidebar/Header Responsive Logic ---
+                const sidebar = document.getElementById("sidebar");
+                const sidebarToggle = document.getElementById("sidebarToggle"); // Botão Desktop
+                const mainContent = document.getElementById("mainContent");
+                const mainHeader = document.getElementById("mainHeader");
+                const menuToggleMobile = document.getElementById('menu-toggle-mobile'); // Botão Mobile
+                const navOverlay = document.getElementById('nav-overlay');
+
+                const applyDesktopCollapsedState = () => {
+                     if (!sidebar || !mainContent || !mainHeader || window.innerWidth <= 992) return;
+                     const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+                     sidebar.classList.toggle("collapsed", isCollapsed);
+                     mainContent.classList.toggle("shifted", isCollapsed);
+                     mainHeader.classList.toggle("shifted", isCollapsed);
+                };
+                applyDesktopCollapsedState(); // Apply on load
+
+                if (sidebarToggle) {
+                    sidebarToggle.addEventListener("click", () => { // Desktop Toggle
+                        if (window.innerWidth > 992) {
+                            sidebar.classList.toggle("collapsed");
+                            mainContent.classList.toggle("shifted");
+                            mainHeader.classList.toggle("shifted");
+                            localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
+                        }
+                    });
+                }
+
+                const closeMobileMenu = () => {
+                    if (sidebar) sidebar.classList.remove('is-open');
+                    if (navOverlay) navOverlay.classList.remove('is-open');
+                };
+
+                if (menuToggleMobile) {
+                    menuToggleMobile.addEventListener('click', () => { // Mobile Toggle
+                        if (sidebar) sidebar.classList.add('is-open');
+                        if (navOverlay) navOverlay.classList.add('is-open');
+                    });
+                }
+                if (navOverlay) {
+                    navOverlay.addEventListener('click', closeMobileMenu); // Overlay click
+                }
+
+                if (sidebar) { // Close on menu item click (mobile)
+                    sidebar.querySelectorAll('.menu-item, .menu-item-logout').forEach(item => {
+                        item.addEventListener('click', (e) => {
+                            // Don't close immediately for logout to allow confirmation
+                            if (!item.classList.contains('menu-item-logout') && window.innerWidth <= 992) {
+                                closeMobileMenu();
+                            }
+                        });
+                    });
+                }
+
+                // Logout Listener
+                 const logoutButton = document.querySelector(".menu-item-logout");
+                 if (logoutButton) {
+                     logoutButton.addEventListener("click", async (e) => {
+                        e.preventDefault();
+                        // Optional: Add confirmation popup here if desired
+                        await supabase.auth.signOut();
+                        window.location.replace("index.html");
+                     });
                  }
-            });
 
-             const closeMobileMenu = () => { sidebar.classList.remove('is-open'); navOverlay.classList.remove('is-open'); };
-             menuToggleMobile.addEventListener('click', () => { sidebar.classList.add('is-open'); navOverlay.classList.add('is-open'); });
-             navOverlay.addEventListener('click', closeMobileMenu);
-             sidebar.querySelectorAll('.menu-item, .menu-item-logout').forEach(item => {
-                 item.addEventListener('click', () => { if (window.innerWidth <= 992 && !item.classList.contains('menu-item-logout')) closeMobileMenu(); });
-             });
+                // Window Resize Listener
+                 window.addEventListener('resize', () => {
+                     if (window.innerWidth > 992) {
+                         closeMobileMenu();
+                         applyDesktopCollapsedState();
+                     } else {
+                         if (sidebar) sidebar.classList.remove("collapsed");
+                         if (mainContent) mainContent.classList.remove("shifted");
+                         if (mainHeader) mainHeader.classList.remove("shifted");
+                     }
+                 });
+                 // --- End Sidebar/Header Logic ---
 
-            document.querySelector(".menu-item-logout").addEventListener("click", async (e) => { e.preventDefault(); await supabase.auth.signOut(); window.location.replace("index.html"); });
-
-             window.addEventListener('resize', () => {
-                 if (window.innerWidth > 992) {
-                     closeMobileMenu();
-                     applyDesktopCollapsedState();
-                 } else {
-                     // Garante que classes desktop sejam removidas no mobile
-                     sidebar.classList.remove("collapsed");
-                     mainContent.classList.remove("shifted");
-                     mainHeader.classList.remove("shifted");
-                 }
+             }).catch(error => {
+                 // Handles errors during the initial admin check if necessary
+                 console.error("Initialization error:", error);
              });
         });
     </script>
