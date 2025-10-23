@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Meu Perfil - Ocean Coffee</title>
     <link rel="icon" href="IMG/Loginho2.png" type="image/png">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <link rel="stylesheet" href="CSS/styles.css"> 
-    <script src="https://unpkg.com/imask"></script>
+
+    <link rel="stylesheet" href="CSS/styles.css"> <script src="https://unpkg.com/imask"></script>
     <style>
         /* ESTILOS ESPECÍFICOS DA PÁGINA DE PERFIL */
         :root { --color-primary: #0047a3; --color-danger: #dc3545; --color-text: #212529; --color-text-muted: #6c757d; --color-background: #f8f9fa; --color-surface: #ffffff; --color-border: #e9ecef; }
-        
+
         /* Layout Geral */
-        body { background-color: var(--color-background); margin: 0; }
+        body { background-color: var(--color-background); margin: 0; font-family: 'Segoe UI', sans-serif; /* Fonte adicionada para consistência */ }
         .dashboard-layout { display: grid; grid-template-columns: 260px 1fr; height: 100vh; }
         .dashboard-main { overflow-y: auto; padding: 2.5rem; }
 
@@ -35,7 +34,7 @@
         .sidebar-nav a.active { background-color: var(--color-primary); color: white; }
         .sidebar-nav a i { width: 20px; text-align: center; font-size: 1.1rem; }
         #logout-btn:hover { color: var(--color-danger); background-color: #fbebee; }
-        
+
         /* Conteúdo Principal */
         .dashboard-main h1 { font-size: 2rem; font-weight: 700; margin-bottom: 2rem; }
         .profile-card { background-color: var(--color-surface); border: 1px solid var(--color-border); border-radius: 12px; padding: 1.75rem; margin-bottom: 1.5rem; }
@@ -44,7 +43,7 @@
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
         .info-item { display: flex; flex-direction: column; gap: 0.5rem; }
         .info-item label { font-size: 0.875rem; font-weight: 500; color: var(--color-text-muted); }
-        .info-item input { font-size: 1rem; padding: 0.75rem 1rem; background-color: var(--color-background); border: 1px solid var(--color-border); border-radius: 8px; transition: all 0.2s; }
+        .info-item input { font-size: 1rem; padding: 0.75rem 1rem; background-color: var(--color-background); border: 1px solid var(--color-border); border-radius: 8px; transition: all 0.2s; box-sizing: border-box; /* Garante padding correto */ }
         .info-item input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 71, 163, 0.1); background-color: var(--color-surface); }
         .info-item input:read-only { background-color: transparent; border-color: transparent; padding-left: 0; cursor: default; box-shadow: none; }
         .password-wrapper { position: relative; display: flex; align-items: center; }
@@ -54,16 +53,14 @@
         .action-button.save-btn, .action-button.save-password-btn { background-color: #198754; }
         .action-button:disabled { background-color: #6c757d; cursor: not-allowed; }
         #edit-mode-controls { display: none; gap: 0.75rem; }
-       
+
         .strength-meter { height: 5px; background-color: var(--color-border); border-radius: 5px; margin-top: 8px; overflow: hidden; }
         .strength-bar { height: 100%; width: 0; background-color: var(--color-danger); transition: width 0.3s ease, background-color 0.3s ease; }
         #strength-text { margin-top: 4px; font-size: 0.875rem; color: var(--color-text-muted); text-align: right; height: 1.2em; transition: color 0.3s ease; }
 
-        .mobile-header { display: none; }
-        .mobile-nav { display: none; }
-
-        .popup-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 12px; }
-        .popup { display: flex; align-items: center; min-width: 300px; padding: 16px 22px; border-radius: 8px; color: white; font-size: 0.95rem; font-weight: 500; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); transform: translateX(calc(100% + 20px)); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        /* --- POPUPS E CONFIRMAÇÕES --- */
+        .popup-container { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 12px; pointer-events: none; /* Adicionado */ }
+        .popup { display: flex; align-items: center; min-width: 300px; padding: 16px 22px; border-radius: 8px; color: white; font-size: 0.95rem; font-weight: 500; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); transform: translateX(calc(100% + 20px)); opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); pointer-events: all; /* Adicionado */ }
         .popup.show { transform: translateX(0); opacity: 1; }
         .popup i { font-size: 1.25rem; margin-right: 14px; }
         .popup.success { background-color: #28a745; } .popup.error { background-color: #dc3545; }.popup.info { background-color: #0d6efd; }
@@ -78,49 +75,101 @@
         .confirmation-btn-cancel { background-color: #e9ecef; color: #495057; } .confirmation-btn-cancel:hover { background-color: #dee2e6; }
         .confirmation-btn-confirm { background-color: #dc3545; color: white; } .confirmation-btn-confirm:hover { background-color: #c82333; }
 
+        /* --- RESPONSIVIDADE E MENU HAMBURGUER --- */
+        .mobile-header, .mobile-nav, .nav-overlay { display: none; } /* Ocultos por padrão */
+
         @media (max-width: 992px) {
             .dashboard-layout { grid-template-columns: 1fr; }
             .dashboard-sidebar { display: none; }
-            .dashboard-main { padding: 1.5rem; padding-top: 80px; }
+            .dashboard-main { padding: 1.5rem; padding-top: 80px; } /* Espaço para header fixo */
             .dashboard-main h1 { font-size: 1.5rem; text-align: center;}
-            .sair{text-decoration: none;}
+            .sair{text-decoration: none;} /* Mantido */
 
-            .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; height: 60px; background-color: var(--color-surface); border-bottom: 1px solid var(--color-border); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
+            .mobile-header {
+                display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem;
+                height: 60px; background-color: var(--color-surface); border-bottom: 1px solid var(--color-border);
+                position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+            }
             .mobile-header .logo-img { height: 35px; }
             .menu-toggle { background: none; border: none; font-size: 1.5rem; color: var(--color-text); cursor: pointer; }
 
-            .mobile-nav { display: block; position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100vh; background-color: var(--color-surface); z-index: 110; transition: left 0.3s ease-in-out; padding: 1.5rem; display: flex; flex-direction: column; }
+            .mobile-nav {
+                display: flex; /* Alterado para flex */
+                flex-direction: column; /* Organiza itens verticalmente */
+                position: fixed; top: 0; left: -100%; width: 80%; max-width: 300px; height: 100vh;
+                background-color: var(--color-surface); z-index: 110;
+                transition: left 0.3s ease-in-out; padding: 1.5rem;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            }
             .mobile-nav.is-open { left: 0; }
-            .mobile-nav .sidebar-header { padding-bottom: 1rem; margin-bottom: 1rem; }
-            .mobile-nav-links { display: flex; flex-direction: column; gap: 0.75rem; }
-            .mobile-nav-links a { color: var(--color-text-muted); text-decoration: none; font-size: 1.1rem; font-weight: 500; padding: 1rem; border-radius: 8px; display: flex; align-items: center; gap: 1rem; }
+            .mobile-nav .sidebar-header {
+                padding-bottom: 1rem; margin-bottom: 1rem; flex-shrink: 0; /* Não encolhe */
+                 border-bottom: 1px solid var(--color-border); /* Adiciona borda inferior */
+                 text-align: center; /* Centraliza o conteúdo */
+            }
+             /* Novo: Garante que a imagem do logo não seja excessivamente grande */
+             .mobile-nav .sidebar-header .logo-img {
+                 height: 40px; /* Ajuste a altura conforme necessário */
+                 width: auto;
+                 margin: 0 auto; /* Centraliza a imagem se houver espaço */
+             }
+             .mobile-nav .sidebar-header h3 { /* Estilo para o 'Olá!' */
+                 margin-top: 0.5rem; /* Espaço acima do nome */
+                 font-size: 1.1rem;
+                 font-weight: 600;
+             }
+            .mobile-nav-links {
+                display: flex; flex-direction: column; gap: 0.75rem;
+                flex-grow: 1; /* Faz esta área crescer e empurrar o logout */
+                overflow-y: auto; /* Permite rolagem se os links excederem a altura */
+                padding-bottom: 1rem; /* Espaço antes do logout */
+                list-style: none; /* Remove marcadores de lista */
+                margin: 0; /* Remove margem padrão da lista */
+                padding-left: 0; /* Remove padding padrão da lista */
+            }
+            .mobile-nav-links a {
+                color: var(--color-text-muted); text-decoration: none; font-size: 1.1rem;
+                font-weight: 500; padding: 1rem; border-radius: 8px;
+                display: flex; align-items: center; gap: 1rem;
+                transition: background-color 0.2s; /* Adiciona transição suave */
+            }
             .mobile-nav-links a:hover { background-color: var(--color-background); }
             .mobile-nav-links a i { width: 20px; text-align: center; }
-            .mobile-logout { margin-top: auto; text-decoration: none; }
-    #mobile-logout-btn {
-        text-decoration: none;
 
-    }
-   
-    .popup-container {
-        width: 90%;
-        max-width: 400px;
-        top: 20px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-    }
-
-    .popup {
-        min-width: 0;
-        width: 100%;
-        font-size: 0.9rem; /* Opcional: ajusta o tamanho da fonte */
-    }
-
-    
-            .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 105; }
-            .nav-overlay.is-open { display: block;
+            .mobile-logout {
+                margin-top: auto; /* Garante que fique no final */
+                padding-top: 1rem; /* Espaço acima do logout */
+                border-top: 1px solid var(--color-border); /* Linha divisória */
+                flex-shrink: 0; /* Não encolhe */
+            }
+            #mobile-logout-btn { /* Estilo específico para o link de logout */
+                display: flex; /* Para alinhar ícone e texto */
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem;
+                color: var(--color-text-muted);
+                text-decoration: none;
+                font-size: 1.1rem;
+                font-weight: 500;
+                border-radius: 8px;
+                transition: background-color 0.2s, color 0.2s;
+            }
+             #mobile-logout-btn:hover {
+                 background-color: #fbebee; /* Fundo avermelhado suave */
+                 color: var(--color-danger); /* Cor vermelha do ícone/texto */
              }
+             #mobile-logout-btn i {
+                 width: 20px;
+                 text-align: center;
+             }
+
+            .nav-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 105; }
+            .nav-overlay.is-open { display: block; }
+        }
+         /* Ajustes finos para popups em telas mobile */
+         @media (max-width: 768px) {
+            .popup-container { width: 90%; max-width: 400px; top: 20px; left: 50%; right: auto; transform: translateX(-50%); }
+            .popup { min-width: 0; width: 100%; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -142,7 +191,7 @@
                 <div class="sidebar-nav-logout"><a href="#" class="sair" id="logout-btn"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a></div>
             </nav>
         </aside>
-        
+
         <main class="dashboard-main">
             <header class="mobile-header">
                 <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
@@ -194,38 +243,42 @@
     <div class="nav-overlay" id="nav-overlay"></div>
     <nav class="mobile-nav" id="mobile-nav">
         <div class="sidebar-header">
+             <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
             <h3 id="mobile-welcome-message">Olá!</h3>
         </div>
-        <div class="mobile-nav-links">
-            <a href="meus-anuncios.html"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a>
-            <a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a>
-        </div>
+        <ul class="mobile-nav-links"> <li><a href="perfil.html"><i class="fas fa-user-circle"></i><span>Meu Perfil</span></a></li>
+            <li><a href="meus-anuncios.html"><i class="fas fa-bullhorn"></i><span>Meus Anúncios</span></a></li>
+            <li><a href="anuncie.html"><i class="fas fa-plus-circle"></i><span>Anunciar Novo</span></a></li>
+        </ul>
         <div class="mobile-logout">
-             <a href="#" id="mobile-logout-btn" class="sair"><i class="fas fa-sign-out-alt"></i><span id="sair" style="margin-left: 2%;">Sair</span></a>
+             <a href="#" id="mobile-logout-btn" class="sair"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>
         </div>
     </nav>
 
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
-        
+
         const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
 
+        // --- Funções Utilitárias ---
         async function protegerPagina() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) { window.location.replace('Login.html'); }
         }
-        protegerPagina();
+        protegerPagina(); // Verifica a sessão ao carregar
 
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
         function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
         function showConfirmationPopup(title, message) { return new Promise((resolve) => { const o = document.createElement('div'); o.className = 'confirmation-overlay'; o.innerHTML = `<div class="confirmation-modal"><h3>${title}</h3><p>${message}</p><div class="confirmation-actions"><button class="confirmation-btn-cancel">Cancelar</button><button class="confirmation-btn-confirm">Sim, Sair</button></div></div>`; const c = (r) => { o.classList.remove('show'); o.addEventListener('transitionend', () => { o.remove(); resolve(r); }); }; o.querySelector('.confirmation-btn-cancel').addEventListener('click', () => c(false)); o.querySelector('.confirmation-btn-confirm').addEventListener('click', () => c(true)); document.body.appendChild(o); requestAnimationFrame(() => o.classList.add('show')); }); }
 
+        // --- Lógica Principal ---
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return;
-            
+            if (!user) return; // Proteção já deve ter redirecionado, mas checa novamente
+
+            // --- Seletores de Elementos ---
             const nomeInput = document.getElementById("nome");
             const emailInput = document.getElementById("email");
             const telefoneInput = document.getElementById("telefone");
@@ -239,37 +292,59 @@
             const savePasswordBtn = document.getElementById("save-password-btn");
             const strengthBar = document.getElementById('strength-bar');
             const strengthText = document.getElementById('strength-text');
-            
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileNav = document.getElementById('mobile-nav');
+            const navOverlay = document.getElementById('nav-overlay');
+
             let originalProfileData = {};
             const telefoneMask = IMask(telefoneInput, { mask: [ { mask: '(00) 0000-0000' }, { mask: '(00) 00000-0000' } ] });
 
+            // --- Funções ---
             async function loadProfile() {
-                const { data: profile, error } = await supabase.from("usuarios").select("nome, email, telefone").eq("user_id", user.id).single();
-                if (error) { showPopup("Não foi possível carregar seu perfil.", 'error'); return; }
-                if (profile) {
-                    originalProfileData = { ...profile };
-                    const firstName = profile.nome.split(' ')[0];
-                    document.getElementById('welcome-message').textContent = firstName;
-                    document.getElementById('user-email-sidebar').textContent = profile.email;
-                    document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
-                    document.getElementById('mobile-welcome-message').textContent = `Olá, ${firstName}!`;
-                    
-                    nomeInput.value = profile.nome || '';
-                    emailInput.value = profile.email || '';
-                    telefoneMask.value = profile.telefone || '';
+                try {
+                    const { data: profile, error } = await supabase.from("usuarios").select("nome, email, telefone").eq("user_id", user.id).single();
+                    if (error) throw error;
+                    if (profile) {
+                        originalProfileData = { ...profile };
+                        const firstName = profile.nome.split(' ')[0];
+                        document.getElementById('welcome-message').textContent = firstName;
+                        document.getElementById('user-email-sidebar').textContent = profile.email;
+                        document.getElementById('avatar-inicial').textContent = profile.nome.charAt(0).toUpperCase();
+                        document.getElementById('mobile-welcome-message').textContent = `Olá, ${firstName}!`;
+
+                        nomeInput.value = profile.nome || '';
+                        emailInput.value = profile.email || '';
+                        telefoneMask.value = profile.telefone || ''; // Usa a máscara para definir o valor
+                    }
+                } catch (error) {
+                    showPopup("Não foi possível carregar seu perfil. Tente recarregar a página.", 'error');
+                    console.error("Erro ao carregar perfil:", error);
                 }
             }
-            
+
             function toggleEditMode(isEditing) {
+                if (!viewControls || !editControls) return; // Verifica se elementos existem
                 viewControls.style.display = isEditing ? 'none' : 'flex';
                 editControls.style.display = isEditing ? 'flex' : 'none';
                 [nomeInput, telefoneInput].forEach(input => {
-                    input.readOnly = !isEditing;
-                    input.style.backgroundColor = isEditing ? 'var(--color-surface)' : 'transparent';
+                    if (input) { // Verifica se input existe
+                        input.readOnly = !isEditing;
+                        input.style.backgroundColor = isEditing ? 'var(--color-surface)' : 'transparent';
+                        input.style.borderColor = isEditing ? 'var(--color-border)' : 'transparent'; // Ajusta borda também
+                        input.style.paddingLeft = isEditing ? '1rem' : '0'; // Ajusta padding
+                    }
                 });
+                 // Email é sempre read-only
+                 if (emailInput) {
+                    emailInput.readOnly = true;
+                    emailInput.style.backgroundColor = 'transparent';
+                    emailInput.style.borderColor = 'transparent';
+                    emailInput.style.paddingLeft = '0';
+                 }
             }
 
             function checkPasswordStrength() {
+                if (!newPasswordInput || !strengthBar || !strengthText || !savePasswordBtn) return; // Verifica elementos
                 const password = newPasswordInput.value;
                 let score = 0;
                 if (password.length >= 8) score++;
@@ -277,83 +352,118 @@
                 if (/[0-9]/.test(password)) score++;
                 if (/[^a-zA-Z0-9]/.test(password)) score++;
                 strengthBar.style.width = (score * 25) + '%';
-                if (password.length === 0) { strengthText.textContent = ''; strengthBar.style.backgroundColor = 'transparent'; } 
-                else if (score < 3) { strengthText.textContent = 'Senha Fraca'; strengthBar.style.backgroundColor = '#dc3545'; } 
-                else if (score === 3) { strengthText.textContent = 'Senha Média'; strengthBar.style.backgroundColor = '#ffc107'; } 
+                if (password.length === 0) { strengthText.textContent = ''; strengthBar.style.backgroundColor = 'transparent'; }
+                else if (score < 3) { strengthText.textContent = 'Senha Fraca'; strengthBar.style.backgroundColor = '#dc3545'; }
+                else if (score === 3) { strengthText.textContent = 'Senha Média'; strengthBar.style.backgroundColor = '#ffc107'; }
                 else { strengthText.textContent = 'Senha Forte'; strengthBar.style.backgroundColor = '#28a745'; }
                 savePasswordBtn.disabled = score < 4;
             }
 
-            editBtn.addEventListener("click", () => toggleEditMode(true));
-            cancelBtn.addEventListener("click", () => {
-                nomeInput.value = originalProfileData.nome || '';
-                telefoneMask.value = originalProfileData.telefone || '';
-                toggleEditMode(false);
-            });
-
-            saveBtn.addEventListener("click", async () => {
-                saveBtn.disabled = true;
-                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
-                const { error } = await supabase.from("usuarios").update({ nome: nomeInput.value.trim(), telefone: telefoneMask.unmaskedValue }).eq('user_id', user.id);
-                if (error) { showPopup("Falha ao salvar as alterações.", 'error'); } 
-                else { showPopup("Perfil atualizado com sucesso!", 'success'); await loadProfile(); toggleEditMode(false); }
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
-            });
-
-            newPasswordInput.addEventListener('input', checkPasswordStrength);
-            
-            savePasswordBtn.addEventListener("click", async () => {
-                const newPassword = newPasswordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                if (newPassword !== confirmPassword) { showPopup("As senhas não coincidem.", 'error'); return; }
-                savePasswordBtn.disabled = true;
-                savePasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Alterando...';
-                const { error } = await supabase.auth.updateUser({ password: newPassword });
-                if (error) { showPopup(`Erro: ${error.message}`, 'error'); } 
-                else { showPopup("Senha alterada com sucesso!", 'success'); newPasswordInput.value = ''; confirmPasswordInput.value = ''; checkPasswordStrength(); }
-                savePasswordBtn.disabled = false;
-                 savePasswordBtn.innerHTML = '<i class="fas fa-key"></i> Alterar Senha';
-            });
-            
-            document.querySelectorAll('.toggle-password').forEach(icon => {
-                icon.addEventListener('click', function () {
-                    const input = this.closest('.password-wrapper').querySelector('input');
-                    input.type = input.type === 'password' ? 'text' : 'password';
-                    this.classList.toggle('fa-eye');
-                    this.classList.toggle('fa-eye-slash');
-                });
-            });
-
             async function handleLogout(e) {
-                e.preventDefault(); 
+                e.preventDefault();
                 const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?');
                 if (userConfirmed) {
                     showPopup("Saindo...", 'info', 1500);
                     await supabase.auth.signOut();
-                    setTimeout(() => window.location.replace("index.html"), 500);
+                    setTimeout(() => window.location.replace("index.html"), 500); // Redireciona após sair
                 }
             }
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
-            document.getElementById('mobile-logout-btn').addEventListener('click', handleLogout);
 
-            const menuToggle = document.getElementById('menu-toggle');
-            const mobileNav = document.getElementById('mobile-nav');
-            const navOverlay = document.getElementById('nav-overlay');
-
-            function closeMenu() {
-                mobileNav.classList.remove('is-open');
-                navOverlay.classList.remove('is-open');
-            }
-
-            menuToggle.addEventListener('click', () => {
-                mobileNav.classList.add('is-open');
-                navOverlay.classList.add('is-open');
+            // --- Event Listeners ---
+            if (editBtn) editBtn.addEventListener("click", () => toggleEditMode(true));
+            if (cancelBtn) cancelBtn.addEventListener("click", () => {
+                if (originalProfileData) { // Garante que dados originais foram carregados
+                    nomeInput.value = originalProfileData.nome || '';
+                    telefoneMask.value = originalProfileData.telefone || ''; // Usa máscara
+                }
+                toggleEditMode(false);
             });
 
-            navOverlay.addEventListener('click', closeMenu);
-            
+            if (saveBtn) saveBtn.addEventListener("click", async () => {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+                try {
+                    const { error } = await supabase.from("usuarios").update({ nome: nomeInput.value.trim(), telefone: telefoneMask.unmaskedValue }).eq('user_id', user.id);
+                    if (error) throw error;
+                    showPopup("Perfil atualizado com sucesso!", 'success');
+                    await loadProfile(); // Recarrega para confirmar
+                    toggleEditMode(false);
+                } catch (error) {
+                    showPopup("Falha ao salvar as alterações.", 'error');
+                    console.error("Erro ao salvar:", error);
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+                }
+            });
+
+            if (newPasswordInput) newPasswordInput.addEventListener('input', checkPasswordStrength);
+
+            if (savePasswordBtn) savePasswordBtn.addEventListener("click", async () => {
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                if (!newPassword || !confirmPassword) { showPopup("Preencha ambos os campos de senha.", 'error'); return; }
+                if (newPassword !== confirmPassword) { showPopup("As senhas não coincidem.", 'error'); return; }
+
+                savePasswordBtn.disabled = true;
+                savePasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Alterando...';
+                try {
+                    const { error } = await supabase.auth.updateUser({ password: newPassword });
+                    if (error) throw error;
+                    showPopup("Senha alterada com sucesso!", 'success');
+                    newPasswordInput.value = '';
+                    confirmPasswordInput.value = '';
+                    checkPasswordStrength(); // Reseta a barra e o botão
+                } catch (error) {
+                     showPopup(`Erro ao alterar senha: ${error.message}`, 'error');
+                     console.error("Erro senha:", error);
+                } finally {
+                    savePasswordBtn.disabled = false; // Reabilita mesmo com erro, mas a validação inicial do checkPasswordStrength pode desabilitar de novo
+                    savePasswordBtn.innerHTML = '<i class="fas fa-key"></i> Alterar Senha';
+                    checkPasswordStrength(); // Garante estado correto do botão pós-tentativa
+                }
+            });
+
+            document.querySelectorAll('.toggle-password').forEach(icon => {
+                icon.addEventListener('click', function () {
+                    const input = this.closest('.password-wrapper').querySelector('input');
+                    if (input) { // Verifica se input foi encontrado
+                        input.type = input.type === 'password' ? 'text' : 'password';
+                        this.classList.toggle('fa-eye');
+                        this.classList.toggle('fa-eye-slash');
+                    }
+                });
+            });
+
+            // Logout Listeners
+            const logoutBtnDesktop = document.getElementById('logout-btn');
+            const logoutBtnMobile = document.getElementById('mobile-logout-btn');
+            if (logoutBtnDesktop) logoutBtnDesktop.addEventListener('click', handleLogout);
+            if (logoutBtnMobile) logoutBtnMobile.addEventListener('click', handleLogout);
+
+            // Mobile Menu Listeners
+            function closeMenu() {
+                if (mobileNav) mobileNav.classList.remove('is-open');
+                if (navOverlay) navOverlay.classList.remove('is-open');
+            }
+            if (menuToggle) menuToggle.addEventListener('click', () => {
+                if (mobileNav) mobileNav.classList.add('is-open');
+                if (navOverlay) navOverlay.classList.add('is-open');
+            });
+            if (navOverlay) navOverlay.addEventListener('click', closeMenu);
+             // Fecha ao clicar num link (se houver links no UL)
+             const mobileNavLinks = document.querySelectorAll('.mobile-nav-links a');
+             mobileNavLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+             });
+
+            // --- Carregamento Inicial ---
             await loadProfile();
+             // Seta o estado inicial dos controles (modo visualização)
+             toggleEditMode(false);
+             // Verifica força inicial da senha (caso haja algo pré-preenchido, embora não deva)
+             checkPasswordStrength();
+
         });
     </script>
 </body>
