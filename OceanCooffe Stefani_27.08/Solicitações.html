@@ -457,7 +457,7 @@
                 <td>${itemIndex}</td>
                 <td>${produto.nome_usuario || "Não Informado"}</td>
                 <td>${produto.produto || "-"}</td>
-                <td>${new Date(produto.data).toLocaleDateString("pt-BR")}</td>
+                <td>${new Date(produto.data).toLocaleString("pt-BR")}</td>
                 <td><button class="btn-detalhes">Ver Detalhes</button></td> `;
              // Add event listener directly to the button
              const detailsButton = tr.querySelector('.btn-detalhes');
