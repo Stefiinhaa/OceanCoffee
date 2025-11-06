@@ -310,6 +310,7 @@
                 <div class="modal-col-imagem"><div id="modal-carrossel" class="modal-carrossel"></div></div>
                 <div class="modal-col-info">
                     <div class="modal-info-item"><h3>Descrição</h3><p id="modal-descricao"></p></div>
+                    <div class="modal-info-item"><h3>Data de Aprovação</h3><p id="modal-data-aprovacao"></p></div>
                     <div class="modal-info-item"><h3>Localização</h3><p id="modal-local"></p></div>
                     <div class="modal-info-item"><h3>Preço</h3><p id="modal-preco"></p></div>
                     <div class="modal-info-item"><h3>Contato</h3><p id="modal-contato"></p></div>
@@ -533,13 +534,17 @@
         if (!detalhesModalEl) return;
         const anuncio = todosAprovados.find(p => p.id == id);
         if (!anuncio) return;
+
+        // *** INÍCIO DA MODIFICAÇÃO ***
         document.getElementById('modal-descricao').textContent = anuncio.descricao || 'Não informado.';
+        document.getElementById('modal-data-aprovacao').textContent = new Date(anuncio.data_aprovacao).toLocaleString("pt-BR"); // <-- LINHA ADICIONADA/MODIFICADA
         document.getElementById('modal-local').textContent = anuncio.local || 'Não informado.';
         document.getElementById('modal-contato').textContent = anuncio.contato || 'Não informado.';
         const precoElement = document.getElementById('modal-preco');
         precoElement.textContent = (anuncio.preco && !isNaN(anuncio.preco))
             ? parseFloat(anuncio.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
             : 'Não informado.';
+        // *** FIM DA MODIFICAÇÃO ***
 
         const carrosselContainer = document.getElementById('modal-carrossel');
         imagensCarrosselAtual = anuncio.imagens || [];
