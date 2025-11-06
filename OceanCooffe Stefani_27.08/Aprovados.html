@@ -434,13 +434,16 @@
         paginatedItems.forEach((anuncio, index) => {
             const tr = document.createElement("tr");
             const itemIndex = startIndex + index + 1;
+            // *** INÍCIO DA MODIFICAÇÃO (Tabela) ***
             tr.innerHTML = `
                 <td>${itemIndex}</td>
                 <td>${anuncio.nome_usuario || "Não Informado"}</td>
                 <td>${anuncio.produto || "-"}</td>
-                <td>${new Date(anuncio.data_aprovacao).toLocaleString("pt-BR")}</td>
+                <td>${new Date(anuncio.data_aprovacao).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>
                 <td><button class="btn-detalhes">Ver Detalhes</button></td>
             `;
+            // *** FIM DA MODIFICAÇÃO ***
+
             // Add listener to the button
             const detailsButton = tr.querySelector('.btn-detalhes');
              if (detailsButton) {
@@ -535,9 +538,9 @@
         const anuncio = todosAprovados.find(p => p.id == id);
         if (!anuncio) return;
 
-        // *** INÍCIO DA MODIFICAÇÃO ***
+        // *** INÍCIO DA MODIFICAÇÃO (Modal) ***
         document.getElementById('modal-descricao').textContent = anuncio.descricao || 'Não informado.';
-        document.getElementById('modal-data-aprovacao').textContent = new Date(anuncio.data_aprovacao).toLocaleString("pt-BR"); // <-- LINHA ADICIONADA/MODIFICADA
+        document.getElementById('modal-data-aprovacao').textContent = new Date(anuncio.data_aprovacao).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
         document.getElementById('modal-local').textContent = anuncio.local || 'Não informado.';
         document.getElementById('modal-contato').textContent = anuncio.contato || 'Não informado.';
         const precoElement = document.getElementById('modal-preco');
