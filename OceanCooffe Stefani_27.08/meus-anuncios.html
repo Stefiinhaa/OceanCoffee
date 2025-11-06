@@ -454,7 +454,22 @@
         protegerPagina();
 
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
-        function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${iconClass}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
+        
+        // ================== INÍCIO DA CORREÇÃO ==================
+        function showPopup(message, type = 'info', duration = 3500) {
+            const c = ensurePopupContainer();
+            const p = document.createElement('div');
+            p.className = `popup ${type}`;
+            let i = 'fas fa-info-circle'; // Variável 'i' declarada
+            if (type === 'success') i = 'fas fa-check-circle';
+            if (type === 'error') i = 'fas fa-times-circle';
+            p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; // Usando 'i' corretamente
+            c.prepend(p);
+            requestAnimationFrame(() => p.classList.add('show'));
+            setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration);
+        }
+        // =================== FIM DA CORREÇÃO ===================
+
         function showConfirmationPopup(title, message, options = {}) {
             const { confirmText = 'Sim', cancelText = 'Cancelar' } = options;
             return new Promise((resolve) => {
@@ -721,7 +736,7 @@
                 e.preventDefault();
                 const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?', { confirmText: 'Sim, Sair' });
                 if (userConfirmed) {
-                    showPopup("Saindo...", 'info', 1500);
+                    showPopup("Saindo...", 'info', 1500); // Esta função estava quebrada, agora deve funcionar
                     await supabase.auth.signOut();
                     setTimeout(() => window.location.replace("index.html"), 500);
                 }

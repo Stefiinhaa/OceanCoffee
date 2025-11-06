@@ -294,7 +294,7 @@
 
                     await Promise.all(uploadTasks);
 
-                    // ================== INÍCIO DA MODIFICAÇÃO ==================
+                    // --- ESTE É O BLOCO MODIFICADO ---
                     const updatedData = {
                         produto: document.getElementById('produto').value,
                         descricao: document.getElementById('descricao').value,
@@ -302,13 +302,14 @@
                         local: document.getElementById('local').value,
                         contato: telefoneMask.unmaskedValue,
                         imagens: newImageUrls.filter(Boolean),
+                        
                         // Campos para re-submissão
                         aprovado: null,          // Define como pendente
                         motivo_rejeicao: null, // Limpa o motivo da rejeição anterior
                         rejeicao_vista: null,  // Limpa o status de visualização
                         data: new Date().toISOString() // Atualiza a data de envio
                     };
-                    // =================== FIM DA MODIFICAÇÃO ===================
+                    // --- FIM DO BLOCO MODIFICADO ---
 
                     const { error: updateError } = await supabase.from('produtos').update(updatedData).eq('id', anuncioId);
                     if (updateError) throw updateError;
