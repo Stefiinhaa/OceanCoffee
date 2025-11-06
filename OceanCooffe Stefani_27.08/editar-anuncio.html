@@ -294,19 +294,26 @@
 
                     await Promise.all(uploadTasks);
 
+                    // ================== INÍCIO DA MODIFICAÇÃO ==================
                     const updatedData = {
                         produto: document.getElementById('produto').value,
                         descricao: document.getElementById('descricao').value,
                         preco: parseFloat(precoInput.value.replace('R$', '').replace(/\./g, '').replace(',', '.')),
                         local: document.getElementById('local').value,
                         contato: telefoneMask.unmaskedValue,
-                        imagens: newImageUrls.filter(Boolean)
+                        imagens: newImageUrls.filter(Boolean),
+                        // Campos para re-submissão
+                        aprovado: null,          // Define como pendente
+                        motivo_rejeicao: null, // Limpa o motivo da rejeição anterior
+                        rejeicao_vista: null,  // Limpa o status de visualização
+                        data: new Date().toISOString() // Atualiza a data de envio
                     };
+                    // =================== FIM DA MODIFICAÇÃO ===================
 
                     const { error: updateError } = await supabase.from('produtos').update(updatedData).eq('id', anuncioId);
                     if (updateError) throw updateError;
                     
-                    showPopup('Anúncio atualizado com sucesso!', 'success');
+                    showPopup('Anúncio atualizado e enviado para análise!', 'success');
                     setTimeout(() => {
                         window.location.href = 'meus-anuncios.html';
                     }, 2000);
