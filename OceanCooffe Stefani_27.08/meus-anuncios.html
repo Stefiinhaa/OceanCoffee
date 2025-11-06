@@ -454,7 +454,7 @@
         protegerPagina();
 
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
-        function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
+        function showPopup(message, type = 'info', duration = 3500) { const c = ensurePopupContainer(); const p = document.createElement('div'); p.className = `popup ${type}`; let i = 'fas fa-info-circle'; if (type === 'success') i = 'fas fa-check-circle'; if (type === 'error') i = 'fas fa-times-circle'; p.innerHTML = `<i class="${iconClass}"></i> <div>${message}</div>`; c.prepend(p); requestAnimationFrame(() => p.classList.add('show')); setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration); }
         function showConfirmationPopup(title, message, options = {}) {
             const { confirmText = 'Sim', cancelText = 'Cancelar' } = options;
             return new Promise((resolve) => {
@@ -577,7 +577,7 @@
                                     ${reasonIconHtml}
                                 </div>
                                 <div class="ad-actions">
-                                    ${ad.status === 'pendentes' ? `<a href="editar-anuncio.html?id=${ad.id}" class="action-btn edit" title="Editar anúncio"><i class="fas fa-pencil-alt"></i></a>` : ''}
+                                    ${ad.status === 'pendentes' || ad.status === 'rejeitados' ? `<a href="editar-anuncio.html?id=${ad.id}" class="action-btn edit" title="Editar anúncio"><i class="fas fa-pencil-alt"></i></a>` : ''}
                                     <button class="action-btn delete" title="Excluir anúncio"><i class="fas fa-trash-alt"></i></button>
                                 </div>
                             </div>
