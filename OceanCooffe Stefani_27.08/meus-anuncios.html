@@ -455,20 +455,18 @@
 
         function ensurePopupContainer() { let c = document.getElementById('popup-container'); if (!c) { c = document.createElement('div'); c.id = 'popup-container'; c.className = 'popup-container'; document.body.appendChild(c); } return c; }
         
-        // ================== INÍCIO DA CORREÇÃO ==================
         function showPopup(message, type = 'info', duration = 3500) {
             const c = ensurePopupContainer();
             const p = document.createElement('div');
             p.className = `popup ${type}`;
-            let i = 'fas fa-info-circle'; // Variável 'i' declarada
+            let i = 'fas fa-info-circle';
             if (type === 'success') i = 'fas fa-check-circle';
             if (type === 'error') i = 'fas fa-times-circle';
-            p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`; // Usando 'i' corretamente
+            p.innerHTML = `<i class="${i}"></i> <div>${message}</div>`;
             c.prepend(p);
             requestAnimationFrame(() => p.classList.add('show'));
             setTimeout(() => { p.classList.remove('show'); p.addEventListener('transitionend', () => p.remove()); }, duration);
         }
-        // =================== FIM DA CORREÇÃO ===================
 
         function showConfirmationPopup(title, message, options = {}) {
             const { confirmText = 'Sim', cancelText = 'Cancelar' } = options;
@@ -584,7 +582,7 @@
                             <div class="ad-info">
                                 <h3>${ad.produto}</h3>
                                 <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
-                                <p>${dateText}: ${new Date(ad.date).toLocaleDateString('pt-BR')}</p>
+                                <p>${dateText}: ${new Date(ad.date).toLocaleString('pt-BR')}</p>
                             </div>
                             <div class="ad-status-actions">
                                 <div class="status-container">
@@ -736,7 +734,7 @@
                 e.preventDefault();
                 const userConfirmed = await showConfirmationPopup('Confirmar Saída', 'Você tem certeza que deseja sair da sua conta?', { confirmText: 'Sim, Sair' });
                 if (userConfirmed) {
-                    showPopup("Saindo...", 'info', 1500); // Esta função estava quebrada, agora deve funcionar
+                    showPopup("Saindo...", 'info', 1500);
                     await supabase.auth.signOut();
                     setTimeout(() => window.location.replace("index.html"), 500);
                 }
