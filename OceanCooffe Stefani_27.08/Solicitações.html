@@ -320,6 +320,7 @@
                 <div class="modal-col-imagem"><div id="modal-carrossel" class="modal-carrossel"></div></div>
                 <div class="modal-col-info">
                     <div class="modal-info-item"><h3>Descrição</h3><p id="modal-descricao"></p></div>
+                    <div class="modal-info-item"><h3>Data de Envio</h3><p id="modal-data"></p></div>
                     <div class="modal-info-item"><h3>Localização</h3><p id="modal-local"></p></div>
                     <div class="modal-info-item"><h3>Preço</h3><p id="modal-preco"></p></div>
                     <div class="modal-info-item"><h3>Contato</h3><p id="modal-contato"></p></div>
@@ -552,10 +553,14 @@
         if (!detalhesModalEl) return;
         const produto = todasSolicitacoes.find(p => p.id == id);
         if (!produto) return;
+        
+        // *** INÍCIO DA MODIFICAÇÃO ***
         document.getElementById('modal-descricao').textContent = produto.descricao || 'Não informado.';
+        document.getElementById('modal-data').textContent = new Date(produto.data).toLocaleString("pt-BR"); // <-- LINHA ADICIONADA
         document.getElementById('modal-local').textContent = produto.local || 'Não informado.';
         document.getElementById('modal-contato').textContent = produto.contato || 'Não informado.';
         document.getElementById('modal-preco').textContent = parseFloat(produto.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        // *** FIM DA MODIFICAÇÃO ***
 
         const carrosselContainer = document.getElementById('modal-carrossel');
         imagensCarrosselAtual = produto.imagens || [];
