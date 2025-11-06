@@ -437,7 +437,7 @@
                 <td>${itemIndex}</td>
                 <td>${anuncio.nome_usuario || "Não Informado"}</td>
                 <td>${anuncio.produto || "-"}</td>
-                <td>${new Date(anuncio.data_aprovacao).toLocaleDateString("pt-BR")}</td>
+                <td>${new Date(anuncio.data_aprovacao).toLocaleString("pt-BR")}</td>
                 <td><button class="btn-detalhes">Ver Detalhes</button></td>
             `;
             // Add listener to the button
