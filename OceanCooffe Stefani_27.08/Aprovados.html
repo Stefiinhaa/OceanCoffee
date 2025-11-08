@@ -120,6 +120,40 @@
         .main-content { margin-top: 60px; padding: 1rem; }
      }
 
+    /* --- BREADCRUMB (NOVO) --- */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .breadcrumb a {
+        color: #0047a3;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+    .breadcrumb i.fa-chevron-right {
+        font-size: 0.7rem;
+        color: #6c757d;
+    }
+    .breadcrumb span {
+        color: #333;
+        font-weight: 600;
+    }
+    /* --- FIM BREADCRUMB --- */
+
     /* --- TABELA CONTAINER & SEARCH --- */
     .tabela-container {
         width: 100%; /* Takes full width of main-content */
@@ -289,6 +323,11 @@
             <span class="header-title" id="headerTitle">Anúncios Aprovados</span> <div></div> </div>
 
         <div class="main-content">
+            <nav class="breadcrumb">
+                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Aprovados</span>
+            </nav>
             <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por produto ou usuário..." /></div>
             <div class="tabela-container">
                 <table>

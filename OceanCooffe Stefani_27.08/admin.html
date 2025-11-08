@@ -118,6 +118,40 @@
          .main-content { margin-top: 60px; padding: 1rem; }
       }
 
+    /* --- BREADCRUMB (NOVO) --- */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem; /* Espaço abaixo */
+        font-size: 0.9rem;
+        font-weight: 500;
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+    .breadcrumb a {
+        color: #0047a3; /* Cor primária do admin */
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+    .breadcrumb i.fa-chevron-right { /* Ícone separador */
+        font-size: 0.7rem;
+        color: #6c757d;
+    }
+    .breadcrumb span {
+        color: #333;
+        font-weight: 600;
+    }
+    /* --- FIM BREADCRUMB --- */
+
     /* --- TABELA E PESQUISA --- */
     .tabela-container {
         width: 100%; background-color: #ffffff; padding: 25px; border-radius: 12px;
@@ -128,52 +162,40 @@
     .search-bar-container input:focus { border-color: #3ac0dd; box-shadow: 0 0 8px rgba(58, 192, 221, 0.5); }
 
     table {
-        table-layout: fixed; /* Essencial para text-overflow funcionar bem */
+        table-layout: fixed;
         width: 100%; border-collapse: collapse; text-align: left;
     }
     th {
         background-color: #0047a3; color: white; padding: 15px 10px; border: 1px solid rgba(255, 255, 255, 0.3);
         font-size: 16px; font-weight: 700; text-transform: uppercase; text-align: left;
-        white-space: nowrap; /* Evita que o cabeçalho quebre linha */
+        white-space: nowrap;
     }
     td {
-        padding: 14px 10px; /* Aumentei padding vertical */
+        padding: 14px 10px;
         border: 1px solid #e0e0e0; font-size: 15px; color: #333;
         vertical-align: middle;
-        /* --- ESTILOS PARA TRUNCAR TEXTO --- */
-        white-space: nowrap;   /* Impede a quebra de linha */
-        overflow: hidden;        /* Esconde o conteúdo que transborda */
-        text-overflow: ellipsis; /* Adiciona "..." ao final */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    /* Permite quebra nos selects quando em modo de edição */
     td select.input_edicao {
         white-space: normal;
-        text-overflow: clip; /* Ou initial */
+        text-overflow: clip;
     }
-    /* Remove truncamento para inputs quando em modo de edição */
     td input.input_edicao {
         white-space: normal;
         overflow: visible;
-        text-overflow: clip; /* Ou initial */
+        text-overflow: clip;
     }
-
-
     tr:nth-child(even) td { background-color: #f7f7f7; }
     tr:hover td { background-color: #dbeaff; }
-
-    /* Larguras das Colunas - Desktop (Ajustadas) */
     th:nth-child(1), td:nth-child(1) { width: 35%; } /* Nome */
     th:nth-child(2), td:nth-child(2) { width: 40%; } /* Email */
     th:nth-child(3), td:nth-child(3) { width: 10%; text-align: center; } /* Tipo */
     th:nth-child(4), td:nth-child(4) { width: 15%; text-align: center; } /* Ações */
-
     td:nth-child(3) select.input_edicao { text-align: center; }
-
-    /* --- ESTILOS PARA ÍCONES DE AÇÃO --- */
     .actions-cell { text-align: center; white-space: nowrap; }
-    /* Adiciona overflow: visible para a célula de ações para garantir que os ícones não sejam cortados */
     td:nth-child(4) { overflow: visible; }
-
     .action-icon {
         display: inline-block; padding: 8px 10px; margin: 0 4px; border-radius: 5px;
         color: white; font-size: 14px; text-decoration: none;
@@ -185,34 +207,28 @@
     .action-icon.salvar { background-color: #007bff; }
     .action-icon.excluir { background-color: #e60000; }
     button.alterar, button.salvar, button.excluir { display: none; }
-
-
-    /* Ajustes específicos para telas menores */
     @media (max-width: 768px) {
-        table { table-layout: auto; } /* Deixa navegador ajustar melhor */
+        table { table-layout: auto; }
         th, td {
-            padding: 12px 6px; /* Ajustado padding */
+            padding: 12px 6px;
             font-size: 14px; text-align: left;
-            white-space: nowrap; /* Mantém nowrap para truncar */
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* Força centralização para Tipo e Ações no mobile */
          th:nth-child(3), td:nth-child(3),
          th:nth-child(4), td:nth-child(4) {
              text-align: center;
-             white-space: nowrap; /* Necessário para centralizar ícones lado a lado */
+             white-space: nowrap;
          }
          th:nth-child(4), td:nth-child(4) {
-             width: auto; /* Deixa largura automática */
-             min-width: 80px; /* Espaço mínimo para ícones */
-             overflow: visible; /* Garante que ícones não cortem */
+             width: auto;
+             min-width: 80px;
+             overflow: visible;
          }
-         th:nth-child(1), td:nth-child(1) { width: 30%; } /* Reduzido Nome */
-         th:nth-child(2), td:nth-child(2) { width: 35%; } /* Reduzido Email */
-
+         th:nth-child(1), td:nth-child(1) { width: 30%; }
+         th:nth-child(2), td:nth-child(2) { width: 35%; }
          .action-icon { padding: 6px 8px; margin: 0 2px; font-size: 13px; }
-         /* Remove nowrap dos inputs/selects em edição no mobile */
          td input.input_edicao, td select.input_edicao {
             white-space: normal;
             overflow: visible;
@@ -220,7 +236,7 @@
          }
     }
 
-    /* --- BOTÕES (Mantido para Popups) --- */
+    /* --- BOTÕES --- */
     button { padding: 8px 15px; border: none; border-radius: 5px; color: white; cursor: pointer; font-size: 14px; transition: all 0.2s ease-in-out; margin: 0 3px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }
     button:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); }
     button:disabled { cursor: not-allowed; background-color: #a0a0a0; transform: none; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);}
@@ -229,9 +245,9 @@
     .popup-buttons .btn-ok { background-color: #007bff; } .popup-buttons .btn-ok:hover { background-color: #0056b3; }
 
     /* --- PAGINAÇÃO --- */
-    .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; flex-wrap: wrap; gap: 10px;} /* Permite quebra de linha */
+    .pagination-container { display: flex; justify-content: space-between; align-items: center; padding: 20px 0 10px 0; margin-top: 15px; border-top: 1px solid #eee; flex-wrap: wrap; gap: 10px;}
     .pagination-info { font-size: 14px; color: #666; white-space: nowrap;}
-    .pagination-controls { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; } /* Impede quebra nos controles */
+    .pagination-controls { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; }
     .pagination-controls button {
         background-color: #f0f0f0; color: #333; border: 1px solid #ccc;
         padding: 8px 14px; border-radius: 5px; cursor: pointer;
@@ -241,11 +257,10 @@
     .pagination-controls button:disabled { background-color: #e9e9e9; color: #aaa; cursor: not-allowed; }
     .pagination-controls button.active { background-color: #0056b3; color: white; border-color: #0056b3; }
     .pagination-controls .ellipsis { padding: 8px 5px; color: #666; }
-     @media (max-width: 480px) { /* Ajuste fino para paginação em telas muito pequenas */
+     @media (max-width: 480px) {
         .pagination-container { justify-content: center; }
         .pagination-info { width: 100%; text-align: center; margin-bottom: 10px; }
      }
-
 
     /* --- POP-UPS E TOASTS --- */
     .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1050; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
@@ -316,6 +331,11 @@
         </div>
 
         <div class="main-content">
+            <nav class="breadcrumb">
+                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Usuários</span>
+            </nav>
             <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail..." /></div>
             <div class="tabela-container">
                 <table>
@@ -406,7 +426,7 @@
              renderizarTabela(filteredUsers);
             setupPagination(filteredUsers);
         }
-        function renderizarTabela(usersToRender) { /* ... (sem alterações - já usa ícones) ... */
+        function renderizarTabela(usersToRender) { /* ... (sem alterações) ... */
             const tbody = document.querySelector("tbody");
             tbody.innerHTML = "";
             const startIndex = (currentPage - 1) * rowsPerPage;
@@ -522,7 +542,7 @@
             displayPage();
          }
 
-        document.addEventListener("DOMContentLoaded", async () => { /* ... (sem alterações na lógica principal) ... */
+        document.addEventListener("DOMContentLoaded", async () => { /* ... (sem alterações) ... */
              try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) { throw new Error("Você precisa estar logado para acessar esta página."); }
@@ -542,7 +562,7 @@
 
             document.getElementById("searchInput").addEventListener("input", (e) => filterUsers(e.target.value));
 
-            document.querySelector("tbody").addEventListener("click", async (e) => { /* ... (sem alterações - já usa ícones) ... */
+            document.querySelector("tbody").addEventListener("click", async (e) => { /* ... (sem alterações) ... */
                  const target = e.target;
                 const actionLink = target.closest('.action-icon');
                 if (!actionLink) return;
@@ -618,7 +638,7 @@
                 }
              });
 
-             const sidebar = document.getElementById("sidebar"); /* ... (restante da lógica da sidebar sem alterações) ... */
+             const sidebar = document.getElementById("sidebar"); /* ... (sem alterações) ... */
             const sidebarToggle = document.getElementById("sidebarToggle");
             const mainContent = document.getElementById("mainContent");
             const mainHeader = document.getElementById("mainHeader");
