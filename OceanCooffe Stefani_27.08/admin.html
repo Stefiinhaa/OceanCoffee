@@ -332,10 +332,7 @@
 
         <div class="main-content">
             <nav class="breadcrumb">
-                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <i class="fas fa-chevron-right"></i>
-                <span>Usuários</span>
-            </nav>
+                </nav>
             <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail..." /></div>
             <div class="tabela-container">
                 <table>
@@ -349,7 +346,17 @@
 
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+        // 1. Importa a NOSSA NOVA função de layout
+        import { initAdminPage } from './JS/admin-layout.js';
 
+        // 2. Informa ao script de layout qual é a página atual
+        initAdminPage({
+            name: "Usuários",
+            icon: "fas fa-users"
+        });
+
+        // --- Início da lógica específica da página admin.html ---
+    
         const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
@@ -638,50 +645,8 @@
                 }
              });
 
-             const sidebar = document.getElementById("sidebar"); /* ... (sem alterações) ... */
-            const sidebarToggle = document.getElementById("sidebarToggle");
-            const mainContent = document.getElementById("mainContent");
-            const mainHeader = document.getElementById("mainHeader");
-            const menuToggleMobile = document.getElementById('menu-toggle-mobile');
-            const navOverlay = document.getElementById('nav-overlay');
-             const applyDesktopCollapsedState = () => {
-                 if (window.innerWidth <= 992) return;
-                 const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
-                 sidebar.classList.toggle("collapsed", isCollapsed);
-                 mainContent.classList.toggle("shifted", isCollapsed);
-                 mainHeader.classList.toggle("shifted", isCollapsed);
-             };
-             applyDesktopCollapsedState();
-             sidebarToggle.addEventListener("click", () => {
-                 if (window.innerWidth > 992) {
-                    sidebar.classList.toggle("collapsed");
-                    mainContent.classList.toggle("shifted");
-                    mainHeader.classList.toggle("shifted");
-                    localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
-                 }
-             });
-             const closeMobileMenu = () => { sidebar.classList.remove('is-open'); navOverlay.classList.remove('is-open'); };
-             menuToggleMobile.addEventListener('click', () => { sidebar.classList.add('is-open'); navOverlay.classList.add('is-open'); });
-             navOverlay.addEventListener('click', closeMobileMenu);
-             sidebar.querySelectorAll('.menu-item').forEach(item => {
-                 item.addEventListener('click', () => { if (window.innerWidth <= 992) closeMobileMenu(); });
-             });
-            document.querySelector(".menu-item-logout").addEventListener("click", async (e) => {
-                e.preventDefault();
-                 if (window.innerWidth <= 992) closeMobileMenu();
-                 await supabase.auth.signOut();
-                window.location.replace("index.html");
-            });
-             window.addEventListener('resize', () => {
-                 if (window.innerWidth > 992) {
-                     closeMobileMenu();
-                     applyDesktopCollapsedState();
-                 } else {
-                     sidebar.classList.remove("collapsed");
-                     mainContent.classList.remove("shifted");
-                     mainHeader.classList.remove("shifted");
-                 }
-             });
+             // ***** TODA A LÓGICA DE SIDEBAR E LOGOUT FOI REMOVIDA DAQUI *****
+             // ***** ELA AGORA É TRATADA PELO JS/admin-layout.js *****
         });
     </script>
 </body>

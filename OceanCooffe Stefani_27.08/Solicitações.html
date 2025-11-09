@@ -334,10 +334,7 @@
 
         <div class="main-content">
             <nav class="breadcrumb">
-                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                <i class="fas fa-chevron-right"></i>
-                <span>Solicitações</span>
-            </nav>
+                </nav>
             <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por produto ou usuário..." /></div>
             <div class="tabela-container">
                 <table>
@@ -403,6 +400,16 @@
 
 <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+    // 1. Importa a NOSSA NOVA função de layout
+    import { initAdminPage } from './JS/admin-layout.js';
+
+    // 2. Informa ao script de layout qual é a página atual
+    initAdminPage({
+        name: "Solicitações",
+        icon: "fas fa-inbox"
+    });
+    
+    // --- Início da lógica específica da página Solicitacoes.html ---
 
     const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
@@ -425,16 +432,10 @@
     const tbodyEl = document.getElementById("solicitacoes-tbody");
     const paginationContainerEl = document.getElementById("pagination-container");
     const searchInputEl = document.getElementById("searchInput");
-    const sidebarEl = document.getElementById("sidebar");
-    const sidebarToggleEl = document.getElementById("sidebarToggle");
-    const mainContentEl = document.getElementById("mainContent");
-    const mainHeaderEl = document.getElementById("mainHeader");
-    const menuToggleMobileEl = document.getElementById('menu-toggle-mobile');
-    const navOverlayEl = document.getElementById('nav-overlay');
-    const headerTitleEl = document.getElementById('headerTitle'); // Get header title span
+    const headerTitleEl = document.getElementById('headerTitle');
 
     // --- Funções Utilitárias ---
-    function showToast(message, type = 'success') { /* ... (sem alterações) ... */
+    function showToast(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast-notification ${type}`;
         toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-times-circle'}"></i><span>${message}</span>`;
@@ -447,11 +448,11 @@
 
     // --- Funções Principais ---
     async function carregarSolicitacoes() {
-        if (!tbodyEl) return; // Ensure tbody exists
-        tbodyEl.innerHTML = `<tr><td colspan="5">Carregando solicitações...</td></tr>`; // Updated colspan
+        if (!tbodyEl) return;
+        tbodyEl.innerHTML = `<tr><td colspan="5">Carregando solicitações...</td></tr>`;
         try {
             const { data, error, count } = await supabase.from("produtos")
-                .select("*", { count: 'exact' }) // Get count
+                .select("*", { count: 'exact' })
                 .is("aprovado", null)
                 .order("data", { ascending: false });
 
@@ -460,7 +461,6 @@
             todasSolicitacoes = data || [];
             solicitacoesFiltradas = todasSolicitacoes;
             currentPage = 1;
-             // Update header title with count
              if (headerTitleEl) {
                 headerTitleEl.textContent = `Solicitações (${count || 0})`;
              }
@@ -468,7 +468,7 @@
         } catch (error) {
             console.error("Erro ao carregar solicitações:", error.message);
             showToast("Erro ao carregar solicitações", "error");
-            if (tbodyEl) tbodyEl.innerHTML = `<tr><td colspan="5">Erro ao carregar dados.</td></tr>`; // Updated colspan
+            if (tbodyEl) tbodyEl.innerHTML = `<tr><td colspan="5">Erro ao carregar dados.</td></tr>`;
         }
     }
 
@@ -485,7 +485,7 @@
         const paginatedItems = solicitacoes.slice(startIndex, startIndex + rowsPerPage);
 
         if (paginatedItems.length === 0) {
-            tbodyEl.innerHTML = `<tr><td colspan="5">Nenhuma solicitação pendente encontrada.</td></tr>`; // Updated colspan
+            tbodyEl.innerHTML = `<tr><td colspan="5">Nenhuma solicitação pendente encontrada.</td></tr>`;
             return;
         }
 
@@ -493,13 +493,15 @@
             const tr = document.createElement("tr");
             tr.setAttribute('data-id', produto.id);
             const itemIndex = startIndex + index + 1;
+            
+            // ***** CORREÇÃO DA HORA APLICADA AQUI *****
             tr.innerHTML = `
                 <td>${itemIndex}</td>
                 <td>${produto.nome_usuario || "Não Informado"}</td>
                 <td>${produto.produto || "-"}</td>
-                <td>${new Date(produto.data).toLocaleString("pt-BR")}</td>
+                <td>${new Date(produto.data).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>
                 <td><button class="btn-detalhes">Ver Detalhes</button></td> `;
-             // Add event listener directly to the button
+             
              const detailsButton = tr.querySelector('.btn-detalhes');
              if (detailsButton) {
                  detailsButton.addEventListener('click', () => abrirModalDetalhes(produto.id));
@@ -508,7 +510,7 @@
         });
     }
 
-    function setupPagination(solicitacoes) { /* ... (sem alterações) ... */
+    function setupPagination(solicitacoes) {
         if (!paginationContainerEl) return;
         paginationContainerEl.innerHTML = "";
         const pageCount = Math.ceil(solicitacoes.length / rowsPerPage);
@@ -593,13 +595,14 @@
         const produto = todasSolicitacoes.find(p => p.id == id);
         if (!produto) return;
         
-        // *** INÍCIO DA MODIFICAÇÃO ***
         document.getElementById('modal-descricao').textContent = produto.descricao || 'Não informado.';
-        document.getElementById('modal-data').textContent = new Date(produto.data).toLocaleString("pt-BR"); // <-- LINHA ADICIONADA
+        
+        // ***** CORREÇÃO DA HORA APLICADA AQUI *****
+        document.getElementById('modal-data').textContent = new Date(produto.data).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+        
         document.getElementById('modal-local').textContent = produto.local || 'Não informado.';
         document.getElementById('modal-contato').textContent = produto.contato || 'Não informado.';
         document.getElementById('modal-preco').textContent = parseFloat(produto.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        // *** FIM DA MODIFICAÇÃO ***
 
         const carrosselContainer = document.getElementById('modal-carrossel');
         imagensCarrosselAtual = produto.imagens || [];
@@ -612,7 +615,6 @@
 
         const acoesContainer = document.getElementById('modal-acoes');
         acoesContainer.innerHTML = `<button class="aprovar">Aprovar</button><button class="excluir">Rejeitar</button>`;
-        // Add listeners inside the modal opening function
         acoesContainer.querySelector('.aprovar').addEventListener('click', () => aprovarAnuncio(produto.id));
         acoesContainer.querySelector('.excluir').addEventListener('click', () => rejeitarAnuncio(produto.id));
 
@@ -621,48 +623,61 @@
     window.fecharModalDetalhes = () => { if (detalhesModalEl) detalhesModalEl.classList.remove('visible'); }; /* Make global */
     window.fecharModalRejeicao = () => { if (rejectionModalEl) rejectionModalEl.classList.remove('visible'); }; /* Make global */
 
-    window.mudarImagemModal=(e,t)=>{ /* ... (sem alterações) ... */
+    window.mudarImagemModal=(e,t)=>{
         e.stopPropagation();
         carrosselAtualIndex=(carrosselAtualIndex+t+imagensCarrosselAtual.length)%imagensCarrosselAtual.length;
         const imgElement = document.getElementById("carrossel-img-modal");
         imgElement.src=imagensCarrosselAtual[carrosselAtualIndex];
         imgElement.setAttribute("onclick",`abrirModalFullscreen(${carrosselAtualIndex})`);
      };
-    window.abrirModalFullscreen = (index) => { /* ... (sem alterações) ... */
+    window.abrirModalFullscreen = (index) => {
         event && event.stopPropagation();
         if(!imagensCarrosselAtual || imagensCarrosselAtual.length === 0 || !fullscreenModalEl) return;
         fullscreenIndex = index;
         atualizarImagemFullscreen();
         fullscreenModalEl.classList.add("visible");
      };
-    window.fecharModalFullscreen = () => { /* ... (sem alterações) ... */
+    window.fecharModalFullscreen = () => {
         event && event.stopPropagation();
         if (fullscreenModalEl) fullscreenModalEl.classList.remove("visible");
      };
-    window.mudarImagemFullscreen = (direction) => { /* ... (sem alterações) ... */
+    window.mudarImagemFullscreen = (direction) => {
          event && event.stopPropagation();
         fullscreenIndex = (fullscreenIndex + direction + imagensCarrosselAtual.length) % imagensCarrosselAtual.length;
         atualizarImagemFullscreen();
      };
-    function atualizarImagemFullscreen(){ /* ... (sem alterações) ... */
+    function atualizarImagemFullscreen(){
         if(!imagensCarrosselAtual || imagensCarrosselAtual.length === 0 || !fullscreenModalEl) return;
         document.getElementById("fullscreen-image").src=imagensCarrosselAtual[fullscreenIndex];
         document.getElementById("fullscreen-counter").textContent=`${fullscreenIndex+1} / ${imagensCarrosselAtual.length}`;
     }
 
     // --- Funções de Ação ---
-     async function aprovarAnuncio(id) { /* Changed to local async */
+     async function aprovarAnuncio(id) {
          try {
             const { data: produto, error: fetchError } = await supabase.from('produtos').select('*').eq('id', id).single();
             if (fetchError || !produto) throw new Error(fetchError?.message || "Solicitação não encontrada.");
 
-            const { id: oldId, aprovado, data, motivo_rejeicao, rejeicao_vista, ...dadosParaAprovados } = produto;
-            dadosParaAprovados.data_aprovacao = new Date().toISOString();
+            // ***** INÍCIO DA CORREÇÃO DO BUG (Aprovados.html) *****
+            // Criamos manualmente o objeto SÓ com os dados que a tabela 'aprovados' aceita.
+            const dadosParaAprovados = {
+                user_id: produto.user_id,
+                nome_usuario: produto.nome_usuario,
+                produto: produto.produto,
+                descricao: produto.descricao,
+                preco: produto.preco,
+                local: produto.local,
+                contato: produto.contato,
+                imagens: produto.imagens,
+                // Adiciona a nova data de aprovação (em UTC, o que é correto para o DB)
+                data_aprovacao: new Date().toISOString() 
+            };
+            // ***** FIM DA CORREÇÃO *****
+            
             const { error: insertError } = await supabase.from('aprovados').insert([dadosParaAprovados]);
             if (insertError) throw new Error(insertError.message || "Erro ao mover para aprovados.");
 
             const { error: deleteError } = await supabase.from('produtos').delete().eq('id', id);
-            // Even if delete fails, we proceed, but log it
             if (deleteError) console.error("Erro ao deletar da tabela produtos após aprovação:", deleteError);
 
 
@@ -674,7 +689,7 @@
             console.error('Erro no processo de aprovação:', error);
         }
       };
-     function rejeitarAnuncio(id) { /* Changed to local function */
+     function rejeitarAnuncio(id) {
         fecharModalDetalhes();
         if (rejectionModalEl && rejectionFormEl) {
             rejectionModalEl.classList.add('visible');
@@ -711,7 +726,12 @@
             try {
                 const { error } = await supabase
                     .from('produtos')
-                    .update({ aprovado: false, motivo_rejeicao: finalMessage, rejeicao_vista: false })
+                    .update({ 
+                        aprovado: false, 
+                        motivo_rejeicao: finalMessage, 
+                        rejeicao_vista: false,
+                        data_rejeicao: new Date().toISOString() // Adiciona a data da rejeição
+                    })
                     .eq('id', anuncioId);
                 if (error) throw error;
 
@@ -723,7 +743,6 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Confirmar Rejeição';
-                // e.target.reset(); // Reset moved inside the try/finally
             }
         });
      }
@@ -744,70 +763,6 @@
                 displayPage();
             });
         }
-
-        // --- SIDEBAR/HEADER RESPONSIVE LOGIC ---
-        const applyDesktopCollapsedState = () => {
-             if (!sidebarEl || !mainContentEl || !mainHeaderEl || window.innerWidth <= 992) return;
-             const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
-             sidebarEl.classList.toggle("collapsed", isCollapsed);
-             mainContentEl.classList.toggle("shifted", isCollapsed);
-             mainHeaderEl.classList.toggle("shifted", isCollapsed);
-        };
-        applyDesktopCollapsedState();
-
-        if (sidebarToggleEl) {
-            sidebarToggleEl.addEventListener("click", () => { // Desktop Toggle
-                if (window.innerWidth > 992) {
-                    sidebarEl.classList.toggle("collapsed");
-                    mainContentEl.classList.toggle("shifted");
-                    mainHeaderEl.classList.toggle("shifted");
-                    localStorage.setItem("sidebarCollapsed", sidebarEl.classList.contains("collapsed"));
-                }
-            });
-        }
-
-        const closeMobileMenu = () => {
-            if (sidebarEl) sidebarEl.classList.remove('is-open');
-            if (navOverlayEl) navOverlayEl.classList.remove('is-open');
-        };
-
-        if (menuToggleMobileEl) {
-            menuToggleMobileEl.addEventListener('click', () => { // Mobile Toggle
-                if (sidebarEl) sidebarEl.classList.add('is-open');
-                if (navOverlayEl) navOverlayEl.classList.add('is-open');
-            });
-        }
-        if (navOverlayEl) {
-            navOverlayEl.addEventListener('click', closeMobileMenu); // Overlay click
-        }
-
-        if (sidebarEl) { // Close on menu item click (mobile)
-            sidebarEl.querySelectorAll('.menu-item, .menu-item-logout').forEach(item => {
-                item.addEventListener('click', () => { if (window.innerWidth <= 992) closeMobileMenu(); });
-            });
-        }
-
-        // Logout Listener (attach only if element exists)
-        const logoutButton = document.querySelector(".menu-item-logout");
-        if (logoutButton) {
-            logoutButton.addEventListener("click", async e => {
-                e.preventDefault();
-                await supabase.auth.signOut();
-                window.location.replace("index.html");
-            });
-        }
-
-        // Window Resize Listener
-        window.addEventListener('resize', () => {
-             if (window.innerWidth > 992) {
-                 closeMobileMenu();
-                 applyDesktopCollapsedState();
-             } else {
-                 if (sidebarEl) sidebarEl.classList.remove("collapsed");
-                 if (mainContentEl) mainContentEl.classList.remove("shifted");
-                 if (mainHeaderEl) mainHeaderEl.classList.remove("shifted");
-             }
-         });
 
         // Keydown Listener for Modals
         window.addEventListener("keydown",e=>{

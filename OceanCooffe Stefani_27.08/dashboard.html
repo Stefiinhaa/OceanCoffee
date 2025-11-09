@@ -328,8 +328,8 @@
 
         <div class="main-content">
             <nav class="breadcrumb">
-                <span><i class="fas fa-tachometer-alt"></i> Dashboard</span>
-            </nav>
+                </nav>
+            
             <div class="dashboard-grid">
                  <a href="admin.html" class="stat-card-link">
                     <div class="stat-card">
@@ -378,8 +378,18 @@
 
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
-        // Chart.js should be imported via <script> tag in <head>, but keep this structure
+        
+        // 2. Importa a NOSSA NOVA função de layout
+        import { initAdminPage } from './JS/admin-layout.js';
 
+        // 3. Informa ao script de layout qual é a página atual
+        initAdminPage({
+            name: "Dashboard",
+            icon: "fas fa-tachometer-alt"
+        });
+
+        // --- Início da lógica específica da página dashboard.html ---
+        
         const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
@@ -495,83 +505,8 @@
                 fetchRecentRequests();
                 renderStatusPieChart(); // Call chart rendering
 
-                // --- Sidebar/Header Responsive Logic ---
-                const sidebar = document.getElementById("sidebar");
-                const sidebarToggle = document.getElementById("sidebarToggle"); // Botão Desktop
-                const mainContent = document.getElementById("mainContent");
-                const mainHeader = document.getElementById("mainHeader");
-                const menuToggleMobile = document.getElementById('menu-toggle-mobile'); // Botão Mobile
-                const navOverlay = document.getElementById('nav-overlay');
-
-                const applyDesktopCollapsedState = () => {
-                     if (!sidebar || !mainContent || !mainHeader || window.innerWidth <= 992) return;
-                     const isCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
-                     sidebar.classList.toggle("collapsed", isCollapsed);
-                     mainContent.classList.toggle("shifted", isCollapsed);
-                     mainHeader.classList.toggle("shifted", isCollapsed);
-                };
-                applyDesktopCollapsedState(); // Apply on load
-
-                if (sidebarToggle) {
-                    sidebarToggle.addEventListener("click", () => { // Desktop Toggle
-                        if (window.innerWidth > 992) {
-                            sidebar.classList.toggle("collapsed");
-                            mainContent.classList.toggle("shifted");
-                            mainHeader.classList.toggle("shifted");
-                            localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
-                        }
-                    });
-                }
-
-                const closeMobileMenu = () => {
-                    if (sidebar) sidebar.classList.remove('is-open');
-                    if (navOverlay) navOverlay.classList.remove('is-open');
-                };
-
-                if (menuToggleMobile) {
-                    menuToggleMobile.addEventListener('click', () => { // Mobile Toggle
-                        if (sidebar) sidebar.classList.add('is-open');
-                        if (navOverlay) navOverlay.classList.add('is-open');
-                    });
-                }
-                if (navOverlay) {
-                    navOverlay.addEventListener('click', closeMobileMenu); // Overlay click
-                }
-
-                if (sidebar) { // Close on menu item click (mobile)
-                    sidebar.querySelectorAll('.menu-item, .menu-item-logout').forEach(item => {
-                        item.addEventListener('click', (e) => {
-                            // Don't close immediately for logout to allow confirmation
-                            if (!item.classList.contains('menu-item-logout') && window.innerWidth <= 992) {
-                                closeMobileMenu();
-                            }
-                        });
-                    });
-                }
-
-                // Logout Listener
-                 const logoutButton = document.querySelector(".menu-item-logout");
-                 if (logoutButton) {
-                     logoutButton.addEventListener("click", async (e) => {
-                        e.preventDefault();
-                        // Optional: Add confirmation popup here if desired
-                        await supabase.auth.signOut();
-                        window.location.replace("index.html");
-                     });
-                 }
-
-                // Window Resize Listener
-                 window.addEventListener('resize', () => {
-                     if (window.innerWidth > 992) {
-                         closeMobileMenu();
-                         applyDesktopCollapsedState();
-                     } else {
-                         if (sidebar) sidebar.classList.remove("collapsed");
-                         if (mainContent) mainContent.classList.remove("shifted");
-                         if (mainHeader) mainHeader.classList.remove("shifted");
-                     }
-                 });
-                 // --- End Sidebar/Header Logic ---
+                // A LÓGICA DA SIDEBAR FOI MOVIDA PARA O admin-layout.js
+                // E JÁ FOI CHAMADA LÁ EM CIMA
 
              }).catch(error => {
                  // Handles errors during the initial admin check if necessary
@@ -579,5 +514,6 @@
              });
         });
     </script>
-</body>
+    
+    </body>
 </html>

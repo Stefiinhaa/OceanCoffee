@@ -563,6 +563,9 @@
                         const statusText = { aprovados: 'Aprovado', pendentes: 'Pendente', rejeitados: 'Rejeitado' }[statusClass];
                         const dateText = { aprovados: 'Aprovado em', pendentes: 'Enviado em', rejeitados: 'Enviado em' }[statusClass];
                         
+                        // ***** CORREÇÃO DA HORA APLICADA AQUI *****
+                        const formattedDate = new Date(ad.date).toLocaleString('pt-BR', { timeZone: "America/Sao_Paulo" });
+
                         let reasonIconHtml = '';
                         if (ad.status === 'rejeitados' && ad.motivo_rejeicao) {
                             const badgeHtml = ad.rejeicao_vista === false ? '<div class="notification-badge"></div>' : '';
@@ -582,7 +585,7 @@
                             <div class="ad-info">
                                 <h3>${ad.produto}</h3>
                                 <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
-                                <p>${dateText}: ${new Date(ad.date).toLocaleString('pt-BR')}</p>
+                                <p>${dateText}: ${formattedDate}</p> 
                             </div>
                             <div class="ad-status-actions">
                                 <div class="status-container">
