@@ -157,9 +157,48 @@
         width: 100%; background-color: #ffffff; padding: 25px; border-radius: 12px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); overflow-x: auto;
     }
-    .search-bar-container { margin-bottom: 1.5rem; text-align: center; }
-    .search-bar-container input { padding: 10px 15px; width: 100%; max-width: 500px; border: 2px solid #0047a3; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+    
+    .search-bar-container {
+        display: flex;
+        justify-content: space-between; /* Input na esquerda, Botão na direita */
+        align-items: center;
+        gap: 1.5rem; /* Espaço entre input e botão */
+        flex-wrap: wrap; /* Para quebrar linha no mobile */
+        margin-bottom: 1.5rem;
+    }
+    .search-bar-container input {
+        padding: 10px 15px;
+        width: 100%; /* Ocupa 100% no mobile */
+        max-width: 500px;
+        border: 2px solid #0047a3;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        flex-grow: 1; /* Faz o input crescer */
+    }
     .search-bar-container input:focus { border-color: #3ac0dd; box-shadow: 0 0 8px rgba(58, 192, 221, 0.5); }
+
+    .back-button {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem; /* Mesmo padding do input */
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem; /* Mesmo tamanho do dashboard */
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-shrink: 0; /* Para não encolher */
+        text-decoration: none; /* Caso use <a> */
+    }
+    .back-button:hover {
+        background-color: #5a6268;
+    }
+
 
     table {
         table-layout: fixed;
@@ -178,21 +217,37 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    
+    td input.input_edicao, td select.input_edicao {
+        width: 95%;
+        padding: 4px;
+        font-size: 15px;
+        color: #333;
+        border: none;
+        border-bottom: 2px solid #0047a3; /* Linha azul */
+        background-color: transparent; /* Fundo transparente */
+        outline: none;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Manter a fonte */
+    }
     td select.input_edicao {
-        white-space: normal;
-        text-overflow: clip;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 20px; /* Espaço para a seta */
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230047A3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
+        background-repeat: no-repeat;
+        background-position: right 5px center;
+        background-size: 10px;
     }
-    td input.input_edicao {
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-    }
+
     tr:nth-child(even) td { background-color: #f7f7f7; }
     tr:hover td { background-color: #dbeaff; }
-    th:nth-child(1), td:nth-child(1) { width: 35%; } /* Nome */
-    th:nth-child(2), td:nth-child(2) { width: 40%; } /* Email */
+    
+    th:nth-child(1), td:nth-child(1) { width: 30%; } /* Nome */
+    th:nth-child(2), td:nth-child(2) { width: 35%; } /* Email */
     th:nth-child(3), td:nth-child(3) { width: 10%; text-align: center; } /* Tipo */
-    th:nth-child(4), td:nth-child(4) { width: 15%; text-align: center; } /* Ações */
+    th:nth-child(4), td:nth-child(4) { width: 25%; text-align: center; } /* Ações (mais larga) */
+    
     td:nth-child(3) select.input_edicao { text-align: center; }
     .actions-cell { text-align: center; white-space: nowrap; }
     td:nth-child(4) { overflow: visible; }
@@ -203,10 +258,30 @@
     }
     .action-icon:hover { transform: scale(1.1); opacity: 0.9; }
     .action-icon i { display: block; }
-    .action-icon.alterar { background-color: #00b86b; }
-    .action-icon.salvar { background-color: #007bff; }
-    .action-icon.excluir { background-color: #e60000; }
+    
+    /* ***** MUDANÇA NAS CORES (Profissional) ***** */
+    .action-icon.ver { background-color: #6c757d; }
+    .action-icon.alterar { background-color: #6c757d; }
+    .action-icon.salvar { background-color: #28a745; }
+    .action-icon.excluir { background-color: #dc3545; }
+    /* ***** FIM DA MUDANÇA NAS CORES ***** */
+
     button.alterar, button.salvar, button.excluir { display: none; }
+    
+    /* ***** CSS CORRIGIDO: Estilo do Filtro de Tipo ***** */
+    #tipo-filter-btn {
+        font-size: 0.9em;
+        margin-left: 8px;
+        color: #ccc; /* Cinza claro (desativado) por padrão */
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    #tipo-filter-btn:hover {
+        color: #0047a3; /* Cor primária (hover) */
+    }
+    /* A classe .active-filter foi REMOVIDA para evitar conflitos */
+    /* ***** FIM DO CSS CORRIGIDO ***** */
+    
     @media (max-width: 768px) {
         table { table-layout: auto; }
         th, td {
@@ -223,7 +298,7 @@
          }
          th:nth-child(4), td:nth-child(4) {
              width: auto;
-             min-width: 80px;
+             min-width: 120px; /* Aumenta o min-width para caber os 3 ícones */
              overflow: visible;
          }
          th:nth-child(1), td:nth-child(1) { width: 30%; }
@@ -233,6 +308,18 @@
             white-space: normal;
             overflow: visible;
             text-overflow: clip;
+         }
+         
+         .search-bar-container {
+            flex-direction: column; /* Empilha no mobile */
+            gap: 1rem;
+         }
+         .search-bar-container input {
+            max-width: 100%; /* Ocupa 100% */
+         }
+         .back-button {
+            width: 100%; /* Botão ocupa 100% */
+            justify-content: center; /* Centraliza o texto do botão */
          }
     }
 
@@ -283,6 +370,169 @@
         background-color: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
     }
     .nav-overlay.is-open { display: block; opacity: 1; }
+    
+    
+    /* --- 
+        NOVOS ESTILOS PARA O MODAL (Detalhes do Usuário)
+    --- */
+    .modal-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.6); z-index: 2000;
+        justify-content: center; align-items: center;
+        opacity: 0; transition: opacity 0.3s ease;
+        padding: 20px;
+    }
+    .modal-overlay.visible { display: flex; opacity: 1; }
+    .modal-content {
+        background-color: #fff; padding: 0; border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        width: 100%; max-width: 800px;
+        height: 90vh;
+        display: flex; flex-direction: column;
+        position: relative;
+        transform: scale(0.95); transition: transform 0.3s ease;
+    }
+    .modal-overlay.visible .modal-content { transform: scale(1); }
+    .modal-header {
+        padding: 1.25rem 1.5rem; border-bottom: 1px solid #eee;
+        display: flex; justify-content: space-between; align-items: center;
+        flex-shrink: 0;
+    }
+    .modal-header h2 {
+        margin: 0; color: #0047a3;
+        font-size: 1.5rem;
+        display: flex; align-items: center; gap: 0.75rem;
+    }
+    .modal-close-btn {
+        background: none; border: none; font-size: 2rem;
+        color: #aaa; cursor: pointer; line-height: 1;
+        transition: color 0.2s;
+    }
+    .modal-close-btn:hover { color: #333; }
+    
+    .modal-body {
+        overflow-y: auto; flex-grow: 1;
+        padding: 1.5rem 2rem;
+    }
+    
+    #user-details-loading {
+        text-align: center; padding: 3rem;
+        font-size: 1.2rem; color: #6c757d;
+    }
+    
+    .user-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    .info-item {
+        display: flex; flex-direction: column; gap: 4px;
+    }
+    .info-item label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+    }
+    .info-item p {
+        font-size: 1.1rem;
+        color: #212529;
+        font-weight: 500;
+        margin: 0;
+        word-break: break-all;
+    }
+    
+    .user-ads-list h3 {
+        font-size: 1.25rem;
+        color: #0047a3;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.5rem;
+    }
+    .user-ads-list ul {
+        list-style: none;
+        padding: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #eee;
+        border-radius: 8px;
+    }
+    .user-ads-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #eee;
+    }
+    .user-ads-list li:last-child { border-bottom: none; }
+    .user-ads-list .ad-title {
+        font-weight: 500;
+        color: #333;
+    }
+    .user-ads-list .ad-status {
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        color: white;
+        white-space: nowrap;
+    }
+    .ad-status.aprovados { background-color: #28a745; }
+    .ad-status.pendentes { background-color: #ffc107; color: #212529; }
+    .ad-status.rejeitados { background-color: #dc3545; }
+    
+    #no-ads-message-modal {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+    }
+    /* --- FIM DOS ESTILOS DO MODAL --- */
+
+    
+    /* Media Queries Finais */
+     @media (max-width: 992px) {
+         .sidebar { left: -250px; z-index: 1100; }
+         .sidebar.is-open { left: 0; }
+         .sidebar.collapsed { width: 250px; }
+         .sidebar.collapsed .logo { padding: 20px 0; border-bottom-color: rgba(255, 255, 255, 0.2); opacity: 1; height: auto; overflow: visible; pointer-events: auto;}
+         .sidebar.collapsed .logo img { opacity: 1; width: auto; max-width: 150px; }
+         .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item-logout { justify-content: flex-start; padding: 12px 25px; }
+         .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 1; width: auto; }
+         .sidebar-bottom { display: none; }
+         
+         .content { margin-left: 0; height: auto; min-height: 100vh; }
+         .content.shifted { margin-left: 0; }
+         
+         .header { width: 100%; left: 0; padding: 0 1rem; position: fixed; }
+         .header.shifted { width: 100%; left: 0; }
+         .header-title { display: none; }
+         .menu-toggle-mobile { display: block; }
+
+         .main-content { margin-top: 60px; padding: 1rem; }
+         
+         /* Modal de Detalhes do Usuário Mobile */
+         .modal-content {
+            max-width: 95vw;
+            height: 85vh;
+         }
+         .modal-header h2 { font-size: 1.25rem; }
+         .modal-body { padding: 1rem; }
+         .user-info-grid {
+             grid-template-columns: 1fr; /* Uma coluna no mobile */
+             gap: 1rem;
+             margin-bottom: 1.5rem;
+             padding-bottom: 1.5rem;
+         }
+         .info-item p { font-size: 1rem; }
+         .user-ads-list li { flex-direction: column; align-items: flex-start; gap: 5px; }
+     }
+     @media (max-width: 480px) {
+        .pagination-container { justify-content: center; }
+        .pagination-info { width: 100%; text-align: center; margin-bottom: 10px; }
+     }
 </style>
 </head>
 <body>
@@ -333,10 +583,24 @@
         <div class="main-content">
             <nav class="breadcrumb">
                 </nav>
-            <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail..." /></div>
+            
+            <div class="search-bar-container">
+                <input type="text" id="searchInput" placeholder="Pesquisar por nome ou e-mail..." />
+                <button id="admin-back-btn" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+            </div>
+            
             <div class="tabela-container">
                 <table>
-                    <thead><tr><th>Nome</th><th>Email</th><th>Tipo</th><th>Ações</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo <i id="tipo-filter-btn" class="fas fa-filter" title="Filtrar por tipo"></i></th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
                     <tbody></tbody>
                 </table>
                 <div id="pagination-container" class="pagination-container"></div>
@@ -344,6 +608,19 @@
         </div>
     </div>
 
+    <div id="user-details-modal-overlay" class="modal-overlay">
+        <div id="user-details-modal-content" class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Detalhes do Usuário</h2>
+                <button id="user-details-modal-close" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="user-details-modal-body">
+                <div id="user-details-loading">
+                    <p><i class="fas fa-spinner fa-spin"></i> Carregando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
         // 1. Importa a NOSSA NOVA função de layout
@@ -365,9 +642,16 @@
         let filteredUsers = [];
         let currentPage = 1;
         const rowsPerPage = 10;
+        
+        // ***** NOVA VARIÁVEL GLOBAL: Estado do filtro de tipo *****
+        let currentTipoFilter = 'Todos'; // 'Todos', 'Comum', 'Administrador'
+        
+        const userDetailsModal = document.getElementById('user-details-modal-overlay');
+        const userDetailsModalClose = document.getElementById('user-details-modal-close');
+        const userDetailsModalBody = document.getElementById('user-details-modal-body');
 
 
-        function showPopup(message, type = 'error') { /* ... (sem alterações) ... */
+        function showPopup(message, type = 'error') {
              return new Promise((resolve) => {
                 const overlay = document.createElement('div');
                 overlay.className = 'popup-overlay';
@@ -399,10 +683,14 @@
                 overlay.querySelector('.btn-cancel')?.addEventListener('click', () => closePopup(false));
             });
         }
-        function showToast(message, type = 'success') { /* ... (sem alterações) ... */
+        function showToast(message, type = 'success') {
              const toast = document.createElement('div');
             toast.className = `toast-notification ${type}`;
-            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            // Use o ícone de info para toasts neutros
+            if (type !== 'success' && type !== 'error') {
+                toast.style.backgroundColor = '#007bff'; // Cor azul para "info"
+            }
             toast.innerHTML = `<i class="fas ${iconClass}"></i><span>${message}</span>`;
             document.body.appendChild(toast);
             setTimeout(() => {
@@ -410,10 +698,24 @@
                 toast.addEventListener('animationend', () => toast.remove());
             }, 3000);
         }
-        async function listarUsuarios() { /* ... (sem alterações) ... */
+        
+        // ***** NOVA FUNÇÃO: Normalizar texto (para busca sem acento) *****
+        const normalizeText = (text) => {
+            if (typeof text !== 'string') return '';
+            return text
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        };
+        
+        async function listarUsuarios() {
             const tbody = document.querySelector("tbody");
             tbody.innerHTML = `<tr><td colspan="4">Carregando usuários...</td></tr>`;
-            const { data, error, count } = await supabase.from("usuarios").select("*", { count: 'exact' }).order('nome', { ascending: true });
+            
+            const { data, error, count } = await supabase
+                .from("usuarios")
+                .select("id, user_id, nome, email, tipo", { count: 'exact' })
+                .order('nome', { ascending: true });
 
             if (error) {
                 console.error("Erro ao carregar usuários:", error);
@@ -426,33 +728,49 @@
              if (headerTitleSpan) {
                 headerTitleSpan.textContent = `Contas Registradas (${count || 0})`;
              }
+             
+            // ***** NOVO: Reseta os filtros ao carregar *****
+            currentTipoFilter = 'Todos';
+            document.getElementById('tipo-filter-btn').style.color = '#ccc'; // Reseta a cor
+            document.getElementById('tipo-filter-btn').title = 'Filtrar por tipo'; // Reseta o title
+            document.getElementById("searchInput").value = '';
+             
             currentPage = 1;
             displayPage();
         }
-        function displayPage() { /* ... (sem alterações) ... */
+        
+        function displayPage() {
              renderizarTabela(filteredUsers);
             setupPagination(filteredUsers);
         }
-        function renderizarTabela(usersToRender) { /* ... (sem alterações) ... */
+        
+        function renderizarTabela(usersToRender) {
             const tbody = document.querySelector("tbody");
             tbody.innerHTML = "";
             const startIndex = (currentPage - 1) * rowsPerPage;
             const paginatedUsers = usersToRender.slice(startIndex, startIndex + rowsPerPage);
 
-            if (paginatedUsers.length === 0 && currentPage === 1) {
-                tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado.</td></tr>`;
+            if (paginatedUsers.length === 0) {
+                 if (currentPage > 1) { // Se não há resultados em páginas > 1
+                    tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado nesta página.</td></tr>`;
+                 } else { // Se não há resultados na página 1 (filtro ou busca vazia)
+                    tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado.</td></tr>`;
+                 }
                 return;
             }
 
             paginatedUsers.forEach((usuario) => {
-                const { id, nome, email, tipo = "Comum" } = usuario;
+                const { id, user_id, nome, email, tipo = "Comum" } = usuario;
                 const tr = document.createElement("tr");
-                tr.dataset.userId = id;
+                tr.dataset.userId = id; // id (int) para editar/excluir
+                tr.dataset.userIdUuid = user_id; // user_id (uuid) para ver detalhes
+                
                 tr.innerHTML = `
                     <td><span>${nome}</span><input class="input_edicao" type="text" style="display:none" value="${nome}"></td>
                     <td><span>${email}</span><input class="input_edicao" type="email" style="display:none" value="${email}"></td>
                     <td><span>${tipo}</span><select class="input_edicao" style="display:none"><option value="Comum" ${tipo === "Comum" ? "selected" : ""}>Comum</option><option value="Administrador" ${tipo === "Administrador" ? "selected" : ""}>Administrador</option></select></td>
                     <td class="actions-cell">
+                        <a href="#" class="action-icon ver" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
                         <a href="#" class="action-icon alterar" title="Alterar"><i class="fas fa-pencil-alt"></i></a>
                         <a href="#" class="action-icon salvar" title="Salvar" style="display:none;"><i class="fas fa-save"></i></a>
                         <a href="#" class="action-icon excluir" title="Excluir"><i class="fas fa-trash-alt"></i></a>
@@ -461,7 +779,8 @@
                 tbody.appendChild(tr);
             });
          }
-        function setupPagination(users) { /* ... (sem alterações) ... */
+         
+        function setupPagination(users) {
              const paginationContainer = document.getElementById("pagination-container");
             paginationContainer.innerHTML = "";
             const pageCount = Math.ceil(users.length / rowsPerPage);
@@ -539,17 +858,119 @@
             paginationContainer.appendChild(pageInfo);
             paginationContainer.appendChild(controls);
         }
-        function filterUsers(searchTerm) { /* ... (sem alterações) ... */
-             const termo = searchTerm.toLowerCase();
-            filteredUsers = allUsers.filter(user =>
-                (user.nome || '').toLowerCase().includes(termo) ||
-                (user.email || '').toLowerCase().includes(termo)
-            );
+        
+        // ***** FUNÇÃO DE FILTRO ATUALIZADA *****
+        // Agora combina o filtro de busca com o filtro de tipo
+        function filterUsers() {
+             const termo = normalizeText(document.getElementById("searchInput").value);
+             
+            filteredUsers = allUsers.filter(user => {
+                // 1. Verifica filtro de Tipo
+                const tipoMatch = (currentTipoFilter === 'Todos') || (user.tipo === currentTipoFilter);
+                
+                // 2. Verifica filtro de Busca (Nome ou Email)
+                const searchMatch = (user.nome && normalizeText(user.nome).includes(termo)) ||
+                                  (user.email && normalizeText(user.email).includes(termo));
+                                  
+                return tipoMatch && searchMatch; // Tem que dar match em ambos
+            });
+            
             currentPage = 1;
             displayPage();
          }
+         
+        async function openUserDetailsModal(userId) {
+            if (!userId || userId === "undefined") {
+                console.error("ID de usuário inválido para o modal:", userId);
+                await showPopup("Não foi possível carregar os detalhes deste usuário (ID inválido).", 'error');
+                return; 
+            }
 
-        document.addEventListener("DOMContentLoaded", async () => { /* ... (sem alterações) ... */
+            userDetailsModal.classList.add('visible');
+            userDetailsModalBody.innerHTML = `<div id="user-details-loading"><p><i class="fas fa-spinner fa-spin"></i> Carregando dados...</p></div>`;
+
+            try {
+                // 1. Pega dados do usuário (da tabela 'usuarios')
+                const { data: user, error: userError } = await supabase
+                    .from('usuarios')
+                    .select('nome, email, telefone')
+                    .eq('user_id', userId) // Busca pelo UUID
+                    .single();
+                
+                if (userError) throw userError;
+
+                // 2. Pega anúncios aprovados
+                const { data: approvedAds, error: approvedError } = await supabase
+                    .from('aprovados')
+                    .select('produto, preco, data_aprovacao, created_at')
+                    .eq('user_id', userId)
+                    .order('data_aprovacao', { ascending: false, nullsFirst: false });
+
+                // 3. Pega anúncios pendentes/rejeitados
+                const { data: otherAds, error: otherError } = await supabase
+                    .from('produtos')
+                    .select('produto, preco, data, data_rejeicao, aprovado')
+                    .eq('user_id', userId)
+                    .order('data', { ascending: false });
+
+                if (approvedError || otherError) throw (approvedError || otherError);
+
+                // 4. Formata o HTML
+                let modalHTML = `
+                    <div class="user-info-grid">
+                        <div class="info-item">
+                            <label>Nome</label>
+                            <p>${user.nome || 'Não informado'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Email</label>
+                            <p>${user.email || 'Não informado'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Telefone</label>
+                            <p>${user.telefone || 'Não informado'}</p>
+                        </div>
+                    </div>
+                    <div class="user-ads-list">
+                        <h3>Todos os Anúncios do Usuário</h3>
+                `;
+
+                // 5. Combina e formata os anúncios
+                const allAds = [
+                    ...approvedAds.map(ad => ({ ...ad, status: 'aprovados', date: ad.data_aprovacao || ad.created_at })),
+                    ...otherAds.map(ad => ({ 
+                        ...ad, 
+                        status: ad.aprovado === false ? 'rejeitados' : 'pendentes',
+                        date: ad.aprovado === false ? (ad.data_rejeicao || ad.data) : ad.data
+                    }))
+                ].sort((a, b) => new Date(b.date + 'Z') - new Date(a.date + 'Z')); // Ordena por data
+
+                if (allAds.length === 0) {
+                    modalHTML += `<div id="no-ads-message-modal"><p>Este usuário não possui nenhum anúncio.</p></div>`;
+                } else {
+                    modalHTML += `<ul>`;
+                    allAds.forEach(ad => {
+                        modalHTML += `
+                            <li>
+                                <span class="ad-title">${ad.produto}</span>
+                                <span class="ad-status ${ad.status}">${ad.status.charAt(0).toUpperCase() + ad.status.slice(1)}</span>
+                            </li>
+                        `;
+                    });
+                    modalHTML += `</ul>`;
+                }
+                
+                modalHTML += `</div>`; // Fim de .user-ads-list
+                userDetailsModalBody.innerHTML = modalHTML;
+                
+            } catch (err) {
+                console.error("Erro ao buscar detalhes do usuário:", err);
+                userDetailsModalBody.innerHTML = `<div id="user-details-loading"><p><i class="fas fa-times-circle" style="color:red;"></i> Erro ao carregar detalhes.</p></div>`;
+            }
+        }
+
+
+        document.addEventListener("DOMContentLoaded", async () => {
              try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) { throw new Error("Você precisa estar logado para acessar esta página."); }
@@ -567,9 +988,41 @@
 
             await listarUsuarios();
 
-            document.getElementById("searchInput").addEventListener("input", (e) => filterUsers(e.target.value));
+            // Listener da busca (chama a função de filtro unificada)
+            document.getElementById("searchInput").addEventListener("input", filterUsers);
+            
+            // NOVO: Listener do botão "Voltar"
+            document.getElementById("admin-back-btn").addEventListener("click", (e) => {
+                e.preventDefault();
+                history.back(); // Volta para a página anterior (ex: Dashboard)
+            });
+            
+            // ***** NOVO: Listener para o filtro de TIPO (com correção de bug) *****
+            document.getElementById("tipo-filter-btn").addEventListener("click", () => {
+                const filterIcon = document.getElementById("tipo-filter-btn");
+                
+                if (currentTipoFilter === 'Todos') {
+                    currentTipoFilter = 'Comum';
+                    filterIcon.style.color = '#0047a3'; // Define a cor azul (ativo)
+                    filterIcon.title = "Filtrando por: Comum";
+                    showToast("Filtrando por: Comuns", "info");
+                } else if (currentTipoFilter === 'Comum') {
+                    currentTipoFilter = 'Administrador';
+                    filterIcon.style.color = '#0047a3'; // Define a cor azul (ativo)
+                    filterIcon.title = "Filtrando por: Administrador";
+                    showToast("Filtrando por: Administradores", "info");
+                } else { // Era 'Administrador'
+                    currentTipoFilter = 'Todos';
+                    filterIcon.style.color = '#ccc'; // Define a cor cinza (inativo)
+                    filterIcon.title = "Filtrar por tipo";
+                    showToast("Mostrando todos os tipos", "info");
+                }
+                
+                filterUsers(); // Re-filtra a lista
+            });
 
-            document.querySelector("tbody").addEventListener("click", async (e) => { /* ... (sem alterações) ... */
+            // Listener de Ações da Tabela
+            document.querySelector("tbody").addEventListener("click", async (e) => {
                  const target = e.target;
                 const actionLink = target.closest('.action-icon');
                 if (!actionLink) return;
@@ -578,15 +1031,35 @@
 
                 const tr = actionLink.closest("tr");
                 if (!tr) return;
-                const userId = tr.dataset.userId;
+                
+                const internalId = tr.dataset.userId; // Para Salvar/Excluir (int)
+                const uuid = tr.dataset.userIdUuid;    // Para Ver Detalhes (uuid)
 
-                if (actionLink.classList.contains("alterar")) {
-                    tr.querySelectorAll("span").forEach(el => el.style.display = "none");
-                    tr.querySelectorAll(".input_edicao").forEach(el => el.style.display = "inline-block");
-                    actionLink.style.display = "none";
-                    tr.querySelector(".action-icon.salvar").style.display = "inline-block";
+                // --- AÇÃO: VER DETALHES ---
+                if (actionLink.classList.contains("ver")) {
+                    openUserDetailsModal(uuid);
                 }
 
+                // --- AÇÃO: ALTERAR ---
+                if (actionLink.classList.contains("alterar")) {
+                    tr.querySelectorAll("span").forEach(el => el.style.display = "none");
+                    
+                    const inputs = tr.querySelectorAll(".input_edicao");
+                    inputs.forEach(el => el.style.display = "inline-block");
+                    
+                    // Foca no primeiro input (Nome)
+                    if (inputs[0]) {
+                        inputs[0].focus(); 
+                        inputs[0].select(); // Seleciona o texto para facilitar a digitação
+                    }
+                    
+                    actionLink.style.display = "none"; // Esconde "Alterar"
+                    tr.querySelector(".action-icon.ver").style.display = "none"; // Esconde "Ver"
+                    tr.querySelector(".action-icon.excluir").style.display = "none"; // Esconde "Excluir"
+                    tr.querySelector(".action-icon.salvar").style.display = "inline-block"; // Mostra "Salvar"
+                }
+
+                // --- AÇÃO: SALVAR ---
                 if (actionLink.classList.contains("salvar")) {
                     const inputs = tr.querySelectorAll(".input_edicao");
                     const updatedData = {
@@ -600,7 +1073,9 @@
                     }
                     actionLink.style.pointerEvents = 'none';
                     actionLink.style.opacity = '0.5';
-                    const { error } = await supabase.from("usuarios").update(updatedData).eq("id", userId);
+                    
+                    const { error } = await supabase.from("usuarios").update(updatedData).eq("id", internalId); 
+                    
                     actionLink.style.pointerEvents = 'auto';
                     actionLink.style.opacity = '1';
 
@@ -614,39 +1089,46 @@
                         tr.querySelectorAll("span").forEach(el => el.style.display = "inline-block");
                         tr.querySelectorAll(".input_edicao").forEach(el => el.style.display = "none");
                         tr.querySelector(".action-icon.alterar").style.display = "inline-block";
-                        actionLink.style.display = "none";
-                        const userIndex = allUsers.findIndex(u => u.id == userId);
+                        tr.querySelector(".action-icon.ver").style.display = "inline-block"; // Mostra "Ver"
+                        tr.querySelector(".action-icon.excluir").style.display = "inline-block"; // Mostra "Excluir"
+                        actionLink.style.display = "none"; // Esconde "Salvar"
+                        
+                        // Atualiza o array local
+                        const userIndex = allUsers.findIndex(u => u.id == internalId);
                         if (userIndex > -1) {
-                            const { status, ...restOfUserData } = allUsers[userIndex];
-                            allUsers[userIndex] = { ...restOfUserData, ...updatedData };
+                            allUsers[userIndex] = { ...allUsers[userIndex], ...updatedData };
                         }
                     }
                 }
 
+                // --- AÇÃO: EXCLUIR ---
                 if (actionLink.classList.contains("excluir")) {
                     const confirmed = await showPopup("Deseja realmente excluir este usuário?", 'confirm');
                     if (confirmed) {
-                        const { error } = await supabase.from("usuarios").delete().eq("id", userId);
+                        const { error } = await supabase.from("usuarios").delete().eq("id", internalId); 
                         if (error) {
                             await showPopup(`Erro ao excluir: ${error.message}`, 'error');
                         } else {
                             showToast("Usuário excluído com sucesso.");
-                             allUsers = allUsers.filter(u => u.id != userId);
-                             filterUsers(document.getElementById("searchInput").value);
+                             allUsers = allUsers.filter(u => u.id != internalId);
+                             filterUsers(); // Atualiza a visualização com os filtros atuais
                              const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
                              if (currentPage > totalPages && totalPages > 0) {
                                 currentPage = totalPages;
-                             } else if (filteredUsers.length === 0) {
-                                currentPage = 1;
                              }
-                             displayPage();
+                             displayPage(); // Re-renderiza a página atual
                         }
                     }
                 }
              });
+             
+            // --- LISTENERS PARA FECHAR O MODAL DE DETALHES ---
+            const closeModal = () => userDetailsModal.classList.remove('visible');
+            userDetailsModalClose.addEventListener('click', closeModal);
+            userDetailsModal.addEventListener('click', (e) => {
+                if (e.target === userDetailsModal) closeModal();
+            });
 
-             // ***** TODA A LÓGICA DE SIDEBAR E LOGOUT FOI REMOVIDA DAQUI *****
-             // ***** ELA AGORA É TRATADA PELO JS/admin-layout.js *****
         });
     </script>
 </body>

@@ -6,7 +6,11 @@
     <title>Dashboard - Administrador Ocean Coffee</title>
     <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    
     <style>
         /* CSS COMPLETO E UNIFICADO (Baseado em admin.html/Solicitações.html) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -121,13 +125,13 @@
         /* --- HEADER CONSISTENTE --- */
         .header {
             width: calc(100% - 250px);
-            height: 60px; /* Altura do header consistente */
-            background: linear-gradient(to right, #0047a3, #3ac0dd); /* Gradiente original */
+            height: 60px;
+            background: linear-gradient(to right, #0047a3, #3ac0dd);
             color: white;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Para hamburger e título */
-            padding: 0 1.5rem; /* Padding ajustado */
+            justify-content: space-between;
+            padding: 0 1.5rem;
             position: fixed;
             top: 0;
             left: 250px;
@@ -140,10 +144,10 @@
             left: 70px;
             width: calc(100% - 70px);
         }
-        .header-title { /* Título "Dashboard" */
-            font-size: 22px; /* Tamanho original */
+        .header-title {
+            font-size: 22px;
             font-weight: bold;
-            position: absolute; left: 50%; transform: translateX(-50%); /* Centralizado */
+            position: absolute; left: 50%; transform: translateX(-50%);
              white-space: nowrap;
         }
 
@@ -152,15 +156,19 @@
              display: none;
              background: none; border: none; color: white;
              font-size: 1.8rem; cursor: pointer; padding: 0.5rem;
-             z-index: 1001; /* Garante que fique clicável */
+             z-index: 1001;
         }
 
         .main-content { /* Conteúdo rolável */
             flex-grow: 1;
             overflow-y: auto;
             padding: 1.5rem;
-            margin-top: 60px; /* Espaço para o header fixo de 60px */
-            background-color: #f4f7f6; /* Cor de fundo original */
+            margin-top: 60px;
+            background-color: #f4f7f6;
+            
+            /* Necessário para a troca de tela */
+            display: flex;
+            flex-direction: column;
         }
 
         /* --- BREADCRUMB --- */
@@ -168,43 +176,47 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1.5rem; /* Aligned with grid gap */
+            margin-bottom: 1.5rem;
             font-size: 0.9rem;
             font-weight: 500;
-            background-color: #ffffff; /* Match the card style */
+            background-color: #ffffff;
             border-radius: 12px;
             padding: 1rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Softer shadow */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0; /* Não encolher o breadcrumb */
         }
         .breadcrumb a {
-            color: #0047a3; /* Admin primary color */
+            color: #0047a3;
             text-decoration: none;
             font-weight: 600;
-            display: flex; /* Para alinhar ícone e texto */
+            display: flex;
             align-items: center;
             gap: 0.4rem;
         }
         .breadcrumb a:hover {
             text-decoration: underline;
         }
-        .breadcrumb i.fa-chevron-right { /* Ícone separador */
+        .breadcrumb i.fa-chevron-right {
             font-size: 0.7rem;
-            color: #6c757d; /* Muted text color */
+            color: #6c757d;
         }
         .breadcrumb span {
-            color: #333; /* Regular text color */
+            color: #333;
             font-weight: 600;
-            display: flex; /* Para alinhar ícone e texto */
+            display: flex;
             align-items: center;
             gap: 0.4rem;
         }
 
-        /* --- ESTILOS DO DASHBOARD (Cards, Gráfico, Lista - Sem alterações visuais) --- */
+        /* --- ESTILOS DO DASHBOARD (Cards, Gráfico, Lista) --- */
+        #dashboard-view {
+             /* Oculta/Mostra esta div */
+        }
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
         .stat-card-link { text-decoration: none; color: inherit; }
         .stat-card { background-color: #ffffff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07); display: flex; align-items: center; gap: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer; }
         .stat-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1); }
-        .stat-card .icon-container { font-size: 2rem; padding: 1rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px;} /* Tamanho original ícone */
+        .stat-card .icon-container { font-size: 2rem; padding: 1rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px;}
         .stat-card .icon-container.users { background-color: #e0f7fa; color: #00796b; }
         .stat-card .icon-container.pending { background-color: #fff3e0; color: #f57c00; }
         .stat-card .icon-container.approved { background-color: #e8f5e9; color: #388e3c; }
@@ -215,41 +227,335 @@
         .chart-container, .recent-requests { background-color: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07); }
         .chart-container h2, .recent-requests h2 { font-size: 1.25rem; margin-top: 0; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
         #pieChartContainer { max-height: 350px; display: flex; justify-content: center; align-items: center; margin-top: 1rem; }
-        #statusPieChart { max-height: 350px; /* Ensure canvas doesn't overflow */ cursor: pointer; } /* Added max-height here */
+        #statusPieChart { max-height: 350px; } 
         .requests-list { list-style: none; padding: 0; margin-top: 1rem; }
         .requests-list li { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #f0f0f0; }
         .requests-list li:last-child { border-bottom: none; }
         .requests-list .product-info { display: flex; flex-direction: column; }
         .requests-list .product-name { font-weight: 600; color: #333; font-size: 0.95rem;}
         .requests-list .user-name { color: #6c757d; font-size: 0.9rem; }
-        .requests-list .view-link { color: #fff; background-color: #007bff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: background-color 0.2s; border: none; cursor: pointer;} /* Added cursor pointer */
+        .requests-list .view-link { color: #fff; background-color: #007bff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; transition: background-color 0.2s; border: none; cursor: pointer;}
         .requests-list .view-link:hover { background-color: #0056b3; }
 
          /* Toast Notification */
         .toast-notification { position: fixed; top: 20px; right: 20px; background-color: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; display: flex; align-items: center; gap: 15px; animation: slideIn 0.5s ease forwards; }
-        .toast-notification.fade-out { animation: fadeOut 0.5s ease 2.5s forwards; } /* Changed duration */
+        .toast-notification.fade-out { animation: fadeOut 0.5s ease 2.5s forwards; }
         .toast-notification.success { background-color: #28a745; }
         .toast-notification.error { background-color: #dc3545; }
         .toast-notification i { font-size: 1.5rem; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(100%); } }
 
-        /* --- RESPONSIVIDADE COM MENU HAMBURGUER (Mantendo consistência visual) --- */
+        /* --- RESPONSIVIDADE COM MENU HAMBURGUER --- */
         .nav-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
         }
         .nav-overlay.is-open { display: block; opacity: 1; }
+        
+        /* --- 
+            NOVOS ESTILOS PARA O RELATÓRIO DE TELA CHEIA
+        --- */
+
+        /* Estilo do Card do Gráfico Clicável */
+        #chart-card {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        #chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Container do Relatório (oculto por padrão) */
+        #report-view {
+            display: none; /* Começa oculto */
+            flex-direction: column;
+            flex-grow: 1; /* Ocupa todo o espaço disponível no main-content */
+            min-height: 0; /* Necessário para o flex-grow funcionar */
+        }
+
+        /* Cabeçalho do Relatório (Título + Botão Voltar) */
+        .report-header {
+            display: flex;
+            flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #0047a3;
+            flex-shrink: 0;
+        }
+        .report-header h2 {
+            font-size: 1.75rem;
+            color: #0047a3;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+        
+        /* NOVO: Input de Busca do Relatório */
+        #report-search-input {
+            padding: 10px 15px;
+            width: 100%; 
+            max-width: 400px; /* Limita a largura */
+            border: 2px solid #0047a3; 
+            border-radius: 8px; 
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            flex-grow: 1; /* Ocupa espaço disponível */
+            min-width: 250px; /* Largura mínima */
+        }
+        #report-search-input:focus {
+            border-color: #3ac0dd; 
+            box-shadow: 0 0 8px rgba(58, 192, 221, 0.5);
+        }
+        
+        /* Container da Tabela (Fundo branco, sombra, etc.) */
+        .report-table-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+            overflow: hidden; /* Para o cabeçalho fixo funcionar */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Ocupa o espaço restante */
+            min-height: 0; /* Crucial para o overflow-y funcionar */
+        }
+        
+        .report-table-body {
+             overflow-y: auto; /* Apenas o corpo da tabela rola */
+        }
+        
+        /* Estilos da Tabela de Sumário */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .summary-table th {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid #e9ecef;
+            position: sticky; /* Cabeçalho fixo */
+            top: 0;
+            z-index: 1; /* Para ficar acima do conteúdo rolando */
+        }
+        .summary-table td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #e9ecef;
+            color: #212529;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .summary-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .summary-table tbody tr {
+            cursor: pointer; /* Indica que a linha é clicável */
+            transition: background-color 0.2s;
+        }
+        .summary-table tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+        .summary-table td:first-child {
+            font-weight: 600;
+            color: #0047a3;
+        }
+        .summary-table th:not(:first-child),
+        .summary-table td:not(:first-child) {
+            text-align: center;
+        }
+        
+        /* Cores para os números */
+        .count-approved { color: #28a745; font-weight: 600; }
+        .count-pending { color: #f57c00; font-weight: 600; }
+        .count-rejected { color: #dc3545; font-weight: 600; }
+        
+        #report-loading-message {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        /* NOVO: Estilos da Paginação do Relatório */
+        #report-pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e9ecef;
+            background-color: #f8f9fa;
+            flex-shrink: 0; /* Não encolher */
+        }
+        .pagination-info { font-size: 14px; color: #666; white-space: nowrap;}
+        .pagination-controls { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;}
+        .pagination-controls button {
+            background-color: #f0f0f0; color: #333; border: 1px solid #ccc;
+            padding: 8px 14px; border-radius: 5px; cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .pagination-controls button:hover:not(:disabled) { background-color: #007bff; color: white; }
+        .pagination-controls button:disabled { background-color: #e9e9e9; color: #aaa; cursor: not-allowed; }
+        .pagination-controls button.active { background-color: #0056b3; color: white; border-color: #0056b3; }
+        .pagination-controls .ellipsis { padding: 8px 5px; color: #666; }
+        
+        /* --- FIM DOS NOVOS ESTILOS --- */
+        
+        
+        /* --- 
+            ESTILOS PARA O NOVO MODAL (Detalhes do Usuário)
+        --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); z-index: 2000;
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+        .modal-overlay.visible { display: flex; opacity: 1; }
+        .modal-content {
+            background-color: #fff; padding: 0; border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            width: 100%; max-width: 800px; /* Modal largo */
+            height: 90vh;
+            display: flex; flex-direction: column;
+            position: relative;
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-header {
+            padding: 1.25rem 1.5rem; border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-shrink: 0;
+        }
+        .modal-header h2 {
+            margin: 0; color: #0047a3;
+            font-size: 1.5rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .modal-close-btn {
+            background: none; border: none; font-size: 2rem;
+            color: #aaa; cursor: pointer; line-height: 1;
+            transition: color 0.2s;
+        }
+        .modal-close-btn:hover { color: #333; }
+        
+        .modal-body {
+            overflow-y: auto; flex-grow: 1;
+            padding: 1.5rem 2rem;
+        }
+        
+        #user-details-loading {
+            text-align: center; padding: 3rem;
+            font-size: 1.2rem; color: #6c757d;
+        }
+        
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        .info-item {
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .info-item label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+        .info-item p {
+            font-size: 1.1rem;
+            color: #212529;
+            font-weight: 500;
+            margin: 0;
+            word-break: break-all;
+        }
+        
+        .user-ads-list h3 {
+            font-size: 1.25rem;
+            color: #0047a3;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        .user-ads-list ul {
+            list-style: none;
+            padding: 0;
+            max-height: 300px; /* Limita a altura da lista de anúncios */
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        .user-ads-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .user-ads-list li:last-child { border-bottom: none; }
+        .user-ads-list .ad-title {
+            font-weight: 500;
+            color: #333;
+        }
+        .user-ads-list .ad-status {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: white;
+            white-space: nowrap;
+        }
+        .ad-status.aprovados { background-color: #28a745; }
+        .ad-status.pendentes { background-color: #ffc107; color: #212529; }
+        .ad-status.rejeitados { background-color: #dc3545; }
+        
+        #no-ads-message-modal {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+        
+        /* --- FIM DOS ESTILOS DO MODAL DE USUÁRIO --- */
+
 
         @media (max-width: 992px) {
-             /* body { display: block; overflow-y: auto;} */ /* REMOVED - Let main-content scroll */
              body { overflow: hidden; } /* Prevent body scroll on mobile */
-
-
              .sidebar {
                  left: -250px; /* Começa escondida */
                  z-index: 1100; /* Acima do overlay */
-                 /* height: 100vh; */ /* Ocupa altura total */
              }
              .sidebar.is-open {
                  left: 0; /* Mostra */
@@ -262,7 +568,7 @@
              .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 1; width: auto; }
              .sidebar-bottom { display: none; } /* Esconde botão colapsar desktop */
 
-             .content { margin-left: 0; /* height: auto; min-height: 100vh;*/ } /* Keep height 100vh */
+             .content { margin-left: 0; }
              .content.shifted { margin-left: 0; }
 
              .header {
@@ -275,13 +581,58 @@
              .menu-toggle-mobile { display: block; } /* Mostra Hamburger */
 
              .main-content { margin-top: 60px; padding: 1rem; } /* Adjusted padding */
-             .dashboard-grid, .dashboard-row { /* Removed padding: 0; */ gap: 1rem; }
+             .dashboard-grid, .dashboard-row { gap: 1rem; }
              .stat-card { padding: 1rem; gap: 1rem; }
              .stat-card .icon-container { width: 45px; height: 45px; font-size: 1.5rem; padding: 0.6rem;} /* Ícone um pouco menor */
              .stat-card .info p { font-size: 1.6rem; }
              .chart-container, .recent-requests { padding: 1rem; }
+             
+             /* Responsividade do Relatório */
+             .report-header {
+                flex-direction: column;
+                align-items: stretch; /* Ocupa a largura total */
+                gap: 1rem;
+             }
+             .report-header h2 {
+                font-size: 1.5rem;
+             }
+             #report-search-input {
+                max-width: 100%; /* Ocupa 100% no mobile */
+             }
+             .report-table-container {
+                max-height: calc(100vh - 280px); /* Ajusta altura para header mobile */
+                padding: 0;
+             }
+             .report-table-body {
+                overflow-x: auto; /* Permite rolagem horizontal da tabela no mobile */
+             }
+             .summary-table th { padding: 0.75rem 0.5rem; font-size: 0.7rem; }
+             .summary-table td { padding: 0.75rem 0.5rem; font-size: 0.85rem; white-space: nowrap; }
+             
+             /* Paginação Mobile */
+            #report-pagination-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .pagination-controls button { padding: 6px 10px; font-size: 0.9rem; }
+            .pagination-controls .ellipsis { padding: 6px 2px; }
+             
+             /* Modal de Detalhes do Usuário Mobile */
+             .modal-content {
+                max-width: 95vw;
+                height: 85vh;
+             }
+             .modal-header h2 { font-size: 1.25rem; }
+             .modal-body { padding: 1rem; }
+             .user-info-grid {
+                 grid-template-columns: 1fr; /* Uma coluna no mobile */
+                 gap: 1rem;
+                 margin-bottom: 1.5rem;
+                 padding-bottom: 1.5rem;
+             }
+             .info-item p { font-size: 1rem; }
+             .user-ads-list li { flex-direction: column; align-items: flex-start; gap: 5px; }
         }
-
     </style>
 </head>
 <body>
@@ -327,62 +678,92 @@
              <div></div> </div>
 
         <div class="main-content">
-            <nav class="breadcrumb">
-                </nav>
             
-            <div class="dashboard-grid">
-                 <a href="admin.html" class="stat-card-link">
-                    <div class="stat-card">
-                        <div class="icon-container users"><i class="fas fa-users"></i></div>
-                        <div class="info">
-                            <h3>Total de Usuários</h3>
-                            <p id="total-users">0</p>
+            <div id="dashboard-view">
+                <nav class="breadcrumb">
+                    </nav>
+                
+                <div class="dashboard-grid">
+                     <a href="admin.html" class="stat-card-link">
+                        <div class="stat-card">
+                            <div class="icon-container users"><i class="fas fa-users"></i></div>
+                            <div class="info">
+                                <h3>Total de Usuários</h3>
+                                <p id="total-users">0</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                <a href="Solicitações.html" class="stat-card-link">
-                    <div class="stat-card">
-                        <div class="icon-container pending"><i class="fas fa-inbox"></i></div>
-                        <div class="info">
-                            <h3>Aprovações Pendentes</h3>
-                            <p id="pending-requests">0</p>
+                    </a>
+                    <a href="Solicitações.html" class="stat-card-link">
+                        <div class="stat-card">
+                            <div class="icon-container pending"><i class="fas fa-inbox"></i></div>
+                            <div class="info">
+                                <h3>Aprovações Pendentes</h3>
+                                <p id="pending-requests">0</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                <a href="Aprovados.html" class="stat-card-link">
-                    <div class="stat-card">
-                        <div class="icon-container approved"><i class="fas fa-check-circle"></i></div>
-                        <div class="info">
-                            <h3>Anúncios Aprovados</h3>
-                            <p id="approved-ads">0</p>
+                    </a>
+                    <a href="Aprovados.html" class="stat-card-link">
+                        <div class="stat-card">
+                            <div class="icon-container approved"><i class="fas fa-check-circle"></i></div>
+                            <div class="info">
+                                <h3>Anúncios Aprovados</h3>
+                                <p id="approved-ads">0</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
 
-            <div class="dashboard-row">
-                <div class="chart-container">
-                    <h2>Distribuição de Anúncios</h2>
-                    <div id="pieChartContainer">
-                        <canvas id="statusPieChart"></canvas>
+                <div class="dashboard-row">
+                    <div class="chart-container" id="chart-card">
+                        <h2>Distribuição de Anúncios</h2>
+                        <div id="pieChartContainer">
+                            <canvas id="statusPieChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="recent-requests">
+                        <h2>Últimas Solicitações</h2>
+                        <ul class="requests-list" id="requests-list">
+                            </ul>
                     </div>
                 </div>
-                <div class="recent-requests">
-                    <h2>Últimas Solicitações</h2>
-                    <ul class="requests-list" id="requests-list">
-                        </ul>
+            </div> <div id="report-view">
+                <div class="report-header">
+                    <h2><i class="fas fa-users"></i> Relatório de Anúncios por Usuário</h2>
+                    <input type="text" id="report-search-input" placeholder="Pesquisar por nome ou e-mail...">
+                    <button id="back-to-dashboard-btn" class="back-button">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+                
+                <div class="report-table-container">
+                    <div class="report-table-body" id="report-table-body">
+                        <div id="report-loading-message">
+                            <p><i class="fas fa-spinner fa-spin"></i> Carregando dados...</p>
+                        </div>
+                    </div>
+                    <div id="report-pagination-container" class="pagination-container" style="display: none;">
+                        </div>
+                </div>
+            </div> </div> </div> <div id="user-details-modal-overlay" class="modal-overlay">
+        <div id="user-details-modal-content" class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Detalhes do Usuário</h2>
+                <button id="user-details-modal-close" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" id="user-details-modal-body">
+                <div id="user-details-loading">
+                    <p><i class="fas fa-spinner fa-spin"></i> Carregando...</p>
                 </div>
             </div>
         </div>
     </div>
-
     <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
         
-        // 2. Importa a NOSSA NOVA função de layout
+        // Importa a função de layout
         import { initAdminPage } from './JS/admin-layout.js';
 
-        // 3. Informa ao script de layout qual é a página atual
+        // Informa ao script de layout qual é a página atual
         initAdminPage({
             name: "Dashboard",
             icon: "fas fa-tachometer-alt"
@@ -394,26 +775,57 @@
         const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
         const supabase = createClient(supabaseUrl, supabaseKey);
 
+        // --- Registra o Plugin do Gráfico ---
+        Chart.register(ChartDataLabels);
+        
+        // --- Variáveis Globais para o Relatório ---
+        let allReportUsers = [];
+        let filteredReportUsers = [];
+        let currentReportPage = 1;
+        const reportRowsPerPage = 10;
+
         // --- Utility Functions ---
         function showWelcomeToast(name) {
             const toast = document.createElement('div');
             toast.className = 'toast-notification success';
             toast.innerHTML = `<i class="fas fa-check-circle"></i><span>Bem-vindo(a), ${name}!</span>`;
             document.body.appendChild(toast);
-            setTimeout(() => { toast.classList.add('fade-out'); toast.addEventListener('animationend', () => toast.remove()); }, 3000); // Duration matches fadeOut animation
+            setTimeout(() => { toast.classList.add('fade-out'); toast.addEventListener('animationend', () => toast.remove()); }, 3000);
         }
+        
+        // Função para normalizar texto (remover acentos)
+        const normalizeText = (text) => {
+            if (typeof text !== 'string') return '';
+            return text
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        };
 
         // --- Data Fetching Functions ---
-        async function fetchDashboardStats() {
-             const [ { count: usersCount }, { count: pendingCount }, { count: approvedCount } ] = await Promise.all([
+        
+        async function fetchAllCounts() {
+             const [ { count: usersCount }, { count: pendingCount }, { count: approvedCount }, { count: rejectedCount } ] = await Promise.all([
                 supabase.from('usuarios').select('*', { count: 'exact', head: true }),
                 supabase.from('produtos').select('*', { count: 'exact', head: true }).is('aprovado', null),
-                supabase.from('aprovados').select('*', { count: 'exact', head: true })
+                supabase.from('aprovados').select('*', { count: 'exact', head: true }),
+                supabase.from('produtos').select('*', { count: 'exact', head: true }).eq('aprovado', false)
             ]);
-            document.getElementById('total-users').textContent = usersCount || 0;
-            document.getElementById('pending-requests').textContent = pendingCount || 0;
-            document.getElementById('approved-ads').textContent = approvedCount || 0;
+            
+            return {
+                users: usersCount || 0,
+                pending: pendingCount || 0,
+                approved: approvedCount || 0,
+                rejected: rejectedCount || 0
+            };
         }
+        
+        function updateDashboardCards(stats) {
+            document.getElementById('total-users').textContent = stats.users;
+            document.getElementById('pending-requests').textContent = stats.pending;
+            document.getElementById('approved-ads').textContent = stats.approved;
+        }
+
         async function fetchRecentRequests() {
             const listElement = document.getElementById('requests-list');
             listElement.innerHTML = '<li>Carregando...</li>';
@@ -429,7 +841,7 @@
                  return;
              }
 
-            listElement.innerHTML = ''; // Clear loading/error message
+            listElement.innerHTML = '';
             data.forEach(req => {
                 const li = document.createElement('li');
                 li.innerHTML = `
@@ -437,44 +849,347 @@
                         <p class="product-name">${req.produto}</p>
                         <p class="user-name">por ${req.nome_usuario}</p>
                     </div>
-                    <a href="Solicitações.html" class="view-link">Ver</a>`; // Link direto para a página
+                    <a href="Solicitações.html" class="view-link">Ver</a>`;
                 listElement.appendChild(li);
              });
         }
-       async function renderStatusPieChart() {
-             const [ { count: approvedCount }, { count: pendingCount }, { count: rejectedCount } ] = await Promise.all([
-                supabase.from('aprovados').select('*', { count: 'exact', head: true }),
-                supabase.from('produtos').select('*', { count: 'exact', head: true }).is('aprovado', null),
-                supabase.from('produtos').select('*', { count: 'exact', head: true }).eq('aprovado', false)
-            ]);
+        
+       function renderStatusPieChart(stats) {
+            const { approved, pending, rejected } = stats;
+            const ctx = document.getElementById('statusPieChart').getContext('2d');
 
-            const ctx = document.getElementById('statusPieChart');
-             if (!ctx) {
-                 console.error("Canvas element #statusPieChart not found");
-                 return;
-             }
-             const context = ctx.getContext('2d');
-              if (!context) {
-                 console.error("Could not get 2D context for #statusPieChart");
-                 return;
-             }
-
-             // Destroy previous chart instance if exists
              if (window.myStatusPieChart instanceof Chart) {
                  window.myStatusPieChart.destroy();
              }
 
-
-            window.myStatusPieChart = new Chart(context, { // Store instance globally
-                type: 'pie', data: { labels: ['Aprovados', 'Pendentes', 'Rejeitados'], datasets: [{ data: [approvedCount || 0, pendingCount || 0, rejectedCount || 0], backgroundColor: ['#28a745', '#ffc107', '#dc3545'], borderColor: '#ffffff', borderWidth: 3, hoverOffset: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { padding: 20 } }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}` } } },
-                onClick: (evt, elems) => { if (elems.length > 0) { const label = ['Aprovados', 'Pendentes', 'Rejeitados'][elems[0].index]; if (label === 'Aprovados') window.location.href = 'Aprovados.html'; else if (label === 'Pendentes') window.location.href = 'Solicitações.html'; /* Add link for Rejeitados if needed */ } } }
+            window.myStatusPieChart = new Chart(ctx, {
+                type: 'pie', 
+                data: { 
+                    labels: ['Aprovados', 'Pendentes', 'Rejeitados'], 
+                    datasets: [{ 
+                        data: [approved, pending, rejected], 
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545'], 
+                        borderColor: '#ffffff', 
+                        borderWidth: 3, 
+                        hoverOffset: 4 
+                    }] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom', 
+                            labels: { padding: 20 } 
+                        }, 
+                        tooltip: { 
+                            callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}` } 
+                        },
+                        // Configuração das porcentagens no gráfico
+                        datalabels: {
+                            display: true,
+                            color: '#fff',
+                            font: {
+                                weight: 'bold',
+                                size: 14,
+                            },
+                            formatter: (value, ctx) => {
+                                const total = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                if (total === 0 || value === 0) {
+                                    return ''; // Não mostra 0%
+                                }
+                                const percentage = ((value / total) * 100).toFixed(0) + '%';
+                                // Só mostra se for > 5%
+                                return (value / total) > 0.05 ? percentage : '';
+                            }
+                        }
+                    }
+                }
             });
+        }
+        
+        // --- LÓGICA DO RELATÓRIO DE TELA CHEIA ---
+        
+        function showDashboardView() {
+            document.getElementById('dashboard-view').style.display = 'block';
+            document.getElementById('report-view').style.display = 'none';
+        }
+        
+        async function showReportView() {
+            const dashboardView = document.getElementById('dashboard-view');
+            const reportView = document.getElementById('report-view');
+            const reportBody = document.getElementById('report-table-body');
+            const paginationContainer = document.getElementById('report-pagination-container');
+            const reportSearchInput = document.getElementById('report-search-input');
+
+            // 1. Troca as telas
+            dashboardView.style.display = 'none';
+            reportView.style.display = 'flex'; // Mudado para flex
+            reportSearchInput.value = ''; // Limpa a busca
+            reportBody.innerHTML = `<div id="report-loading-message"><p><i class="fas fa-spinner fa-spin"></i> Carregando dados dos usuários...</p></div>`;
+            paginationContainer.style.display = 'none'; // Esconde paginação
+
+            try {
+                // 2. Chama a função SQL
+                const { data: userSummary, error } = await supabase.rpc('get_user_ad_summary');
+                if (error) throw error;
+
+                if (userSummary.length === 0) {
+                    reportBody.innerHTML = `<div id="report-loading-message"><p><i class="fas fa-info-circle"></i> Nenhum usuário (comum) encontrado.</p></div>`;
+                    return;
+                }
+                
+                allReportUsers = userSummary;
+                filteredReportUsers = allReportUsers;
+                currentReportPage = 1;
+                displayReportPage(); // Renderiza a primeira página
+
+            } catch (err) {
+                console.error("Erro ao buscar resumo por usuário:", err);
+                reportBody.innerHTML = `<div id="report-loading-message"><p><i class="fas fa-times-circle" style="color:red;"></i> Erro ao carregar dados. Verifique se a função 'get_user_ad_summary' foi criada no SQL Editor.</p></div>`;
+            }
+        }
+        
+        // (NOVA) Renderiza a página atual do relatório
+        function displayReportPage() {
+            renderReportTable(filteredReportUsers);
+            setupReportPagination(filteredReportUsers);
+        }
+        
+        // (NOVA) Renderiza apenas a tabela do relatório
+        function renderReportTable(users) {
+            const reportBody = document.getElementById('report-table-body');
+            const startIndex = (currentReportPage - 1) * reportRowsPerPage;
+            const paginatedUsers = users.slice(startIndex, startIndex + reportRowsPerPage);
+
+            if (users.length === 0) {
+                reportBody.innerHTML = `<div id="report-loading-message"><p>Nenhum usuário encontrado para "${document.getElementById('report-search-input').value}".</p></div>`;
+                return;
+            }
+            
+            let tableHTML = `
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>E-mail</th>
+                            <th>Aprovados</th>
+                            <th>Pendentes</th>
+                            <th>Rejeitados</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            paginatedUsers.forEach(user => {
+                const totalUserAds = user.approved_count + user.pending_count + user.rejected_count;
+                // Adiciona o data-user-id na linha
+                tableHTML += `
+                    <tr data-user-id="${user.user_id}" title="Clique para ver detalhes de ${user.nome}">
+                        <td>${user.nome}</td>
+                        <td>${user.email}</td>
+                        <td class="count-approved">${user.approved_count}</td>
+                        <td class="count-pending">${user.pending_count}</td>
+                        <td class="count-rejected">${user.rejected_count}</td>
+                        <td><strong>${totalUserAds}</strong></td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `</tbody></table>`;
+            reportBody.innerHTML = tableHTML;
+        }
+
+        // (NOVA) Configura a paginação do relatório
+        function setupReportPagination(users) {
+            const paginationContainer = document.getElementById("report-pagination-container");
+            paginationContainer.innerHTML = "";
+            const pageCount = Math.ceil(users.length / reportRowsPerPage);
+            
+            if (pageCount <= 1) {
+                paginationContainer.style.display = 'none'; // Esconde se não precisar
+                return;
+            }
+            
+            paginationContainer.style.display = 'flex'; // Mostra se precisar
+
+            const pageInfo = document.createElement('div');
+            pageInfo.className = 'pagination-info';
+            pageInfo.textContent = `Mostrando ${Math.min((currentReportPage - 1) * reportRowsPerPage + 1, users.length)} a ${Math.min(currentReportPage * reportRowsPerPage, users.length)} de ${users.length} usuários`;
+
+            const controls = document.createElement('div');
+            controls.className = 'pagination-controls';
+
+            const createButton = (text, page, isDisabled = false, isActive = false) => {
+                const button = document.createElement('button');
+                button.innerHTML = text;
+                button.disabled = isDisabled;
+                if (isActive) button.classList.add('active');
+                if (page) {
+                    button.addEventListener('click', () => {
+                        currentReportPage = page;
+                        displayReportPage(); // Re-renderiza a tabela e a paginação
+                    });
+                }
+                return button;
+            };
+
+            const createEllipsis = () => {
+                const span = document.createElement('span');
+                span.className = 'ellipsis';
+                span.textContent = '...';
+                return span;
+            };
+
+            controls.appendChild(createButton('&laquo; Anterior', currentReportPage - 1, currentReportPage === 1));
+
+            // Lógica de paginação...
+            const maxVisibleButtons = 5;
+            let startPage, endPage;
+            if (pageCount <= maxVisibleButtons) {
+                startPage = 1; endPage = pageCount;
+            } else {
+                const maxPagesShown = maxVisibleButtons - 2;
+                let maxPagesBeforeCurrent = Math.floor(maxPagesShown / 2);
+                let maxPagesAfterCurrent = Math.ceil(maxPagesShown / 2) - 1;
+                if (currentReportPage <= maxPagesBeforeCurrent) {
+                    startPage = 1; endPage = maxPagesShown;
+                } else if (currentReportPage + maxPagesAfterCurrent >= pageCount) {
+                    startPage = pageCount - maxPagesShown + 1; endPage = pageCount;
+                } else {
+                    startPage = currentReportPage - maxPagesBeforeCurrent; endPage = currentReportPage + maxPagesAfterCurrent;
+                }
+            }
+            if (startPage > 1) {
+                controls.appendChild(createButton('1', 1));
+                if (startPage > 2) controls.appendChild(createEllipsis());
+            }
+            for (let i = startPage; i <= endPage; i++) {
+                controls.appendChild(createButton(i, i, false, i === currentReportPage));
+            }
+            if (endPage < pageCount) {
+                if (endPage < pageCount - 1) controls.appendChild(createEllipsis());
+                controls.appendChild(createButton(pageCount, pageCount));
+            }
+            // ...fim da lógica de paginação
+
+            controls.appendChild(createButton('Próximo &raquo;', currentReportPage + 1, currentReportPage === pageCount));
+
+            paginationContainer.appendChild(pageInfo);
+            paginationContainer.appendChild(controls);
+        }
+        
+        // (NOVA) Abre o modal de detalhes do usuário
+        async function openUserDetailsModal(userId) {
+            // ***** INÍCIO DA CORREÇÃO DE ERRO *****
+            // Se userId for a string "undefined" ou nulo, não faz nada.
+            if (!userId || userId === "undefined") {
+                console.error("Tentativa de abrir detalhes do modal com user_id inválido.");
+                return; 
+            }
+            // ***** FIM DA CORREÇÃO DE ERRO *****
+
+            const modalOverlay = document.getElementById('user-details-modal-overlay');
+            const modalBody = document.getElementById('user-details-modal-body');
+            
+            modalOverlay.classList.add('visible');
+            modalBody.innerHTML = `<div id="user-details-loading"><p><i class="fas fa-spinner fa-spin"></i> Carregando dados...</p></div>`;
+
+            try {
+                // 1. Pega dados do usuário (da tabela 'usuarios')
+                const { data: user, error: userError } = await supabase
+                    .from('usuarios')
+                    .select('nome, email, telefone')
+                    .eq('user_id', userId) // Agora 'userId' é um UUID válido
+                    .single();
+                
+                if (userError) throw userError;
+
+                // 2. Pega anúncios aprovados
+                const { data: approvedAds, error: approvedError } = await supabase
+                    .from('aprovados')
+                    .select('produto, preco, data_aprovacao, created_at')
+                    .eq('user_id', userId)
+                    .order('data_aprovacao', { ascending: false });
+
+                // 3. Pega anúncios pendentes/rejeitados
+                const { data: otherAds, error: otherError } = await supabase
+                    .from('produtos')
+                    .select('produto, preco, data, data_rejeicao, aprovado')
+                    .eq('user_id', userId)
+                    .order('data', { ascending: false });
+
+                if (approvedError || otherError) throw (approvedError || otherError);
+
+                // 4. Formata o HTML
+                let modalHTML = `
+                    <div class="user-info-grid">
+                        <div class="info-item">
+                            <label>Nome</label>
+                            <p>${user.nome || 'Não informado'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Email</label>
+                            <p>${user.email || 'Não informado'}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Telefone</label>
+                            <p>${user.telefone || 'Não informado'}</p>
+                        </div>
+                    </div>
+                    <div class="user-ads-list">
+                        <h3>Todos os Anúncios do Usuário</h3>
+                `;
+
+                // 5. Combina e formata os anúncios
+                const allAds = [
+                    ...approvedAds.map(ad => ({ ...ad, status: 'aprovados', date: ad.data_aprovacao || ad.created_at })),
+                    ...otherAds.map(ad => ({ 
+                        ...ad, 
+                        status: ad.aprovado === false ? 'rejeitados' : 'pendentes',
+                        date: ad.aprovado === false ? (ad.data_rejeicao || ad.data) : ad.data
+                    }))
+                ].sort((a, b) => new Date(b.date + 'Z') - new Date(a.date + 'Z')); // Ordena por data
+
+                if (allAds.length === 0) {
+                    modalHTML += `<div id="no-ads-message-modal"><p>Este usuário não possui nenhum anúncio.</p></div>`;
+                } else {
+                    modalHTML += `<ul>`;
+                    allAds.forEach(ad => {
+                        modalHTML += `
+                            <li>
+                                <span class="ad-title">${ad.produto}</span>
+                                <span class="ad-status ${ad.status}">${ad.status.charAt(0).toUpperCase() + ad.status.slice(1)}</span>
+                            </li>
+                        `;
+                    });
+                    modalHTML += `</ul>`;
+                }
+                
+                modalHTML += `</div>`; // Fim de .user-ads-list
+                modalBody.innerHTML = modalHTML;
+                
+            } catch (err) {
+                console.error("Erro ao buscar detalhes do usuário:", err);
+                modalBody.innerHTML = `<div id="user-details-loading"><p><i class="fas fa-times-circle" style="color:red;"></i> Erro ao carregar detalhes.</p></div>`;
+            }
         }
 
         // --- DOMContentLoaded ---
         document.addEventListener("DOMContentLoaded", () => {
-            // Check for Admin (essential for security)
+            
+            // Elementos das novas views e modais
+            const chartCard = document.getElementById('chart-card');
+            const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
+            const reportSearchInput = document.getElementById('report-search-input');
+            const reportTableBody = document.getElementById('report-table-body');
+            
+            const userDetailsModal = document.getElementById('user-details-modal-overlay');
+            const userDetailsModalClose = document.getElementById('user-details-modal-close');
+
+            
+            // Função para verificar se é Admin
             const checkAdmin = async () => {
                 try {
                     const { data: { user } } = await supabase.auth.getUser();
@@ -482,34 +1197,70 @@
                     const { data: profile, error } = await supabase.from('usuarios').select('tipo, nome').eq('user_id', user.id).single();
                     if (error || !profile) throw new Error("Perfil não encontrado.");
                     if (profile.tipo !== 'Administrador') throw new Error("Acesso restrito a administradores.");
-                    return profile.nome; // Return admin name for welcome toast
+                    return profile.nome; // Retorna o nome do admin para o toast
                 } catch (error) {
                     alert(error.message);
-                    window.location.replace("index.html"); // Redirect non-admins
-                    return null; // Indicate failure
+                    window.location.replace("index.html"); // Redireciona não-admins
+                    return null; // Indica falha
                 }
             };
 
+            // Inicia a página
             checkAdmin().then(adminName => {
-                 if (!adminName) return; // Stop execution if check failed
+                 if (!adminName) return; // Para a execução se o check falhar
 
-                // Show Welcome Toast if redirected from login
                 const welcomeName = localStorage.getItem("bemVindo");
                 if (welcomeName) {
                     showWelcomeToast(welcomeName);
                     localStorage.removeItem("bemVindo");
                 }
 
-                // Fetch data and render chart
-                fetchDashboardStats();
+                // Carrega os dados da view principal (Dashboard)
+                fetchAllCounts().then(stats => {
+                    updateDashboardCards(stats);
+                    renderStatusPieChart(stats);
+                }).catch(error => {
+                    console.error("Erro ao buscar stats do dashboard:", error);
+                    document.getElementById('total-users').textContent = 'Erro';
+                    document.getElementById('pending-requests').textContent = 'Erro';
+                    document.getElementById('approved-ads').textContent = 'Erro';
+                });
+                
                 fetchRecentRequests();
-                renderStatusPieChart(); // Call chart rendering
 
-                // A LÓGICA DA SIDEBAR FOI MOVIDA PARA O admin-layout.js
-                // E JÁ FOI CHAMADA LÁ EM CIMA
-
+                // --- LISTENERS PARA TROCAR DE TELA E BUSCAR ---
+                chartCard.addEventListener('click', showReportView);
+                backToDashboardBtn.addEventListener('click', showDashboardView);
+                
+                reportSearchInput.addEventListener('input', (e) => {
+                    const termo = normalizeText(e.target.value);
+                    filteredReportUsers = allReportUsers.filter(user => 
+                        normalizeText(user.nome).includes(termo) ||
+                        normalizeText(user.email).includes(termo)
+                    );
+                    currentReportPage = 1;
+                    displayReportPage();
+                });
+                
+                // --- LISTENER PARA CLICAR NA LINHA DA TABELA (ABRIR MODAL) ---
+                reportTableBody.addEventListener('click', (e) => {
+                    const row = e.target.closest('tr');
+                    // ***** CORREÇÃO DE ERRO *****
+                    // Verificamos se o row e o dataset existem ANTES de tentar acessá-lo
+                    if (row && row.dataset && row.dataset.userId) {
+                        const userId = row.dataset.userId;
+                        openUserDetailsModal(userId);
+                    }
+                });
+                
+                // --- LISTENERS PARA FECHAR O MODAL DE DETALHES ---
+                const closeModal = () => userDetailsModal.classList.remove('visible');
+                userDetailsModalClose.addEventListener('click', closeModal);
+                userDetailsModal.addEventListener('click', (e) => {
+                    if (e.target === userDetailsModal) closeModal();
+                });
+                
              }).catch(error => {
-                 // Handles errors during the initial admin check if necessary
                  console.error("Initialization error:", error);
              });
         });

@@ -24,6 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Outros';
     };
 
+    // ***** NOVA FUNÇÃO ADICIONADA *****
+    // Esta função remove acentos e transforma em minúsculas
+    const normalizeText = (text) => {
+        if (typeof text !== 'string') return '';
+        return text
+            .toLowerCase()
+            .normalize("NFD") // Separa acentos dos caracteres (ex: 'á' vira 'a' + '´')
+            .replace(/[\u0300-\u036f]/g, ""); // Remove os acentos (diacríticos)
+    };
+    // ***** FIM DA NOVA FUNÇÃO *****
+
     // --- FUNÇÕES DE RENDERIZAÇÃO ---
     const createProductCard = (product) => {
         const card = document.createElement('div');
@@ -31,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageUrl = product.imagens && product.imagens.length > 0 ? product.imagens[0] : 'IMG/placeholder.png';
         const priceFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco);
 
-        // CORREÇÃO APLICADA AQUI: Adicionado ?id=${product.id} aos links
         card.innerHTML = `
             <a href="MarketPlace.html?id=${product.id}" class="oc-product-card__image-container" aria-label="Ver detalhes de ${product.produto}">
                 <img class="oc-product-card__image" src="${imageUrl}" alt="${product.produto}" loading="lazy" decoding="async">
@@ -84,7 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const filterAndRender = () => {
         const selectedCategory = document.querySelector('.oc-filter-button.active')?.dataset.category || 'Todos';
-        const searchTerm = searchInput.value.toLowerCase();
+        
+        // ***** MUDANÇA APLICADA AQUI *****
+        // Usa a nova função normalizeText para o termo de busca
+        const searchTerm = normalizeText(searchInput.value);
 
         let filteredProducts = allProducts;
 
@@ -93,9 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (searchTerm) {
+            // ***** MUDANÇA APLICADA AQUI *****
+            // Usa a nova função normalizeText para o título do produto
             filteredProducts = filteredProducts.filter(product =>
-                product.produto.toLowerCase().includes(searchTerm) ||
-                product.descricao.toLowerCase().includes(searchTerm)
+                normalizeText(product.produto).includes(searchTerm)
             );
         }
         

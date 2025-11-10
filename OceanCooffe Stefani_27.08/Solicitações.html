@@ -159,9 +159,50 @@
             background-color: #ffffff; padding: 25px; border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); overflow-x: auto;
         }
-        .search-bar-container { margin-bottom: 1.5rem; text-align: center; } /* Adjusted margin */
-        .search-bar-container input { padding: 10px 15px; width: 100%; max-width: 500px; border: 2px solid #0047a3; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        
+        /* ***** CSS ATUALIZADO (search-bar-container) ***** */
+        .search-bar-container {
+            display: flex;
+            justify-content: space-between; /* Input na esquerda, Botão na direita */
+            align-items: center;
+            gap: 1.5rem; /* Espaço entre input e botão */
+            flex-wrap: wrap; /* Para quebrar linha no mobile */
+            margin-bottom: 1.5rem;
+        }
+        .search-bar-container input {
+            padding: 10px 15px;
+            width: 100%; /* Ocupa 100% no mobile */
+            max-width: 500px;
+            border: 2px solid #0047a3;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            flex-grow: 1; /* Faz o input crescer */
+        }
         .search-bar-container input:focus { border-color: #3ac0dd; box-shadow: 0 0 8px rgba(58, 192, 221, 0.5); }
+        
+        /* ***** NOVO CSS: Botão Voltar ***** */
+        .back-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem; /* Mesmo padding do input */
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem; /* Mesmo tamanho do dashboard */
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0; /* Para não encolher */
+            text-decoration: none; /* Caso use <a> */
+        }
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+        /* ***** FIM DO NOVO CSS ***** */
 
         /* --- TABLE --- */
         table { width: 100%; border-collapse: collapse; text-align: left; table-layout: fixed; } /* Added fixed layout */
@@ -285,6 +326,19 @@
              th:nth-child(4), td:nth-child(4) { width: auto; text-align: center;} /* Data */
              th:nth-child(5), td:nth-child(5) { width: auto; min-width: 90px; text-align: center;} /* Ações */
              .btn-detalhes { padding: 6px 10px; font-size: 13px;}
+             
+             /* ***** MEDIA QUERY PARA O CONTAINER DE BUSCA (SOLICITAÇÕES) ***** */
+             .search-bar-container {
+                flex-direction: column; /* Empilha no mobile */
+                gap: 1rem;
+             }
+             .search-bar-container input {
+                max-width: 100%; /* Ocupa 100% */
+             }
+             .back-button {
+                width: 100%; /* Botão ocupa 100% */
+                justify-content: center; /* Centraliza o texto do botão */
+             }
         }
 
     </style>
@@ -335,7 +389,14 @@
         <div class="main-content">
             <nav class="breadcrumb">
                 </nav>
-            <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Pesquisar por produto ou usuário..." /></div>
+            
+            <div class="search-bar-container">
+                <input type="text" id="searchInput" placeholder="Pesquisar por produto ou usuário..." />
+                <button id="solicitacoes-back-btn" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </button>
+            </div>
+            
             <div class="tabela-container">
                 <table>
                     <thead><tr><th>#</th><th>Usuário</th><th>Produto</th><th>Data</th><th>Ações</th></tr></thead>
@@ -494,12 +555,14 @@
             tr.setAttribute('data-id', produto.id);
             const itemIndex = startIndex + index + 1;
             
-            // ***** CORREÇÃO DA HORA APLICADA AQUI *****
+            // ***** NOVA CORREÇÃO DE HORA APLICADA AQUI *****
+            // Força a data a ser lida como UTC, adicionando "Z"
+            const dataUTC = new Date(produto.data + "Z");
             tr.innerHTML = `
                 <td>${itemIndex}</td>
                 <td>${produto.nome_usuario || "Não Informado"}</td>
                 <td>${produto.produto || "-"}</td>
-                <td>${new Date(produto.data).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>
+                <td>${dataUTC.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</td>
                 <td><button class="btn-detalhes">Ver Detalhes</button></td> `;
              
              const detailsButton = tr.querySelector('.btn-detalhes');
@@ -597,8 +660,10 @@
         
         document.getElementById('modal-descricao').textContent = produto.descricao || 'Não informado.';
         
-        // ***** CORREÇÃO DA HORA APLICADA AQUI *****
-        document.getElementById('modal-data').textContent = new Date(produto.data).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
+        // ***** NOVA CORREÇÃO DE HORA APLICADA AQUI *****
+        // Força a data a ser lida como UTC, adicionando "Z"
+        const dataUTC = new Date(produto.data + "Z");
+        document.getElementById('modal-data').textContent = dataUTC.toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
         
         document.getElementById('modal-local').textContent = produto.local || 'Não informado.';
         document.getElementById('modal-contato').textContent = produto.contato || 'Não informado.';
@@ -658,7 +723,6 @@
             const { data: produto, error: fetchError } = await supabase.from('produtos').select('*').eq('id', id).single();
             if (fetchError || !produto) throw new Error(fetchError?.message || "Solicitação não encontrada.");
 
-            // ***** INÍCIO DA CORREÇÃO DO BUG (Aprovados.html) *****
             // Criamos manualmente o objeto SÓ com os dados que a tabela 'aprovados' aceita.
             const dadosParaAprovados = {
                 user_id: produto.user_id,
@@ -672,7 +736,6 @@
                 // Adiciona a nova data de aprovação (em UTC, o que é correto para o DB)
                 data_aprovacao: new Date().toISOString() 
             };
-            // ***** FIM DA CORREÇÃO *****
             
             const { error: insertError } = await supabase.from('aprovados').insert([dadosParaAprovados]);
             if (insertError) throw new Error(insertError.message || "Erro ao mover para aprovados.");
@@ -763,6 +826,12 @@
                 displayPage();
             });
         }
+        
+        // ***** NOVO LISTENER PARA O BOTÃO VOLTAR *****
+        document.getElementById("solicitacoes-back-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            history.back(); // Volta para a página anterior (ex: Dashboard)
+        });
 
         // Keydown Listener for Modals
         window.addEventListener("keydown",e=>{

@@ -222,6 +222,21 @@
             font-weight: 500;
             color: var(--color-primary);
         }
+        
+        /* ESTILO PARA A DATA (SIMPLIFICADO E SEM COR) */
+        .ad-info p.ad-date {
+            font-size: 0.85rem;
+            color: var(--color-text-muted); /* Cor padrão (cinza) */
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .ad-info p.ad-date i {
+            font-size: 0.8rem;
+        }
+        /* FIM DO ESTILO DA DATA */
+
 
         .ad-status-actions {
             display: flex;
@@ -506,22 +521,37 @@
             async function loadAds() {
                 adList.innerHTML = '<p style="text-align: center; padding: 2rem;">Carregando...</p>';
                 try {
-                    const { data: approvedAds, error: approvedError } = await supabase.from('aprovados').select('*').eq('user_id', user.id);
+                    // ***** MUDANÇA IMPORTANTE: Pedindo 'created_at' *****
+                    // 'created_at' é a coluna de data automática do Supabase.
+                    const { data: approvedAds, error: approvedError } = await supabase.from('aprovados').select('*, created_at').eq('user_id', user.id);
                     if (approvedError) throw approvedError;
                     
-                    const { data: otherAds, error: otherError } = await supabase.from('produtos').select('*, motivo_rejeicao, rejeicao_vista').eq('user_id', user.id);
+                    // Pedimos 'data_rejeicao'
+                    const { data: otherAds, error: otherError } = await supabase.from('produtos').select('*, motivo_rejeicao, rejeicao_vista, data_rejeicao').eq('user_id', user.id);
                     if (otherError) throw otherError;
 
+                    // ***** LÓGICA DE DATA MAIS ROBUSTA *****
                     const mappedApproved = (approvedAds || []).map(ad => ({
-                        ...ad, status: 'aprovados', dataTable: 'aprovados', date: ad.data_aprovacao
+                        ...ad, 
+                        status: 'aprovados', 
+                        dataTable: 'aprovados', 
+                        // Use 'data_aprovacao' PRIMEIRO. Se for nula, use 'created_at'.
+                        date: ad.data_aprovacao || ad.created_at 
                     }));
 
                     const mappedOthers = (otherAds || []).map(ad => ({
-                        ...ad, status: ad.aprovado === false ? 'rejeitados' : 'pendentes', dataTable: 'produtos', date: ad.data
+                        ...ad, 
+                        status: ad.aprovado === false ? 'rejeitados' : 'pendentes', 
+                        dataTable: 'produtos', 
+                        // Se rejeitado, use 'data_rejeicao'. Se for nula, use a data de envio 'data'.
+                        // Se pendente, use 'data' (envio).
+                        date: ad.aprovado === false ? (ad.data_rejeicao || ad.data) : ad.data
                     }));
+                    // ***** FIM DA LÓGICA DE DATA *****
 
                     allUserAds = [...mappedApproved, ...mappedOthers];
-                    allUserAds.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    // Ordena por data (os que tiverem data nula ou inválida vão para o fim)
+                    allUserAds.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
                     displayPage();
 
@@ -561,10 +591,35 @@
 
                         const statusClass = ad.status;
                         const statusText = { aprovados: 'Aprovado', pendentes: 'Pendente', rejeitados: 'Rejeitado' }[statusClass];
-                        const dateText = { aprovados: 'Aprovado em', pendentes: 'Enviado em', rejeitados: 'Enviado em' }[statusClass];
                         
-                        // ***** CORREÇÃO DA HORA APLICADA AQUI *****
-                        const formattedDate = new Date(ad.date).toLocaleString('pt-BR', { timeZone: "America/Sao_Paulo" });
+                        let dateText = '';
+                        if (statusClass === 'aprovados') {
+                            dateText = 'Aprovado em';
+                        } else if (statusClass === 'pendentes') {
+                            dateText = 'Enviado em';
+                        } else if (statusClass === 'rejeitados') {
+                            dateText = 'Rejeitado em';
+                        }
+                        
+                        // ***** CORREÇÃO FINAL 'Invalid Date' *****
+                        let formattedDate;
+                        // 1. Checa se a data (que agora já tem o fallback) existe
+                        if (ad.date) {
+                            // 2. Adiciona o 'Z' para garantir que o JS leia como UTC
+                            const dataUTC = new Date(ad.date + "Z");
+                            
+                            // 3. Verifica se a data criada é válida
+                            if (!isNaN(dataUTC.getTime())) {
+                                formattedDate = dataUTC.toLocaleString('pt-BR', { timeZone: "America/Sao_Paulo" });
+                            } else {
+                                // Isso acontece se ad.date for uma string inválida
+                                formattedDate = 'Data indisponível'; 
+                            }
+                        } else {
+                            // Isso acontece se ad.date for null ou undefined
+                            formattedDate = 'Data não informada'; 
+                        }
+                        // ***** FIM DA CORREÇÃO *****
 
                         let reasonIconHtml = '';
                         if (ad.status === 'rejeitados' && ad.motivo_rejeicao) {
@@ -580,12 +635,16 @@
                             ? `<div class="rejection-reason-box">${ad.motivo_rejeicao}</div>`
                             : '';
 
+                        // ***** HTML SEM CORES E ÍCONES DINÂMICOS NA DATA *****
                         adCard.innerHTML = `
-                            <img src="${ad.imagens[0]}" alt="${ad.produto}" class="ad-image">
+                            <img src="${ad.imagens[0] || 'IMG/placeholder.png'}" alt="${ad.produto}" class="ad-image">
                             <div class="ad-info">
                                 <h3>${ad.produto}</h3>
                                 <p class="ad-price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(ad.preco)}</p>
-                                <p>${dateText}: ${formattedDate}</p> 
+                                <p class="ad-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    ${dateText}: ${formattedDate}
+                                </p> 
                             </div>
                             <div class="ad-status-actions">
                                 <div class="status-container">
