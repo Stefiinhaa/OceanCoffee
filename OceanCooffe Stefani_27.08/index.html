@@ -7,19 +7,21 @@
   <title>Ocean Coffee - Brasil</title>
   <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
 
-
   <script src="JS/theme-applier.js"></script>
+
   <link rel="stylesheet" href="CSS/dark-mode.css">
+
   <link rel="stylesheet" href="CSS/styles.css">
   <link rel="stylesheet" href="CSS/api.css">
-  <link rel="stylesheet" href="CSS/curva.css"> <link rel="stylesheet" href="CSS/responsive.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  <link rel="stylesheet" href="CSS/curva.css">
+  <link rel="stylesheet" href="CSS/responsive.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
+</head>
 
 <style>
- 
   #fundo {
     height: 100vh;
     background-image: url("IMG/Fundo.png");
@@ -50,28 +52,38 @@
       <span></span>
     </div>
   </header>
-
   <header class="mobile-header">
-      <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
-      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-          <i class="fas fa-bars"></i>
-      </button>
+    <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+      <i class="fas fa-bars"></i>
+    </button>
   </header>
 
   <div class="nav-overlay" id="nav-overlay"></div>
-  <nav class="mobile-nav" id="mobile-nav">
-      <div class="mobile-nav-header">
-          <img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img" style="height: 50px;">
-      </div>
-      <ul class="mobile-nav-links">
-          <li><a href="#NossoCafe"><i class="fas fa-coffee"></i>Nosso Café</a></li>
-          <li><a href="#Serviços"><i class="fas fa-concierge-bell"></i>Serviços</a></li>
-          <li><a href="#Sobre"><i class="fas fa-info-circle"></i>Sobre</a></li>
-          <li><a href="Market.html"><i class="fas fa-store"></i>Loja</a></li>
-          <li><a href="Login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
-      </ul>
-  </nav>
 
+  <nav class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-header">
+      <img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img" style="height: 50px;">
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="#NossoCafe"><i class="fas fa-coffee"></i>Nosso Café</a></li>
+      <li><a href="#Serviços"><i class="fas fa-concierge-bell"></i>Serviços</a></li>
+      <li><a href="#Sobre"><i class="fas fa-info-circle"></i>Sobre</a></li>
+      <li><a href="Market.html"><i class="fas fa-store"></i>Loja</a></li>
+      <li><a href="Login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+    </ul>
+
+    <div class="theme-switch-wrapper">
+      <span>Tema</span>
+      <label class="theme-switch">
+        <input type="checkbox">
+        <span class="slider">
+          <i class="fas fa-sun"></i>
+          <i class="fas fa-moon"></i>
+        </span>
+      </label>
+    </div>
+  </nav>
   <section class="fundo" id="fundo">
     <div id="container" class="popup">
       <button id="close-popup" title="Fechar">&times;</button>
@@ -91,10 +103,30 @@
             </div>
           </div>
           <div id="other_infos">
-            <div class="main"><i id="temp_max_icon" class="fa-solid fa-temperature-high"></i><div><h2>Temp. max</h2><p id="temp_max">-- <sup>C°</sup></p></div></div>
-            <div class="main"><i id="temp_min_icon" class="fa-solid fa-temperature-low"></i><div><h2>Temp. min</h2><p id="temp_min">-- <sup>C°</sup></p></div></div>
-            <div class="main"><i id="humidity_icon" class="fa-solid fa-droplet"></i><div><h2>Umidade</h2><p id="humidity">--%</p></div></div>
-            <div class="main"><i id="wind_icon" class="fa-solid fa-wind"></i><div><h2>Vento</h2><p id="wind">-- km/h</p></div></div>
+            <div class="main"><i id="temp_max_icon" class="fa-solid fa-temperature-high"></i>
+              <div>
+                <h2>Temp. max</h2>
+                <p id="temp_max">-- <sup>C°</sup></p>
+              </div>
+            </div>
+            <div class="main"><i id="temp_min_icon" class="fa-solid fa-temperature-low"></i>
+              <div>
+                <h2>Temp. min</h2>
+                <p id="temp_min">-- <sup>C°</sup></p>
+              </div>
+            </div>
+            <div class="main"><i id="humidity_icon" class="fa-solid fa-droplet"></i>
+              <div>
+                <h2>Umidade</h2>
+                <p id="humidity">--%</p>
+              </div>
+            </div>
+            <div class="main"><i id="wind_icon" class="fa-solid fa-wind"></i>
+              <div>
+                <h2>Vento</h2>
+                <p id="wind">-- km/h</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -114,7 +146,7 @@
   </section>
 
   <link rel="stylesheet" href="CSS/curva.css">
-  <section class="curved-section"  id="NossoCafe">
+  <section class="curved-section" id="NossoCafe">
     <div><img class="background" src="IMG/fundoteste4.png"></div>
     <div class="curved-shape"></div>
     <div class="coffee-info">
@@ -123,15 +155,21 @@
         <img class="img" src="IMG/cafearabica2.png">
       </div>
       <div class="info-list">
-        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info1"><strong>Sabor:</strong> Suave, menos amargo, com notas frutadas e achocolatadas.</p></div>
-        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info2"><strong>Menos cafeína:</strong> Até 50% menos que o robusta.</p></div>
-        <div class="info-item"><img class="Grãoinfo3" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info3"> <strong>Notas:</strong> Chocolate, nozes, mel, frutas vermelhas, florais e cítricas.</p></div>
+        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon">
+          <p class="info1"><strong>Sabor:</strong> Suave, menos amargo, com notas frutadas e achocolatadas.</p>
+        </div>
+        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon">
+          <p class="info2"><strong>Menos cafeína:</strong> Até 50% menos que o robusta.</p>
+        </div>
+        <div class="info-item"><img class="Grãoinfo3" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon">
+          <p class="info3"> <strong>Notas:</strong> Chocolate, nozes, mel, frutas vermelhas, florais e cítricas.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="Serviços" class="services-section">
-      <h2>Serviços</h2>
+    <h2>Serviços</h2>
     <div class="services-grid">
       <div class="service-card">
         <img src="IMG/Pessoa1.png" alt="Classificação dos grãos">
@@ -169,43 +207,64 @@
     </div>
   </section>
   <section class="Carossel">
-      <div id="meuCarrossel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-interval="4000">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1: Banner Principal"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="1" aria-label="Slide 2: Classificação de Grãos"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="2" aria-label="Slide 3: Adicionando Grãos Crus"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="3" aria-label="Slide 4: Checagem da Torra"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="4" aria-label="Slide 5: Ponto Ideal de Torra"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="5" aria-label="Slide 6: Moagem dos Grãos"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="6" aria-label="Slide 7: Pó de Café Retirado"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="7" aria-label="Slide 8: Separação para Degustação"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="8" aria-label="Slide 9: Imagem 9"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="9" aria-label="Slide 10: Imagem 10"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="10" aria-label="Slide 11: Imagem 11"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="11" aria-label="Slide 12: Imagem 12"></button>
-    </div>
+    <div id="meuCarrossel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="0" class="active" aria-current="true"
+          aria-label="Slide 1: Banner Principal"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="1"
+          aria-label="Slide 2: Classificação de Grãos"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="2"
+          aria-label="Slide 3: Adicionando Grãos Crus"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="3"
+          aria-label="Slide 4: Checagem da Torra"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="4"
+          aria-label="Slide 5: Ponto Ideal de Torra"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="5"
+          aria-label="Slide 6: Moagem dos Grãos"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="6"
+          aria-label="Slide 7: Pó de Café Retirado"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="7"
+          aria-label="Slide 8: Separação para Degustação"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="8" aria-label="Slide 9: Imagem 9"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="9"
+          aria-label="Slide 10: Imagem 10"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="10"
+          aria-label="Slide 11: Imagem 11"></button>
+        <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="11"
+          aria-label="Slide 12: Imagem 12"></button>
+      </div>
 
-    <div class="carousel-inner">
-      <div class="carousel-item active"><img src="IMG/Carrosel.png" class="d-block w-100" alt="Banner principal do carrossel"></div>
-      <div class="carousel-item"><img src="IMG/1.png" class="d-block w-100" alt="Classificação de Grãos"></div>
-      <div class="carousel-item"><img src="IMG/2.png" class="d-block w-100" alt="Adicionando grãos crus à torradeira"></div>
-      <div class="carousel-item"><img src="IMG/3.png" class="d-block w-100" alt="Checagem do ponto de torra dos grãos"></div>
-      <div class="carousel-item"><img src="IMG/4.png" class="d-block w-100" alt="Grãos atingindo o ponto de torra ideal"></div>
-      <div class="carousel-item"><img src="IMG/5.png" class="d-block w-100" alt="Moendo os grãos torrados"></div>
-      <div class="carousel-item"><img src="IMG/6.png" class="d-block w-100" alt="Pó de café retirado após a moagem"></div>
-      <div class="carousel-item"><img src="IMG/7.png" class="d-block w-100" alt="Separação de cafés para degustação"></div>
-      <div class="carousel-item"><img src="IMG/8.png" class="d-block w-100" alt="Detalhes do processo"></div>
-      <div class="carousel-item"><img src="IMG/9.png" class="d-block w-100" alt="Mais sobre o processo"></div>
-      <div class="carousel-item"><img src="IMG/10.png" class="d-block w-100" alt="Etapa final do processo"></div>
-      <div class="carousel-item"><img src="IMG/11.png" class="d-block w-100" alt="Resultados finais"></div>
-    </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active"><img src="IMG/Carrosel.png" class="d-block w-100"
+            alt="Banner principal do carrossel"></div>
+        <div class="carousel-item"><img src="IMG/1.png" class="d-block w-100" alt="Classificação de Grãos"></div>
+        <div class="carousel-item"><img src="IMG/2.png" class="d-block w-100" alt="Adicionando grãos crus à torradeira">
+        </div>
+        <div class="carousel-item"><img src="IMG/3.png" class="d-block w-100" alt="Checagem do ponto de torra dos grãos">
+        </div>
+        <div class="carousel-item"><img src="IMG/4.png" class="d-block w-100" alt="Grãos atingindo o ponto de torra ideal">
+        </div>
+        <div class="carousel-item"><img src="IMG/5.png" class="d-block w-100" alt="Moendo os grãos torrados"></div>
+        <div class="carousel-item"><img src="IMG/6.png" class="d-block w-100" alt="Pó de café retirado após a moagem">
+        </div>
+        <div class="carousel-item"><img src="IMG/7.png" class="d-block w-100" alt="Separação de cafés para degustação">
+        </div>
+        <div class="carousel-item"><img src="IMG/8.png" class="d-block w-100" alt="Detalhes do processo"></div>
+        <div class="carousel-item"><img src="IMG/9.png" class="d-block w-100" alt="Mais sobre o processo"></div>
+        <div class="carousel-item"><img src="IMG/10.png" class="d-block w-100" alt="Etapa final do processo"></div>
+        <div class="carousel-item"><img src="IMG/11.png" class="d-block w-100" alt="Resultados finais"></div>
+      </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#meuCarrossel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Anterior</span></button>
-    <button class="carousel-control-next" type="button" data-bs-target="#meuCarrossel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Próximo</span></button>
-  </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#meuCarrossel" data-bs-slide="prev"><span
+          class="carousel-control-prev-icon" aria-hidden="true"></span><span
+          class="visually-hidden">Anterior</span></button>
+      <button class="carousel-control-next" type="button" data-bs-target="#meuCarrossel" data-bs-slide="next"><span
+          class="carousel-control-next-icon" aria-hidden="true"></span><span
+          class="visually-hidden">Próximo</span></button>
+    </div>
   </section>
   <section id="Sobre" class="Sobre">
-      <h2>Sobre</h2>
+    <h2>Sobre</h2>
     <br>
     <div class="container">
       <div class="left-card">
@@ -226,15 +285,38 @@
     </div>
   </section>
   <section class="Container2">
-      <h2>Nossos Princípios</h2>
+    <h2>Nossos Princípios</h2>
     <div class="principio-bloco">
-      <div class="card"><img class="politica" src="IMG/political-instability.png" alt="Ícone de política"><p class="number-h1">01</p><h3 class="principio-titulo">Política</h3><ul class="principio-lista"><li><strong>Saúde e Segurança:</strong> Promover um ambiente de trabalho seguro e saudável.</li><li><strong>Oportunidades Iguais:</strong> Assegurar tratamento justo e incentivo ao crescimento.</li><li><strong>Satisfação do Cliente:</strong> Atendimento personalizado e de alta qualidade.</li><li><strong>Melhoria Contínua:</strong> Inovação e aperfeiçoamento dos processos internos.</li></ul></div>
-      <div class="card"><img class="politica" src="IMG/mission.png" alt="Ícone de política"><p class="number-h1">02</p><h3 class="principio-titulo">Missão</h3><ul class="principio-lista"><li>Ser um parceiro estratégico que compreende e atende as necessidades dos produtores e consumidores de café, oferecendo soluções que garantam a excelência em classificação, degustação e comercialização do café.</li></ul></div>
-      <div class="card"><img class="politica" src="IMG/opportunity.png" alt="Ícone de política"><p class="number-h1">03</p><h3 class="principio-titulo">Visão</h3><ul class="principio-lista"><li>Tornar-se referência nacional e internacional no setor cafeeiro, destacando-se pela qualidade dos serviços, inovação tecnológica e compromisso com a sustentabilidade e transparência.</li></ul></div>
+      <div class="card"><img class="politica" src="IMG/political-instability.png" alt="Ícone de política">
+        <p class="number-h1">01</p>
+        <h3 class="principio-titulo">Política</h3>
+        <ul class="principio-lista">
+          <li><strong>Saúde e Segurança:</strong> Promover um ambiente de trabalho seguro e saudável.</li>
+          <li><strong>Oportunidades Iguais:</strong> Assegurar tratamento justo e incentivo ao crescimento.</li>
+          <li><strong>Satisfação do Cliente:</strong> Atendimento personalizado e de alta qualidade.</li>
+          <li><strong>Melhoria Contínua:</strong> Inovação e aperfeiçoamento dos processos internos.</li>
+        </ul>
+      </div>
+      <div class="card"><img class="politica" src="IMG/mission.png" alt="Ícone de política">
+        <p class="number-h1">02</p>
+        <h3 class="principio-titulo">Missão</h3>
+        <ul class="principio-lista">
+          <li>Ser um parceiro estratégico que compreende e atende as necessidades dos produtores e consumidores de café,
+            oferecendo soluções que garantam a excelência em classificação, degustação e comercialização do café.</li>
+        </ul>
+      </div>
+      <div class="card"><img class="politica" src="IMG/opportunity.png" alt="Ícone de política">
+        <p class="number-h1">03</p>
+        <h3 class="principio-titulo">Visão</h3>
+        <ul class="principio-lista">
+          <li>Tornar-se referência nacional e internacional no setor cafeeiro, destacando-se pela qualidade dos
+            serviços, inovação tecnológica e compromisso com a sustentabilidade e transparência.</li>
+        </ul>
+      </div>
     </div>
   </section>
   <section id="NossoEstabelecimento" class="Estabelecimento">
-      <h2 class="NossoEstabelecimento">Nosso Estabelecimento</h2>
+    <h2 class="NossoEstabelecimento">Nosso Estabelecimento</h2>
     <br>
     <div class="container3">
       <div class="text-content2">
@@ -252,26 +334,48 @@
     </div>
   </section>
   <section id="Colaboradores" class="Colaboradores">
-      <h2>Colaboradores</h2>
+    <h2>Colaboradores</h2>
     <br>
     <div class="container-caixas">
-      <div class="caixa"><div class="contorno"><img class="aspas" src="IMG/aspas.png"><p class="complemento">A Ocean Coffee não é apenas uma empresa, é a materialização de minha paixão e de um compromisso com a qualidade e com as pessoas. Para mim,cada xícara de café representa uma oportunidade de compartilhar algo que vai além do sabor</p><img class="jorge1" src="IMG/jorge.png"><div class="nome2">Jorge Luiz</div></div></div>
-      <div class="caixa"><div class="contorno"><img class="aspas" src="IMG/aspas.png"><p class="complemento">A Ocean Coffee não é apenas uma empresa, é a materialização de minha paixão e de um compromisso com a qualidade e com as pessoas. Para mim,cada xícara de café representa uma oportunidade de compartilhar algo que vai além do sabor</p><img class="jorge" src="IMG/gabriel.png"><div class="nome">Gabriel</div></div></div>
-      <div class="caixa"><div class="contorno"><img class="aspas" src="IMG/aspas.png"><p class="complemento">A Ocean Coffee não é apenas uma empresa, é a materialização de minha paixão e de um compromisso com a qualidade e com as pessoas. Para mim,cada xícara de café representa uma oportunidade de compartilhar algo que vai além do sabor</p><img class="user" src="IMG/user.png"><div class="nome3">Agatha</div></div></div>
+      <div class="caixa">
+        <div class="contorno"><img class="aspas" src="IMG/aspas.png">
+          <p class="complemento">A Ocean Coffee não é apenas uma empresa, é a materialização de minha paixão e de um
+            compromisso com a qualidade e com as pessoas. Para mim,cada xícara de café representa uma oportunidade de
+            compartilhar algo que vai além do sabor</p><img class="jorge1" src="IMG/jorge.png">
+          <div class="nome2">Jorge Luiz</div>
+        </div>
+      </div>
+      <div class="caixa">
+        <div class="contorno"><img class="aspas" src="IMG/aspas.png">
+          <p class="complemento">A Ocean Coffee não é apenas uma empresa, é a materialização de minha paixão e de um
+            compromisso com a qualidade e com as pessoas. Para mim,cada xícara de café representa uma oportunidade de
+            compartilhar algo que vai além do sabor</p><img class="jorge" src="IMG/gabriel.png">
+          <div class="nome">Gabriel</div>
+        </div>
+      </div>
+      <div class="caixa">
+        <div class="contorno"><img class="aspas" src="IMG/aspas.png">
+          <p class="complemento">A Ocean Coffee não é apenas uma empresa, é a materialização de minha paixão e de um
+            compromisso com a qualidade e com as pessoas. Para mim,cada xícara de café representa uma oportunidade de
+            compartilhar algo que vai além do sabor</p><img class="user" src="IMG/user.png">
+          <div class="nome3">Agatha</div>
+        </div>
+      </div>
     </div>
   </section>
   <section id="equipamentos-destaque" class="equipamentos-destaque-section">
-      <div class="equipamentos-destaque-container">
-        <h2 class="equipamentos-destaque-section-title">Equipamentos em Destaque</h2>
-        <p class="equipamentos-destaque-section-subtitle">Confira os equipamentos mais recentes adicionados à nossa plataforma.</p>
-        <div class="equipamentos-destaque-product-grid" id="recent-products-grid"></div>
-        <div class="equipamentos-destaque-cta-container">
-            <a href="Market.html" class="equipamentos-destaque-main-button">Ver todos os equipamentos</a>
-        </div>
+    <div class="equipamentos-destaque-container">
+      <h2 class="equipamentos-destaque-section-title">Equipamentos em Destaque</h2>
+      <p class="equipamentos-destaque-section-subtitle">Confira os equipamentos mais recentes adicionados à nossa
+        plataforma.</p>
+      <div class="equipamentos-destaque-product-grid" id="recent-products-grid"></div>
+      <div class="equipamentos-destaque-cta-container">
+        <a href="Market.html" class="equipamentos-destaque-main-button">Ver todos os equipamentos</a>
+      </div>
     </div>
   </section>
   <section>
-      <div class="containers">
+    <div class="containers">
       <h1 class="title">
         Anuncie seus produtos na <img class="Ocean" src="IMG/ocean.png" alt="Logo Ocean Coffee">
       </h1>
@@ -303,67 +407,79 @@
       </div>
     </div>
   </section>
-  
+
   <footer class="footer">
     <div class="footer-content">
-<div class="footer-column footer-about">
-    <img src="IMG/Logo.png" alt="Logo Ocean Coffee" class="footer-logo">
-    <p>&copy; 2025 Ocean Coffee. <br>Todos os direitos reservados.</p>
-    <p style="margin-top: 10px; font-size: 0.8rem;">
-        <a href="equipe.html" style="color: #ccc; text-decoration: none;">Equipe de Desenvolvimento</a>
-    </p>
-</div>
-        <div class="footer-column footer-links">
-            <h4>Links Rápidos</h4>
-            <a href="#NossoCafe">Nosso Café</a>
-            <a href="#Serviços">Serviços</a>
-            <a href="#Sobre">Sobre</a>
-            <a href="#NossoEstabelecimento">Estabelecimento</a>
-            <a href="#Colaboradores">Colaboradores</a>
+      <div class="footer-column footer-about">
+        <img src="IMG/Logo.png" alt="Logo Ocean Coffee" class="footer-logo">
+        <p>&copy; 2025 Ocean Coffee. <br>Todos os direitos reservados.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">
+          <a href="equipe.html" style="color: #ccc; text-decoration: none;">Equipe de Desenvolvimento</a>
+        </p>
+
+        <div class="theme-switch-wrapper in-footer">
+          <span>Tema</span>
+          <label class="theme-switch">
+            <input type="checkbox">
+            <span class="slider">
+              <i class="fas fa-sun"></i>
+              <i class="fas fa-moon"></i>
+            </span>
+          </label>
         </div>
-        <div class="footer-column footer-company-info">
-            <h4>Sobre a Ocean Coffee</h4>
-            <p>A Ocean Coffee foi fundada em 01 de outubro de 2019, com a missão de revolucionar o mercado cafeeiro ao unir tradição e inovação.</p>
+        
+      </div>
+      <div class="footer-column footer-links">
+        <h4>Links Rápidos</h4>
+        <a href="#NossoCafe">Nosso Café</a>
+        <a href="#Serviços">Serviços</a>
+        <a href="#Sobre">Sobre</a>
+        <a href="#NossoEstabelecimento">Estabelecimento</a>
+        <a href="#Colaboradores">Colaboradores</a>
+      </div>
+      <div class="footer-column footer-company-info">
+        <h4>Sobre a Ocean Coffee</h4>
+        <p>A Ocean Coffee foi fundada em 01 de outubro de 2019, com a missão de revolucionar o mercado cafeeiro ao unir
+          tradição e inovação.</p>
+      </div>
+      <div class="footer-column footer-social">
+        <h4>Siga-nos</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
         </div>
-        <div class="footer-column footer-social">
-            <h4>Siga-nos</h4>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
+      </div>
     </div>
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+  <script src="JS/api.js"></script>
   <button id="btnTopo" onclick="rolarParaTopo()"><img class="up" src="IMG/up-arrow.png"></button>
 
   <script>
     function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileNav = document.getElementById('mobile-nav');
-        const navOverlay = document.getElementById('nav-overlay');
-        const navLinks = document.querySelectorAll('.mobile-nav-links a');
+      const menuToggle = document.getElementById('menu-toggle');
+      const mobileNav = document.getElementById('mobile-nav');
+      const navOverlay = document.getElementById('nav-overlay');
+      const navLinks = document.querySelectorAll('.mobile-nav-links a');
 
-        function closeMenu() {
-            mobileNav.classList.remove('is-open');
-            navOverlay.classList.remove('is-open');
-        }
+      function closeMenu() {
+        mobileNav.classList.remove('is-open');
+        navOverlay.classList.remove('is-open');
+      }
 
-        menuToggle.addEventListener('click', () => {
-            mobileNav.classList.add('is-open');
-            navOverlay.classList.add('is-open');
-        });
+      menuToggle.addEventListener('click', () => {
+        mobileNav.classList.add('is-open');
+        navOverlay.classList.add('is-open');
+      });
 
-        navOverlay.addEventListener('click', closeMenu);
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
+      navOverlay.addEventListener('click', closeMenu);
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', closeMenu);
+      });
     });
   </script>
 
@@ -374,21 +490,21 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     async function loadRecentProducts() {
-        const grid = document.getElementById('recent-products-grid');
-        if (!grid) return;
-        const { data, error } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
-        if (error) {
-            console.error('Erro ao buscar produtos recentes:', error);
-            grid.innerHTML = '<p>Não foi possível carregar os produtos no momento.</p>';
-            return;
-        }
-        if (data.length === 0) {
-            grid.innerHTML = '<p>Nenhum produto em destaque no momento.</p>';
-            return;
-        }
-        grid.innerHTML = '';
-        data.forEach(product => {
-            const productCard = `
+      const grid = document.getElementById('recent-products-grid');
+      if (!grid) return;
+      const { data, error } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
+      if (error) {
+        console.error('Erro ao buscar produtos recentes:', error);
+        grid.innerHTML = '<p>Não foi possível carregar os produtos no momento.</p>';
+        return;
+      }
+      if (data.length === 0) {
+        grid.innerHTML = '<p>Nenhum produto em destaque no momento.</p>';
+        return;
+      }
+      grid.innerHTML = '';
+      data.forEach(product => {
+        const productCard = `
                 <article class="equipamentos-destaque-product-card">
                     <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__image-container">
                         <img src="${product.imagens[0] || 'IMG/placeholder.png'}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
@@ -405,13 +521,13 @@
                     </div>
                 </article>
             `;
-            grid.innerHTML += productCard;
-        });
+        grid.innerHTML += productCard;
+      });
     }
     document.addEventListener('DOMContentLoaded', loadRecentProducts);
   </script>
-<script src="JS/dolar-api.js" defer></script>
-  <script src="JS/weather-api.js" defer></script>
+
+  <script src="JS/theme-toggle.js"></script>
 
 </body>
 </html>

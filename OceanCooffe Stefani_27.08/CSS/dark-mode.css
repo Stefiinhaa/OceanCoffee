@@ -1,21 +1,22 @@
-/* CSS/dark-mode.css */
+/* ============================================== */
+/* === ARQUIVO dark-mode.css (VERSÃO CORRIGIDA) === */
+/* ============================================== */
 
-/* Define as variáveis de cor para o modo escuro.
-  Usamos html.dark-mode para ter alta especificidade.
+/* I. VARIÁVEIS DO TEMA ESCURO
+  (Para páginas que já usam variáveis, como perfil, loja, admin, etc.)
 */
-html.dark-mode {
-    /* --- Paleta Principal (Loja, Perfil, Anúncios) --- */
-    --color-primary: #3ac0dd; /* Um azul mais brilhante para dark mode */
+@media (prefers-color-scheme: dark) {
+  html:not(.light-mode) {
+    --color-primary: #3ac0dd;
     --color-primary-light: #243B53;
-    --color-accent: #F97316; /* Laranja se destaca bem */
-    --color-background: #1a202c; /* Azul-ardósia muito escuro */
-    --color-surface: #2d3748; /* Azul-ardósia escuro */
-    --color-text: #f7fafc; /* Quase branco */
-    --color-text-headings: #ffffff; /* Branco total */
-    --color-text-muted: #a0aec0; /* Cinza claro */
-    --color-border: #4a5568; /* Cinza-ardósia */
+    --color-accent: #F97316;
+    --color-background: #1a202c;
+    --color-surface: #2d3748;
+    --color-text: #f7fafc;
+    --color-text-headings: #ffffff;
+    --color-text-muted: #a0aec0;
+    --color-border: #4a5568;
 
-    /* --- Paleta do Admin Dashboard (Sidebar Azul-claro) --- */
     --admin-sidebar-bg: #1f2937;
     --admin-sidebar-text: #e2e8f0;
     --admin-sidebar-icon: #e2e8f0;
@@ -24,248 +25,153 @@ html.dark-mode {
     --admin-sidebar-bottom-bg: #2d3748;
     --admin-sidebar-bottom-hover-bg: #4a5568;
 
-    /* --- Cores Específicas (Login, etc.) --- */
-    --login-card-bg: rgba(45, 55, 72, 0.95); /* Fundo do card de login */
-    --fundo-creme: #1a202c; /* Substitui o fundo creme/bege */
+    --login-card-bg: rgba(45, 55, 72, 0.95);
+    --fundo-creme: #1a202c;
+  }
 }
 
-/* --- Aplicação das Variáveis do Admin (dashboard.html, admin.html, etc.) --- */
-html.dark-mode .sidebar {
-    background-color: var(--admin-sidebar-bg);
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-}
-html.dark-mode .sidebar .logo {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-html.dark-mode .sidebar .menu-item,
-html.dark-mode .sidebar .menu-item-logout {
-    color: var(--admin-sidebar-text);
-}
-html.dark-mode .sidebar .menu-item i,
-html.dark-mode .sidebar .menu-item svg,
-html.dark-mode .sidebar .menu-item-logout svg {
-    color: var(--admin-sidebar-icon);
-    fill: var(--admin-sidebar-icon);
-}
-html.dark-mode .sidebar .menu-item:hover,
-html.dark-mode .sidebar .menu-item-logout:hover {
-    background-color: var(--admin-sidebar-hover-bg);
-    color: var(--admin-sidebar-hover-text);
-}
-html.dark-mode .sidebar .menu-item.selected {
-    background: linear-gradient(to right, #0047a3, #3ac0dd); /* Manter o gradiente de seleção */
-    color: white;
-}
-html.dark-mode .sidebar .sidebar-bottom {
-    background-color: var(--admin-sidebar-bottom-bg);
-    border-top-color: rgba(255, 255, 255, 0.1);
-}
-html.dark-mode .sidebar .sidebar-bottom:hover {
-    background-color: var(--admin-sidebar-bottom-hover-bg);
-}
-html.dark-mode .sidebar .sidebar-bottom svg {
-    fill: var(--admin-sidebar-text);
+html.dark-mode {
+  --color-primary: #3ac0dd;
+  --color-primary-light: #243B53;
+  --color-accent: #F97316;
+  --color-background: #1a202c;
+  --color-surface: #2d3748;
+  --color-text: #f7fafc;
+  --color-text-headings: #ffffff;
+  --color-text-muted: #a0aec0;
+  --color-border: #4a5568;
+
+  --admin-sidebar-bg: #1f2937;
+  --admin-sidebar-text: #e2e8f0;
+  --admin-sidebar-icon: #e2e8f0;
+  --admin-sidebar-hover-bg: rgba(255, 255, 255, 0.1);
+  --admin-sidebar-hover-text: #ffffff;
+  --admin-sidebar-bottom-bg: #2d3748;
+  --admin-sidebar-bottom-hover-bg: #4a5568;
+
+  --login-card-bg: rgba(45, 55, 72, 0.95);
+  --fundo-creme: #1a202c;
 }
 
-/* --- Aplicação das Variáveis (Geral, Perfil, Loja) --- */
-
-/* Fundo principal */
-html.dark-mode body,
-html.dark-mode .main-content,
-html.dark-mode .dashboard-main,
-html.dark-mode .oc-product-section {
-    background-color: var(--color-background);
-    color: var(--color-text);
+/* II. SOBRESCRITAS DE ESTILOS FIXOS (Para index.html)
+  (Força o modo escuro em classes de CSS/styles.css e CSS/curva.css)
+*/
+@media (prefers-color-scheme: dark) {
+  html:not(.light-mode) .navbar {
+    background-color: #b23a27 !important; /* Mantém o vermelho do header */
+  }
+  html:not(.light-mode) .navbar-center {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  html:not(.light-mode) .services-section,
+  html:not(.light-mode) .Container2,
+  html:not(.light-mode) .Estabelecimento,
+  html:not(.light-mode) .Colaboradores,
+  html:not(.light-mode) .equipamentos-destaque-section,
+  html:not(.light-mode) .containers {
+    background-color: #1a202c !important; /* Fundo principal escuro */
+  }
+  html:not(.light-mode) .service-card,
+  html:not(.light-mode) .left-card,
+  html:not(.light-mode) .card,
+  html:not(.light-mode) .caixa,
+  html:not(.light-mode) .equipamentos-destaque-product-card {
+    background-color: #2d3748 !important; /* Fundo dos cards escuro */
+    border-color: #4a5568 !important;
+    color: #a0aec0 !important;
+  }
+  html:not(.light-mode) .service-card h3,
+  html:not(.light-mode) .principio-titulo,
+  html:not(.light-mode) .equipamentos-destaque-product-card__title,
+  html:not(.light-mode) .equipamentos-destaque-product-card__title a,
+  html:not(.light-mode) .service-card p,
+  html:not(.light-mode) .text-content, html:not(.light-mode) .text-content p,
+  html:not(.light-mode) .principio-lista,
+  html:not(.light-mode) .text-content2 p,
+  html:not(.light-mode) .complemento,
+  html:not(.light-mode) .equipamentos-destaque-section-subtitle,
+  html:not(.light-mode) .equipamentos-destaque-product-card__description,
+  html:not(.light-mode) .info,
+  html:not(.light-mode) .principio-lista li {
+    color: #a0aec0 !important; /* Texto dos cards */
+  }
+  html:not(.light-mode) .services-section h2,
+  html:not(.light-mode) .Sobre h2,
+  html:not(.light-mode) .Container2 h2,
+  html:not(.light-mode) .Estabelecimento h2,
+  html:not(.light-mode) .Colaboradores h2,
+  html:not(.light-mode) .equipamentos-destaque-section-title,
+  html:not(.light-mode) .title {
+    color: #ffffff !important; /* Títulos de seção brancos */
+    border-color: #F97316 !important; /* Destaque laranja */
+  }
+  html:not(.light-mode) .curved-section .curved-shape {
+    background-color: #2d3748 !important; /* Forma curva escura */
+  }
+  html:not(.light-mode) .coffee-info {
+    color: #a0aec0 !important;
+  }
+  html:not(.light-mode) .coffee-info h1.nomecafe {
+    color: #ffffff !important;
+  }
+  html:not(.light-mode) .cor2,
+  html:not(.light-mode) .nome, html:not(.light-mode) .nome2, html:not(.light-mode) .nome3 {
+    color: #F97316 !important; /* Destaque laranja */
+  }
+  html:not(.light-mode) .footer {
+    background-color: #1f1f1f; /* Footer já é escuro */
+  }
+  html:not(.light-mode) .footer h4 {
+     border-color: #ba391c !important; /* Vermelho da marca */
+  }
+  html:not(.light-mode) .mobile-nav {
+     background-color: #2d3748 !important;
+  }
+  html:not(.light-mode) .mobile-nav-links a {
+    color: #a0aec0 !important;
+  }
+  html:not(.light-mode) .mobile-nav-links a:hover {
+    background-color: #1a202c !important;
+  }
 }
 
-/* Superfícies (Cards, Modais, Headers) */
-html.dark-mode .oc-header,
-html.dark-mode .dashboard-sidebar, /* Sidebar do perfil.html */
-html.dark-mode .profile-card,
-html.dark-mode .form-section,
-html.dark-mode .tabela-container,
-html.dark-mode .stat-card,
-html.dark-mode .chart-container,
-html.dark-mode .recent-requests,
-html.dark-mode .report-table-container,
-html.dark-mode .oc-product-card,
-html.dark-mode .product-info-card,
-html.dark-mode .seller-info-card,
-html.dark-mode .modal-content,
-html.dark-mode .confirmation-modal,
-html.dark-mode .mobile-header,
-html.dark-mode .mobile-nav,
-html.dark-mode .breadcrumb,
-html.dark-mode .login-card, /* Login/Cadastro */
-html.dark-mode .card, /* Login/Cadastro */
-html.dark-mode .filter-bar {
-    background-color: var(--color-surface);
-    color: var(--color-text);
-    border-color: var(--color-border);
-}
-
-/* Texto e Títulos */
-html.dark-mode h1, html.dark-mode h2, html.dark-mode h3, html.dark-mode h4,
-html.dark-mode .oc-product-card__title,
-html.dark-mode .product-title,
-html.dark-mode .section-title,
-html.dark-mode .user-profile-summary h3,
-html.dark-mode .oc-footer__title,
-html.dark-mode .login-card h1, html.dark-mode .card h1 {
-    color: var(--color-text-headings);
-}
-
-html.dark-mode p, html.dark-mode span, html.dark-mode li,
-html.dark-mode .user-profile-summary p,
-html.dark-mode .sidebar-nav a,
-html.dark-mode .ad-info p,
-html.dark-mode .info-item label,
-html.dark-mode .pagination-info,
-html.dark-mode .oc-footer,
-html.dark-mode .links, html.dark-mode .links p,
-html.dark-mode .card p.instructions {
-    color: var(--color-text-muted);
-}
-
-/* Links */
-html.dark-mode a {
-    color: var(--color-primary);
-}
-html.dark-mode .sidebar-nav a:hover,
-html.dark-mode .mobile-nav-links a:hover,
-html.dark-mode .filter-btn:hover {
-    background-color: var(--color-background); /* Fundo principal escuro */
-    color: var(--color-text-headings);
-}
-
-/* Inputs e Bordas */
-html.dark-mode input,
-html.dark-mode textarea,
-html.dark-mode select,
-html.dark-mode .input-field,
-html.dark-mode .info-item input,
-html.dark-mode .form-group input, html.dark-mode .form-group textarea,
-html.dark-mode .oc-search-bar {
-    background-color: var(--color-background);
-    color: var(--color-text);
-    border-color: var(--color-border);
-}
-html.dark-mode .info-item input:focus,
-html.dark-mode .form-group input:focus, html.dark-mode .form-group textarea:focus,
-html.dark-mode .oc-search-bar:focus-within {
-    background-color: var(--color-surface);
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(58, 192, 221, 0.2);
-}
-html.dark-mode .info-item input:read-only {
-     background-color: transparent;
-     border-color: transparent;
-}
-
-/* Botões */
-html.dark-mode .filter-btn {
-    background-color: var(--color-surface);
-    border-color: var(--color-border);
-    color: var(--color-text-muted);
-}
-html.dark-mode .filter-btn.active {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-text-headings);
-}
-
-/* Tabelas */
-html.dark-mode th, /* Cabeçalho de tabela (admin) */
-html.dark-mode .summary-table th,
-html.dark-mode .report-pagination-container {
-     background-color: #2d3748; /* surface */
-     border-color: var(--color-border);
-     color: var(--color-text-muted);
-}
-html.dark-mode .summary-table td,
-html.dark-mode .tabela-container td {
-     border-color: var(--color-border);
-     color: var(--color-text);
-}
-html.dark-mode .tabela-container tr:nth-child(even) td {
-    background-color: #222b38; /* Um pouco mais escuro que o fundo */
-}
-html.dark-mode .tabela-container tr:hover td,
-html.dark-mode .summary-table tbody tr:hover {
-    background-color: #4a5568; /* Cor da borda */
-}
-
-/* Pop-ups */
-html.dark-mode .popup-content {
-    background: var(--color-surface);
-    color: var(--color-text);
-}
-html.dark-mode .popup-content h3 {
-    color: var(--color-text-headings);
-}
-
-/* --- Ajustes Específicos (Páginas Públicas) --- */
-html.dark-mode .oc-footer {
-    background-color: var(--color-primary-light); 
-}
-html.dark-mode .oc-footer__bottom-bar {
-    background-color: var(--color-primary);
-}
-html.dark-mode .oc-footer__links a,
-html.dark-mode .oc-footer__social-icons a {
-     color: var(--color-text-muted);
-}
- html.dark-mode .oc-footer__links a:hover,
-html.dark-mode .oc-footer__social-icons a:hover {
-     color: var(--color-accent);
-}
-
-/* Página 'equipe.html' */
-html.dark-mode .team-card {
-    background-color: var(--color-surface);
-    border-top-color: transparent;
-}
-html.dark-mode .team-card:hover {
-     border-top-color: var(--color-accent);
-}
-html.dark-mode .team-card h3 {
-    color: var(--color-text-headings);
-}
-html.dark-mode .team-card .role {
-    color: var(--color-primary);
-}
-html.dark-mode .social-links {
-    border-top-color: var(--color-border);
-}
-html.dark-mode .social-links a {
-    color: var(--color-text-muted);
-}
-
-/* Página 'index.html' */
 html.dark-mode .navbar {
-    background-color: #1a202c; /* Fundo escuro */
-    border-bottom: 1px solid var(--color-border);
+  background-color: #b23a27 !important; /* Mantém o vermelho do header */
 }
 html.dark-mode .navbar-center {
-    border-color: var(--color-border);
-}
-html.dark-mode .curved-section .curved-shape {
-     background-color: var(--color-surface);
-}
-html.dark-mode .curved-section .coffee-info {
-    color: var(--color-text);
-}
-html.dark-mode .coffee-info h1.nomecafe {
-     color: var(--color-text-headings);
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
 html.dark-mode .services-section,
-html.dark-mode .Sobre,
 html.dark-mode .Container2,
 html.dark-mode .Estabelecimento,
 html.dark-mode .Colaboradores,
 html.dark-mode .equipamentos-destaque-section,
 html.dark-mode .containers {
-    background-color: var(--color-background);
+  background-color: #1a202c !important; /* Fundo principal escuro */
+}
+html.dark-mode .service-card,
+html.dark-mode .left-card,
+html.dark-mode .card,
+html.dark-mode .caixa,
+html.dark-mode .equipamentos-destaque-product-card {
+  background-color: #2d3748 !important; /* Fundo dos cards escuro */
+  border-color: #4a5568 !important;
+  color: #a0aec0 !important;
+}
+html.dark-mode .service-card h3,
+html.dark-mode .principio-titulo,
+html.dark-mode .equipamentos-destaque-product-card__title,
+html.dark-mode .equipamentos-destaque-product-card__title a,
+html.dark-mode .service-card p,
+html.dark-mode .text-content, html.dark-mode .text-content p,
+html.dark-mode .principio-lista,
+html.dark-mode .text-content2 p,
+html.dark-mode .complemento,
+html.dark-mode .equipamentos-destaque-section-subtitle,
+html.dark-mode .equipamentos-destaque-product-card__description,
+html.dark-mode .info,
+html.dark-mode .principio-lista li {
+  color: #a0aec0 !important; /* Texto dos cards */
 }
 html.dark-mode .services-section h2,
 html.dark-mode .Sobre h2,
@@ -274,157 +180,124 @@ html.dark-mode .Estabelecimento h2,
 html.dark-mode .Colaboradores h2,
 html.dark-mode .equipamentos-destaque-section-title,
 html.dark-mode .title {
-     color: var(--color-text-headings);
-     border-color: var(--color-accent);
+  color: #ffffff !important; /* Títulos de seção brancos */
+  border-color: #F97316 !important; /* Destaque laranja */
 }
-html.dark-mode .service-card,
-html.dark-mode .left-card,
-html.dark-mode .card, /* Nossos Princípios */
-html.dark-mode .caixa, /* Colaboradores */
-html.dark-mode .equipamentos-destaque-product-card {
-     background-color: var(--color-surface);
-     border-color: var(--color-border);
+html.dark-mode .curved-section .curved-shape {
+  background-color: #2d3748 !important; /* Forma curva escura */
 }
-html.dark-mode .service-card h3,
-html.dark-mode .principio-titulo,
-html.dark-mode .equipamentos-destaque-product-card__title {
-    color: var(--color-text-headings);
+html.dark-mode .coffee-info {
+  color: #a0aec0 !important;
 }
-html.dark-mode .service-card p,
-html.dark-mode .text-content, html.dark-mode .text-content p,
-html.dark-mode .principio-lista,
-html.dark-mode .text-content2 p,
-html.dark-mode .complemento,
-html.dark-mode .equipamentos-destaque-section-subtitle,
-html.dark-mode .equipamentos-destaque-product-card__description,
-html.dark-mode .info {
-    color: var(--color-text-muted);
+html.dark-mode .coffee-info h1.nomecafe {
+  color: #ffffff !important;
 }
- html.dark-mode .caixa {
-    background-color: var(--color-surface);
-    border-color: var(--color-accent);
-}
+html.dark-mode .cor2,
 html.dark-mode .nome, html.dark-mode .nome2, html.dark-mode .nome3 {
-    color: var(--color-accent);
+  color: #F97316 !important; /* Destaque laranja */
 }
-html.dark-mode .cor2 {
-     color: var(--color-accent);
+html.dark-mode .footer {
+  background-color: #1f1f1f; /* Footer já é escuro */
+}
+html.dark-mode .footer h4 {
+   border-color: #ba391c !important; /* Vermelho da marca */
+}
+html.dark-mode .mobile-nav {
+   background-color: #2d3748 !important;
+}
+html.dark-mode .mobile-nav-links a {
+  color: #a0aec0 !important;
+}
+html.dark-mode .mobile-nav-links a:hover {
+  background-color: #1a202c !important;
 }
 
-/* --- Estilo do Botão Seletor (Toggle Switch) --- */
+/* III. ESTILO DO NOVO SELETOR DE TEMA (MAIS LIMPO) */
 .theme-switch-wrapper {
     display: flex;
     align-items: center;
     gap: 10px;
     font-weight: 500;
 }
+.theme-switch-wrapper .fa-sun { 
+    color: #f39c12; 
+    font-size: 1.1rem;
+}
+.theme-switch-wrapper .fa-moon { 
+    color: #a0aec0; /* Cinza no modo claro */
+    font-size: 1.1rem;
+}
+html.dark-mode .theme-switch-wrapper .fa-sun {
+    color: #a0aec0; /* Cinza no modo escuro */
+}
+html.dark-mode .theme-switch-wrapper .fa-moon { 
+    color: #3ac0dd; /* Azul no modo escuro */
+}
+
 .theme-switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 26px;
+    width: 44px; /* Mais fino */
+    height: 24px;
 }
-.theme-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
+.theme-switch input { opacity: 0; width: 0; height: 0; }
+
+.slider.round {
     position: absolute;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 26px;
+    border-radius: 24px;
 }
-.slider:before {
+.slider.round:before {
     position: absolute;
     content: "";
     height: 18px;
     width: 18px;
-    left: 4px;
-    bottom: 4px;
+    left: 3px;
+    bottom: 3px;
     background-color: white;
     transition: .4s;
     border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
-.slider .fa-sun, .slider .fa-moon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 14px;
-    color: white;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+input:checked + .slider.round {
+    background-color: #3ac0dd; /* Azul no dark mode */
 }
-.slider .fa-sun {
-    left: 6px;
-    opacity: 1; /* Visível por padrão (light) */
-    color: #f39c12;
-}
-.slider .fa-moon {
-    right: 6px;
+input:checked + .slider.round:before {
+    transform: translateX(20px);
 }
 
-/* Estado Ativo (Dark Mode) */
-input:checked + .slider {
-    background-color: var(--color-surface); /* Fundo do switch em dark mode */
-    border: 1px solid var(--color-border);
+/* Localização no Rodapé */
+.theme-switch-wrapper.in-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 0 0 0;
+    color: #ccc;
+    font-size: 0.9rem;
 }
-input:checked + .slider:before {
-    transform: translateX(24px);
-    background-color: var(--color-primary); /* Bolinha do switch */
+@media (min-width: 992px) {
+    .theme-switch-wrapper.in-footer {
+        justify-content: flex-start;
+    }
 }
-input:checked + .slider .fa-sun {
-    opacity: 0;
-}
-input:checked + .slider .fa-moon {
-    opacity: 1;
-    color: var(--color-primary);
-}
-
-
-/* --- Localização do Seletor --- */
-.theme-switch-wrapper.in-sidebar {
-     justify-content: center;
-     padding: 10px 0;
-     margin: 0 15px 10px 15px;
-     border-top: 1px solid rgba(0, 0, 0, 0.1);
-     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-html.dark-mode .theme-switch-wrapper.in-sidebar {
-    border-color: var(--color-border);
+html.dark-mode .theme-switch-wrapper.in-footer {
+    color: #a0aec0; /* --color-text-muted */
 }
 
-.theme-switch-wrapper.in-header {
-     color: white;
-     font-weight: normal;
-}
-html.dark-mode .theme-switch-wrapper.in-header {
-     color: var(--color-text-muted);
-}
-.navbar-right { /* index.html */
-     gap: 25px;
-}
-.oc-header-nav { /* Market.html */
-     gap: 1.5rem;
-     align-items: center;
-}
-
-/* Header Mobile */
+/* Localização no Menu Mobile */
 .mobile-nav .theme-switch-wrapper {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
     justify-content: space-between;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid #ddd;
     margin-top: auto;
+    color: #3e2f1c; /* Cor do texto no mobile light */
 }
 html.dark-mode .mobile-nav .theme-switch-wrapper {
-    border-top-color: var(--color-border);
-}
-.mobile-logout {
-    margin-top: 0; /* O switch agora é o último item */
+    border-top-color: #4a5568; /* --color-border */
+    color: #a0aec0; /* --color-text-muted */
 }
