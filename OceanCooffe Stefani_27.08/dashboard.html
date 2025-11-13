@@ -21,15 +21,15 @@
             width: 250px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Changed from space-evenly */
-            background-color: #5ce1e6; /* Cor ciano original */
+            justify-content: space-between;
+            background-color: #5ce1e6;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            position: fixed; /* Mantido fixo */
+            position: fixed;
             height: 100%;
             left: 0;
             top: 0;
             z-index: 1001;
-            transition: width 0.3s ease, left 0.3s ease; /* Transição para width e left */
+            transition: width 0.3s ease, left 0.3s ease;
         }
         .sidebar.collapsed {
             width: 70px;
@@ -39,18 +39,15 @@
             text-align: center;
             padding: 20px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            /* height: 139px; */ /* REMOVED FIXED HEIGHT - LET CONTENT DEFINE */
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: padding 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, height 0.3s ease; /* Transição adicionada */
+            transition: padding 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, height 0.3s ease;
         }
-         /* Comportamento do logo ao colapsar - IGUAL AO ADMIN.HTML */
          .sidebar.collapsed .logo {
-             padding: 10px 0; /* Padding menor */
-             border-bottom-color: transparent; /* Remove borda */
-             /* Added to hide logo when collapsed on desktop */
+             padding: 10px 0;
+             border-bottom-color: transparent;
               opacity: 0;
               height: 0;
               overflow: hidden;
@@ -60,53 +57,43 @@
             max-width: 150px;
             height: auto;
             display: block;
-            transition: opacity 0.2s ease, width 0.3s ease; /* Transição original */
+            transition: opacity 0.2s ease, width 0.3s ease;
         }
-         /* Removed specific style for .sidebar.collapsed .logo img as the whole logo hides */
 
         .menu { display: flex; flex-direction: column; gap: 5px; padding: 20px 0; flex-grow: 1; overflow-y: auto; }
-        /* Estilo dos itens de menu IGUAL AO ADMIN.HTML */
         .menu-item, .menu-item-logout {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 25px; /* Padding original */
-            border-radius: 0 25px 25px 0; /* Raio original */
+            padding: 12px 25px;
+            border-radius: 0 25px 25px 0;
             color: #333; font-weight: 600; cursor: pointer;
-            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, padding 0.3s ease; /* Transições originais */
+            transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, padding 0.3s ease;
             text-decoration: none; white-space: nowrap; overflow: hidden;
-            /* margin-right: 0; */ /* Removido margin-right extra */
          }
         .menu-item span, .menu-item-logout span { transition: opacity 0.3s ease; opacity: 1; }
         .sidebar.collapsed .menu-item, .sidebar.collapsed .menu-item-logout {
-            justify-content: center; padding: 12px 0; /* Padding colapsado original */
-            /* margin-right: 0; */
+            justify-content: center; padding: 12px 0;
          }
         .sidebar.collapsed .menu-item span, .sidebar.collapsed .menu-item-logout span { opacity: 0; width: 0; }
-        /* Unified icon style */
          .menu-item i, .menu-item-logout i, .menu-item svg, .menu-item-logout svg {
-             width: 22px; height: 22px; color: #333; fill: #333; /* Added fill for SVG */
-             transition: color 0.3s ease, fill 0.3s ease; /* Added fill transition */
+             width: 22px; height: 22px; color: #333; fill: #333;
+             transition: color 0.3s ease, fill 0.3s ease;
              flex-shrink: 0;
              text-align: center; font-size: 1.2rem;
          }
 
-        .menu-item:hover, .menu-item-logout:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; } /* Added transform */
+        .menu-item:hover, .menu-item-logout:hover { background-color: rgba(255, 255, 255, 0.2); color: #1a1a1a; }
         .sidebar.collapsed .menu-item:hover, .sidebar.collapsed .menu-item-logout:hover { transform: none; }
         .menu-item.selected { background: linear-gradient(to right, #0047a3, #3ac0dd); color: white; box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2); }
-         /* Unified selected icon style */
         .menu-item.selected i, .menu-item.selected svg { color: white; fill: white; }
         .menu-item-logout { margin-top: auto; }
 
-        /* Botão inferior para colapsar - IGUAL AO ADMIN.HTML */
-        .sidebar-bottom { /* Renamed from menu-bottom */
+        .sidebar-bottom {
             background-color: #0cc0df; text-align: center; padding: 15px 0;
             border-top: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
             transition: background 0.3s ease; flex-shrink: 0;
          }
         .sidebar-bottom:hover { background-color: #08a3bd; }
         .sidebar-bottom svg { width: 28px; height: 28px; fill: #333; }
-         /* Rotação do ícone SVG ao colapsar (se for o mesmo SVG do admin.html) */
-         /* .sidebar.collapsed .sidebar-bottom svg { transform: rotate(180deg); } /* Ajuste se necessário */
-
 
         /* --- CONTEÚDO PRINCIPAL CONSISTENTE --- */
         .content {
@@ -151,7 +138,6 @@
              white-space: nowrap;
         }
 
-        /* Botão Hamburger (oculto por padrão) */
         .menu-toggle-mobile {
              display: none;
              background: none; border: none; color: white;
@@ -308,12 +294,13 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-shrink: 0; /* Para não encolher */
+            text-decoration: none; /* Caso use <a> */
         }
         .back-button:hover {
             background-color: #5a6268;
         }
         
-        /* NOVO: Input de Busca do Relatório */
         #report-search-input {
             padding: 10px 15px;
             width: 100%; 
@@ -405,7 +392,7 @@
             font-size: 1.1rem;
         }
         
-        /* NOVO: Estilos da Paginação do Relatório */
+        /* Estilos da Paginação do Relatório */
         #report-pagination-container {
             display: flex;
             justify-content: space-between;
@@ -416,7 +403,7 @@
             flex-shrink: 0; /* Não encolher */
         }
         .pagination-info { font-size: 14px; color: #666; white-space: nowrap;}
-        .pagination-controls { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap;}
+        .pagination-controls { display: flex; align-items: center; gap: 5px; flex-wrap: nowrap; }
         .pagination-controls button {
             background-color: #f0f0f0; color: #333; border: 1px solid #ccc;
             padding: 8px 14px; border-radius: 5px; cursor: pointer;
@@ -802,6 +789,26 @@
                 .replace(/[\u0300-\u036f]/g, "");
         };
 
+        // ***** NOVA FUNÇÃO: formatarTelefone *****
+        function formatarTelefone(numero) {
+            if (!numero) return 'Não informado';
+            
+            // Remove tudo que não é dígito
+            const digitos = numero.replace(/\D/g, '');
+
+            // Formato (XX) XXXXX-XXXX (11 dígitos)
+            if (digitos.length === 11) {
+                return digitos.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+            // Formato (XX) XXXX-XXXX (10 dígitos)
+            if (digitos.length === 10) {
+                return digitos.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            }
+            
+            // Se não for 10 ou 11, retorna o número original (ou os dígitos limpos)
+            return numero; 
+        }
+
         // --- Data Fetching Functions ---
         
         async function fetchAllCounts() {
@@ -1082,13 +1089,10 @@
         
         // (NOVA) Abre o modal de detalhes do usuário
         async function openUserDetailsModal(userId) {
-            // ***** INÍCIO DA CORREÇÃO DE ERRO *****
-            // Se userId for a string "undefined" ou nulo, não faz nada.
             if (!userId || userId === "undefined") {
                 console.error("Tentativa de abrir detalhes do modal com user_id inválido.");
                 return; 
             }
-            // ***** FIM DA CORREÇÃO DE ERRO *****
 
             const modalOverlay = document.getElementById('user-details-modal-overlay');
             const modalBody = document.getElementById('user-details-modal-body');
@@ -1122,6 +1126,9 @@
 
                 if (approvedError || otherError) throw (approvedError || otherError);
 
+                // ***** MUDANÇA AQUI: Formata o telefone *****
+                const telefoneFormatado = formatarTelefone(user.telefone);
+
                 // 4. Formata o HTML
                 let modalHTML = `
                     <div class="user-info-grid">
@@ -1135,7 +1142,7 @@
                         </div>
                         <div class="info-item">
                             <label>Telefone</label>
-                            <p>${user.telefone || 'Não informado'}</p>
+                            <p>${telefoneFormatado}</p>
                         </div>
                     </div>
                     <div class="user-ads-list">
@@ -1245,8 +1252,6 @@
                 // --- LISTENER PARA CLICAR NA LINHA DA TABELA (ABRIR MODAL) ---
                 reportTableBody.addEventListener('click', (e) => {
                     const row = e.target.closest('tr');
-                    // ***** CORREÇÃO DE ERRO *****
-                    // Verificamos se o row e o dataset existem ANTES de tentar acessá-lo
                     if (row && row.dataset && row.dataset.userId) {
                         const userId = row.dataset.userId;
                         openUserDetailsModal(userId);

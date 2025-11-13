@@ -230,10 +230,12 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Manter a fonte */
     }
     td select.input_edicao {
+        /* Remove a aparência padrão do S.O. */
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
         padding-right: 20px; /* Espaço para a seta */
+        /* Adiciona uma seta customizada */
         background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230047A3%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
         background-repeat: no-repeat;
         background-position: right 5px center;
@@ -259,16 +261,13 @@
     .action-icon:hover { transform: scale(1.1); opacity: 0.9; }
     .action-icon i { display: block; }
     
-    /* ***** MUDANÇA NAS CORES (Profissional) ***** */
     .action-icon.ver { background-color: #6c757d; }
     .action-icon.alterar { background-color: #6c757d; }
     .action-icon.salvar { background-color: #28a745; }
     .action-icon.excluir { background-color: #dc3545; }
-    /* ***** FIM DA MUDANÇA NAS CORES ***** */
 
     button.alterar, button.salvar, button.excluir { display: none; }
     
-    /* ***** CSS CORRIGIDO: Estilo do Filtro de Tipo ***** */
     #tipo-filter-btn {
         font-size: 0.9em;
         margin-left: 8px;
@@ -277,10 +276,8 @@
         transition: color 0.2s;
     }
     #tipo-filter-btn:hover {
-        color: #0047a3; /* Cor primária (hover) */
+        color: #3ac0dd; /* Ciano claro no hover */
     }
-    /* A classe .active-filter foi REMOVIDA para evitar conflitos */
-    /* ***** FIM DO CSS CORRIGIDO ***** */
     
     @media (max-width: 768px) {
         table { table-layout: auto; }
@@ -686,8 +683,8 @@
         function showToast(message, type = 'success') {
              const toast = document.createElement('div');
             toast.className = `toast-notification ${type}`;
-            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
-            // Use o ícone de info para toasts neutros
+            const iconClass = type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-times-circle' : 'fa-info-circle');
+            
             if (type !== 'success' && type !== 'error') {
                 toast.style.backgroundColor = '#007bff'; // Cor azul para "info"
             }
@@ -699,7 +696,6 @@
             }, 3000);
         }
         
-        // ***** NOVA FUNÇÃO: Normalizar texto (para busca sem acento) *****
         const normalizeText = (text) => {
             if (typeof text !== 'string') return '';
             return text
@@ -707,6 +703,26 @@
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
         };
+        
+        // ***** NOVA FUNÇÃO: formatarTelefone *****
+        function formatarTelefone(numero) {
+            if (!numero) return 'Não informado';
+            
+            // Remove tudo que não é dígito
+            const digitos = numero.replace(/\D/g, '');
+
+            // Formato (XX) XXXXX-XXXX (11 dígitos)
+            if (digitos.length === 11) {
+                return digitos.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            }
+            // Formato (XX) XXXX-XXXX (10 dígitos)
+            if (digitos.length === 10) {
+                return digitos.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            }
+            
+            // Se não for 10 ou 11, retorna o número original (ou os dígitos limpos)
+            return numero; 
+        }
         
         async function listarUsuarios() {
             const tbody = document.querySelector("tbody");
@@ -729,10 +745,10 @@
                 headerTitleSpan.textContent = `Contas Registradas (${count || 0})`;
              }
              
-            // ***** NOVO: Reseta os filtros ao carregar *****
             currentTipoFilter = 'Todos';
-            document.getElementById('tipo-filter-btn').style.color = '#ccc'; // Reseta a cor
-            document.getElementById('tipo-filter-btn').title = 'Filtrar por tipo'; // Reseta o title
+            const filterIcon = document.getElementById('tipo-filter-btn');
+            filterIcon.style.color = '#ccc'; // Reseta a cor
+            filterIcon.title = 'Filtrar por tipo'; // Reseta o title
             document.getElementById("searchInput").value = '';
              
             currentPage = 1;
@@ -751,9 +767,9 @@
             const paginatedUsers = usersToRender.slice(startIndex, startIndex + rowsPerPage);
 
             if (paginatedUsers.length === 0) {
-                 if (currentPage > 1) { // Se não há resultados em páginas > 1
+                 if (currentPage > 1) {
                     tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado nesta página.</td></tr>`;
-                 } else { // Se não há resultados na página 1 (filtro ou busca vazia)
+                 } else {
                     tbody.innerHTML = `<tr><td colspan="4">Nenhum usuário encontrado.</td></tr>`;
                  }
                 return;
@@ -762,8 +778,8 @@
             paginatedUsers.forEach((usuario) => {
                 const { id, user_id, nome, email, tipo = "Comum" } = usuario;
                 const tr = document.createElement("tr");
-                tr.dataset.userId = id; // id (int) para editar/excluir
-                tr.dataset.userIdUuid = user_id; // user_id (uuid) para ver detalhes
+                tr.dataset.userId = id;
+                tr.dataset.userIdUuid = user_id;
                 
                 tr.innerHTML = `
                     <td><span>${nome}</span><input class="input_edicao" type="text" style="display:none" value="${nome}"></td>
@@ -859,20 +875,17 @@
             paginationContainer.appendChild(controls);
         }
         
-        // ***** FUNÇÃO DE FILTRO ATUALIZADA *****
-        // Agora combina o filtro de busca com o filtro de tipo
         function filterUsers() {
              const termo = normalizeText(document.getElementById("searchInput").value);
              
             filteredUsers = allUsers.filter(user => {
-                // 1. Verifica filtro de Tipo
-                const tipoMatch = (currentTipoFilter === 'Todos') || (user.tipo === currentTipoFilter);
+                const userTipo = user.tipo || 'Comum'; 
+                const tipoMatch = (currentTipoFilter === 'Todos') || (userTipo === currentTipoFilter);
                 
-                // 2. Verifica filtro de Busca (Nome ou Email)
                 const searchMatch = (user.nome && normalizeText(user.nome).includes(termo)) ||
                                   (user.email && normalizeText(user.email).includes(termo));
                                   
-                return tipoMatch && searchMatch; // Tem que dar match em ambos
+                return tipoMatch && searchMatch;
             });
             
             currentPage = 1;
@@ -914,6 +927,9 @@
                     .order('data', { ascending: false });
 
                 if (approvedError || otherError) throw (approvedError || otherError);
+                
+                // ***** MUDANÇA AQUI: Formata o telefone *****
+                const telefoneFormatado = formatarTelefone(user.telefone);
 
                 // 4. Formata o HTML
                 let modalHTML = `
@@ -928,7 +944,7 @@
                         </div>
                         <div class="info-item">
                             <label>Telefone</label>
-                            <p>${user.telefone || 'Não informado'}</p>
+                            <p>${telefoneFormatado}</p>
                         </div>
                     </div>
                     <div class="user-ads-list">
@@ -997,25 +1013,25 @@
                 history.back(); // Volta para a página anterior (ex: Dashboard)
             });
             
-            // ***** NOVO: Listener para o filtro de TIPO (com correção de bug) *****
+            // ***** MUDANÇA AQUI: LÓGICA DO FILTRO DE TIPO CORRIGIDA (sem classe, sem toasts) *****
             document.getElementById("tipo-filter-btn").addEventListener("click", () => {
                 const filterIcon = document.getElementById("tipo-filter-btn");
                 
                 if (currentTipoFilter === 'Todos') {
                     currentTipoFilter = 'Comum';
-                    filterIcon.style.color = '#0047a3'; // Define a cor azul (ativo)
+                    filterIcon.style.color = '#3ac0dd'; // Cor CIANO (ativo)
                     filterIcon.title = "Filtrando por: Comum";
-                    showToast("Filtrando por: Comuns", "info");
+                    // showToast("Filtrando por: Comuns", "info"); // REMOVIDO
                 } else if (currentTipoFilter === 'Comum') {
                     currentTipoFilter = 'Administrador';
-                    filterIcon.style.color = '#0047a3'; // Define a cor azul (ativo)
+                    filterIcon.style.color = '#3ac0dd'; // Cor CIANO (ativo)
                     filterIcon.title = "Filtrando por: Administrador";
-                    showToast("Filtrando por: Administradores", "info");
+                    // showToast("Filtrando por: Administradores", "info"); // REMOVIDO
                 } else { // Era 'Administrador'
                     currentTipoFilter = 'Todos';
-                    filterIcon.style.color = '#ccc'; // Define a cor cinza (inativo)
+                    filterIcon.style.color = '#ccc'; // Cor cinza (inativo)
                     filterIcon.title = "Filtrar por tipo";
-                    showToast("Mostrando todos os tipos", "info");
+                    // showToast("Mostrando todos os tipos", "info"); // REMOVIDO
                 }
                 
                 filterUsers(); // Re-filtra a lista
