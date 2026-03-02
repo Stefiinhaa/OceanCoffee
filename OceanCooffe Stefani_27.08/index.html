@@ -27,6 +27,51 @@
     background-image: url("IMG/Fundo.png");
     background-size: cover;
   }
+  .pwa-popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .pwa-popup-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    position: relative;
+    max-width: 90%;
+    width: 400px;
+  }
+  .pwa-popup-content h3 {
+    color: #005f73;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333333;
+  }
+  .pwa-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
 </style>
 
 <body>
@@ -412,17 +457,36 @@
     }
     document.addEventListener('DOMContentLoaded', loadRecentProducts);
   </script>
-<script src="JS/dolar-api.js" defer></script>
+  <script src="JS/dolar-api.js" defer></script>
   <script src="JS/weather-api.js" defer></script>
   <script src="JS/theme-toggle.js"></script>
 
-  <div style="text-align: center; margin: 30px 0;">
-    <button id="btnNotificacao" class="anuncie-btn" style="border: none; padding: 10px 20px; margin-right: 10px; cursor: pointer;">Ativar Notificacoes</button>
-    <button id="btnInstalar" class="anuncie-btn" style="border: none; padding: 10px 20px; display: none; cursor: pointer;">Instalar Aplicativo</button>
+  <div id="pwa-popup" class="pwa-popup-container">
+    <div class="pwa-popup-content">
+      <button id="close-pwa-popup" class="close-btn">&times;</button>
+      <h3>Bem-vindo!</h3>
+      <p>Instale o aplicativo e ative as notificacoes para uma melhor experiencia na plataforma.</p>
+      <div class="pwa-buttons">
+        <button id="btnNotificacao" class="anuncie-btn" style="border: none; padding: 10px 20px; cursor: pointer;">Ativar Notificacoes</button>
+        <button id="btnInstalar" class="anuncie-btn" style="border: none; padding: 10px 20px; display: none; cursor: pointer;">Instalar Aplicativo</button>
+      </div>
+    </div>
   </div>
 
   <script>
     let eventoInstalacao;
+    const pwaPopup = document.getElementById('pwa-popup');
+    const fecharPopup = document.getElementById('close-pwa-popup');
+
+    setTimeout(() => {
+      if (Notification.permission !== 'granted' || eventoInstalacao) {
+          pwaPopup.style.display = 'flex';
+      }
+    }, 2000);
+
+    fecharPopup.addEventListener('click', () => {
+      pwaPopup.style.display = 'none';
+    });
 
     window.addEventListener('beforeinstallprompt', (evento) => {
       evento.preventDefault();
@@ -436,6 +500,7 @@
         eventoInstalacao.userChoice.then((resultado) => {
           if (resultado.outcome === 'accepted') {
             document.getElementById('btnInstalar').style.display = 'none';
+            pwaPopup.style.display = 'none';
           }
           eventoInstalacao = null;
         });
@@ -450,7 +515,10 @@
       document.getElementById('btnNotificacao').addEventListener('click', () => {
         Notification.requestPermission().then(permissao => {
           if (permissao === 'granted') {
-            console.log('Permissao concedida.');
+            document.getElementById('btnNotificacao').style.display = 'none';
+            if (document.getElementById('btnInstalar').style.display === 'none') {
+                pwaPopup.style.display = 'none';
+            }
           }
         });
       });
