@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocean Coffee - Brasil</title>
   <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#005f73">
 
   <script src="JS/theme-applier.js"></script>
@@ -91,7 +91,7 @@
       <button class="close-pwa" id="close-pwa-popup">&times;</button>
       <img src="IMG/Loginho2.png" alt="Logo" style="width: 60px; margin-bottom: 15px;">
       <h3>Fique por dentro!</h3>
-      <p>Instale o aplicativo e ative as notificacoes para receber ofertas exclusivas e atualizacoes.</p>
+      <p>Ative as notificacoes para receber alertas de novos produtos e ofertas exclusivas.</p>
       <button id="btnNotificacao" class="pwa-btn-main">ATIVAR NOTIFICACOES</button>
       <button id="btnInstalar" class="pwa-btn-main" style="display: none;">INSTALAR APLICATIVO</button>
     </div>
@@ -180,48 +180,100 @@
     </div>
   </section>
 
-  <section class="Carossel">
-      <div id="meuCarrossel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-interval="4000">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#meuCarrossel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    </div>
-    <div class="carousel-inner">
-      <div class="carousel-item active"><img src="IMG/Carrosel.jpg" class="d-block w-100" alt="Banner principal"></div>
-      <div class="carousel-item"><img src="IMG/1.png" class="d-block w-100" alt="Processo de Grãos"></div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#meuCarrossel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span></button>
-    <button class="carousel-control-next" type="button" data-bs-target="#meuCarrossel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span></button>
-  </div>
-  </section>
-
-  <section id="Sobre" class="Sobre">
-      <h2>Sobre</h2>
-    <div class="container">
-      <div class="left-card">
-        <img src="IMG/Bolinha.png" alt="Imagem do Card" class="card-img">
+  <link rel="stylesheet" href="CSS/curva.css">
+  <section class="curved-section"  id="NossoCafe">
+    <div><img class="background" src="IMG/fundoteste4.png"></div>
+    <div class="curved-shape"></div>
+    <div class="coffee-info">
+      <div class="text-side">
+        <h1 class="nomecafe"><strong>Café Arábica</strong></h1>
+        <img class="img" src="IMG/cafearabica2.png">
       </div>
-      <div class="text-content">
-        <h3>Proprietário: Jorge Luiz Miguel Santos</h3>
-        <p>A Ocean Coffee foi fundada em 2019 com a missão de unir tradição e inovação no mercado cafeeiro.</p>
+      <div class="info-list">
+        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info1"><strong>Sabor:</strong> Suave, menos amargo, com notas frutadas e achocolatadas.</p></div>
+        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info2"><strong>Menos cafeína:</strong> Até 50% menos que o robusta.</p></div>
+        <div class="info-item"><img class="Grãoinfo3" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info3"> <strong>Notas:</strong> Chocolate, nozes, mel, frutas vermelhas, florais e cítricas.</p></div>
       </div>
     </div>
   </section>
 
-  <section id="equipamentos-destaque" class="equipamentos-destaque-section">
-      <div class="equipamentos-destaque-container">
-        <h2 class="equipamentos-destaque-section-title">Equipamentos em Destaque</h2>
-        <div class="equipamentos-destaque-product-grid" id="recent-products-grid"></div>
+  <section id="Serviços" class="services-section">
+      <h2>Serviços</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="IMG/Pessoa1.png" alt="Classificação dos grãos">
+        <div class="floating-icon">
+          <img src="IMG/grao.png" alt="Grãos de café">
+        </div>
+        <h3 class="Classificação">Classificação</h3>
+        <p>A classificação dos grãos na Ocean Coffee é feita com rigor técnico e atenção aos detalhes, garantindo que
+          apenas cafés de alta qualidade sejam selecionados.</p>
+      </div>
+      <div class="service-card">
+        <img src="IMG/pessoa2.png" alt="Degustação dos grãos">
+        <div class="floating-icon">
+          <img src="IMG/xicara.png" alt="Xicara de Café">
+        </div>
+        <h3 class="Degustação">Degustação</h3>
+        <p>A degustação na Ocean Coffee é feita de maneira criteriosa, seguindo os padrões da indústria de cafés
+          especiais.</p>
+      </div>
+      <div class="service-card">
+        <img src="IMG/Pessoa3.png" alt="Comercialização dos grãos">
+        <div class="floating-icon">
+          <img src="IMG/pagamento.png" alt="Xicara de Café">
+        </div>
+        <h3 class="Comercialização">Comercialização</h3>
+        <p>A comercialização na Ocean Coffee é feita com foco em qualidade, transparência e relacionamento direto.</p>
+      </div>
     </div>
   </section>
-  
+
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; 2025 Ocean Coffee. Todos os direitos reservados.</p>
+      <div class="footer-column footer-about">
+          <img src="IMG/Logo.png" alt="Logo Ocean Coffee" class="footer-logo">
+          <p>&copy; 2025 Ocean Coffee. <br>Todos os direitos reservados.</p>
+      </div>
+      <div class="footer-column footer-links">
+          <h4>Links Rápidos</h4>
+          <a href="#NossoCafe">Nosso Café</a>
+          <a href="#Serviços">Serviços</a>
+          <a href="#Sobre">Sobre</a>
+      </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <button id="btnTopo" onclick="rolarParaTopo()"><img class="up" src="IMG/up-arrow.png"></button>
+
+  <script>
+    function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        const navOverlay = document.getElementById('nav-overlay');
+        const navLinks = document.querySelectorAll('.mobile-nav-links a');
+
+        function closeMenu() {
+            mobileNav.classList.remove('is-open');
+            navOverlay.classList.remove('is-open');
+        }
+
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.add('is-open');
+            navOverlay.classList.add('is-open');
+        });
+
+        navOverlay.addEventListener('click', closeMenu);
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+    });
+  </script>
 
   <script>
     let deferredPrompt;
@@ -286,16 +338,27 @@
     async function loadRecentProducts() {
         const grid = document.getElementById('recent-products-grid');
         if (!grid) return;
-        const { data, error } = await supabase.from('aprovados').select('*').limit(3);
-        if (error) return;
+        const { data, error } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
+        if (error) {
+            console.error('Erro ao buscar produtos recentes:', error);
+            return;
+        }
         grid.innerHTML = '';
         data.forEach(product => {
             const productCard = `
                 <article class="equipamentos-destaque-product-card">
-                    <img src="${product.imagens[0]}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
+                    <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__image-container">
+                        <img src="${product.imagens[0] || 'IMG/placeholder.png'}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
+                    </a>
                     <div class="equipamentos-destaque-product-card__content">
-                        <h3>${product.produto}</h3>
-                        <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">go to marketplace</a>
+                        <h3 class="equipamentos-destaque-product-card__title">
+                           <a href="MarketPlace.html?id=${product.id}" style="text-decoration: none; color: inherit;">${product.produto}</a>
+                        </h3>
+                        <p class="equipamentos-destaque-product-card__description">${product.descricao.substring(0, 100)}...</p>
+                        <div class="equipamentos-destaque-product-card__footer">
+                            <span class="equipamentos-destaque-product-card__price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)}</span>
+                            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">go to marketplace</a>
+                        </div>
                     </div>
                 </article>
             `;
@@ -304,6 +367,9 @@
     }
     document.addEventListener('DOMContentLoaded', loadRecentProducts);
   </script>
+  <script src="JS/dolar-api.js" defer></script>
+  <script src="JS/weather-api.js" defer></script>
+  <script src="JS/theme-toggle.js"></script>
 </body>
 
 </html>
