@@ -7,20 +7,21 @@
   <title>Ocean Coffee - Brasil</title>
   <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme_color" content="#005f73">
+  <meta name="theme-color" content="#005f73">
 
   <script src="JS/theme-applier.js"></script>
   <link rel="stylesheet" href="CSS/dark-mode.css">
   <link rel="stylesheet" href="CSS/styles.css">
   <link rel="stylesheet" href="CSS/api.css">
-  <link rel="stylesheet" href="CSS/curva.css"> <link rel="stylesheet" href="CSS/responsive.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  <link rel="stylesheet" href="CSS/curva.css"> 
+  <link rel="stylesheet" href="CSS/responsive.css"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  </head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
 <style>
- 
   #fundo {
     height: 100vh;
     background-image: url("IMG/Fundo.png");
@@ -337,7 +338,7 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <button id="btnTopo" onclick="rolarParaTopo()"><img class="up" src="IMG/up-arrow.png"></button>
 
@@ -367,30 +368,9 @@
         });
     });
   </script>
-<script>
-  if ('serviceWorker' in navigator && 'Notification' in window) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(registro => {
-          console.log('O Service Worker foi ativado.');
-          
-          // Solicita permissão explícita para mostrar as notificações
-          Notification.requestPermission().then(permissao => {
-            if (permissao === 'granted') {
-              console.log('Permissão concedida com sucesso.');
-            } else {
-              console.log('A permissão foi negada.');
-            }
-          });
-        })
-        .catch(erro => {
-          console.log('Ocorreu um erro:', erro);
-        });
-    });
-  }
-</script>
+
   <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
+    import { createClient } from "https://cdn.jsdelivr.net/npm/%40supabase/supabase-js%402.44.1/+esm";
     const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
     const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -422,7 +402,7 @@
                         <p class="equipamentos-destaque-product-card__description">${product.descricao.substring(0, 100)}...</p>
                         <div class="equipamentos-destaque-product-card__footer">
                             <span class="equipamentos-destaque-product-card__price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)}</span>
-                            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">Saiba Mais</a>
+                            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">go to marketplace</a>
                         </div>
                     </div>
                 </article>
@@ -435,6 +415,47 @@
 <script src="JS/dolar-api.js" defer></script>
   <script src="JS/weather-api.js" defer></script>
   <script src="JS/theme-toggle.js"></script>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <button id="btnNotificacao" class="anuncie-btn" style="border: none; padding: 10px 20px; margin-right: 10px; cursor: pointer;">Ativar Notificacoes</button>
+    <button id="btnInstalar" class="anuncie-btn" style="border: none; padding: 10px 20px; display: none; cursor: pointer;">Instalar Aplicativo</button>
+  </div>
+
+  <script>
+    let eventoInstalacao;
+
+    window.addEventListener('beforeinstallprompt', (evento) => {
+      evento.preventDefault();
+      eventoInstalacao = evento;
+      document.getElementById('btnInstalar').style.display = 'inline-block';
+    });
+
+    document.getElementById('btnInstalar').addEventListener('click', () => {
+      if (eventoInstalacao) {
+        eventoInstalacao.prompt();
+        eventoInstalacao.userChoice.then((resultado) => {
+          if (resultado.outcome === 'accepted') {
+            document.getElementById('btnInstalar').style.display = 'none';
+          }
+          eventoInstalacao = null;
+        });
+      }
+    });
+
+    if ('serviceWorker' in navigator && 'Notification' in window) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+
+      document.getElementById('btnNotificacao').addEventListener('click', () => {
+        Notification.requestPermission().then(permissao => {
+          if (permissao === 'granted') {
+            console.log('Permissao concedida.');
+          }
+        });
+      });
+    }
+  </script>
 
 </body>
 
