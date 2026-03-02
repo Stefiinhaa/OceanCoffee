@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocean Coffee - Brasil</title>
   <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#005f73">
 
   <script src="JS/theme-applier.js"></script>
@@ -19,81 +19,75 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    #fundo {
-      height: 100vh;
-      background-image: url("IMG/Fundo.png");
-      background-size: cover;
+    /* AJUSTE DO POPUP PWA PARA NÃO FICAR NO RODAPÉ */
+    .pwa-popup-container {
+      position: fixed; /* Fixa na tela, ignora o scroll */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Fundo escurecido */
+      display: none; /* Controlado pelo JS */
+      justify-content: center;
+      align-items: center;
+      z-index: 999999; /* Valor altíssimo para cobrir tudo */
     }
-    #pwa-popup {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      background-color: rgba(0, 0, 0, 0.85) !important;
-      display: none;
-      justify-content: center !important;
-      align-items: center !important;
-      z-index: 9999999 !important;
-    }
+
     .pwa-popup-content {
       background-color: #ffffff;
       padding: 30px;
-      border-radius: 20px;
+      border-radius: 15px;
       text-align: center;
-      box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       position: relative;
-      max-width: 85%;
-      width: 350px;
-      animation: zoomIn 0.3s ease-out;
+      max-width: 90%;
+      width: 380px;
+      animation: aparecer 0.3s ease-out;
     }
-    @keyframes zoomIn {
+
+    @keyframes aparecer {
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
-    .pwa-popup-content h3 {
-      color: #005f73;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .close-pwa {
+
+    .close-btn {
       position: absolute;
       top: 10px;
       right: 15px;
       background: none;
       border: none;
       font-size: 24px;
-      color: #999;
       cursor: pointer;
+      color: #333;
     }
-    .pwa-btn-main {
-      background-color: #005f73;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      width: 100%;
-      font-weight: bold;
-      margin-bottom: 10px;
-      cursor: pointer;
+
+    .pwa-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
     }
-    #btnInstalar {
-      background-color: #e9d8a6;
-      color: #005f73;
+
+    #fundo {
+      height: 100vh;
+      background-image: url("IMG/Fundo.png");
+      background-size: cover;
     }
   </style>
 </head>
 
 <body>
 
-  <div id="pwa-popup">
+  <div id="pwa-popup" class="pwa-popup-container">
     <div class="pwa-popup-content">
-      <button class="close-pwa" id="close-pwa-popup">&times;</button>
-      <img src="IMG/Loginho2.png" alt="Logo" style="width: 60px; margin-bottom: 15px;">
-      <h3>Fique por dentro!</h3>
-      <p>Ative as notificacoes para receber alertas de novos produtos e ofertas exclusivas.</p>
-      <button id="btnNotificacao" class="pwa-btn-main">ATIVAR NOTIFICACOES</button>
-      <button id="btnInstalar" class="pwa-btn-main" style="display: none;">INSTALAR APLICATIVO</button>
+      <button id="close-pwa-popup" class="close-btn">&times;</button>
+      <img src="IMG/Loginho2.png" alt="Logo" style="width: 70px; margin-bottom: 15px;">
+      <h3>Instalar Ocean Coffee</h3>
+      <p>Ative as notificações e instale o nosso app para ter acesso rápido às novidades e anúncios!</p>
+      <div class="pwa-buttons">
+        <button id="btnNotificacao" class="anuncie-btn">Ativar Notificações</button>
+        <button id="btnInstalar" class="anuncie-btn" style="display: none;">Instalar Aplicativo</button>
+      </div>
     </div>
   </div>
 
@@ -102,7 +96,7 @@
       <a href="Market.html"><i class="fas fa-store"></i></a>
       <div>
         <a href="https://portal.cocatrel.com.br/DPmercadoCafe.aspx">
-          <img class="cocatrel" src="IMG/cocatrel.png" alt="Cocatrel" title="Acesse o site da Cocatrel">
+          <img class="cocatrel" src="IMG/cocatrel.png" alt="Cocatrel">
         </a>
       </div>
     </div>
@@ -119,213 +113,146 @@
   </header>
 
   <header class="mobile-header">
-      <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
-      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-          <i class="fas fa-bars"></i>
-      </button>
+      <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo" class="logo-img"></a>
+      <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
   </header>
 
   <div class="nav-overlay" id="nav-overlay"></div>
   <nav class="mobile-nav" id="mobile-nav">
-      <div class="mobile-nav-header">
-          <img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img" style="height: 50px;">
-      </div>
       <ul class="mobile-nav-links">
-          <li><a href="#NossoCafe"><i class="fas fa-coffee"></i>Nosso Café</a></li>
-          <li><a href="#Serviços"><i class="fas fa-concierge-bell"></i>Serviços</a></li>
-          <li><a href="#Sobre"><i class="fas fa-info-circle"></i>Sobre</a></li>
-          <li><a href="Market.html"><i class="fas fa-store"></i>Loja</a></li>
-          <li><a href="Login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
+          <li><a href="#NossoCafe"><i class="fas fa-coffee"></i> Nosso Café</a></li>
+          <li><a href="#Serviços"><i class="fas fa-concierge-bell"></i> Serviços</a></li>
+          <li><a href="#Sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>
+          <li><a href="Market.html"><i class="fas fa-store"></i> Loja</a></li>
+          <li><a href="Login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
       </ul>
   </nav>
 
   <section class="fundo" id="fundo">
-    <div id="container" class="popup">
-      <button id="close-popup" title="Fechar">&times;</button>
-      <form id="search">
-        <i class="fa-solid fa-location-dot"></i>
-        <input type="search" name="city_name" id="city_name" placeholder="Buscar cidade" />
-        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-      </form>
-      <div id="weather">
-        <h1 id="title"></h1>
-        <div id="infos">
-          <div id="temp">
-            <i id="temp_icon" class="fa-solid fa-cloud-sun"></i>
-            <div>
-              <p id="temp_value">-- <sup>C°</sup></p>
-              <p id="temp_description"></p>
-            </div>
-          </div>
-          <div id="other_infos">
-            <div class="main"><i id="temp_max_icon" class="fa-solid fa-temperature-high"></i><div><h2>Temp. max</h2><p id="temp_max">-- <sup>C°</sup></p></div></div>
-            <div class="main"><i id="temp_min_icon" class="fa-solid fa-temperature-low"></i><div><h2>Temp. min</h2><p id="temp_min">-- <sup>C°</sup></p></div></div>
-            <div class="main"><i id="humidity_icon" class="fa-solid fa-droplet"></i><div><h2>Umidade</h2><p id="humidity">--%</p></div></div>
-            <div class="main"><i id="wind_icon" class="fa-solid fa-wind"></i><div><h2>Vento</h2><p id="wind">-- km/h</p></div></div>
-          </div>
-        </div>
-      </div>
-      <div id="alert"></div>
-    </div>
     <div class="Primeirasessao">
       <div class="sessao">
         <img class="Logo" src="IMG/Logo.png">
-        <p class="texto1">Comece seu dia <br>
-          <span class="cor"> Com café </span>
-        </p>
-        <br>
-        <p class="frase">"Viva a experiência de um bom café" </p>
+        <p class="texto1">Comece seu dia <br><span class="cor"> Com café </span></p>
+        <p class="frase">"Viva a experiência de um bom café"</p>
       </div>
-      <img class="Pacote" src="IMG/Imagempacote (1).png" alt="">
+      <img class="Pacote" src="IMG/Imagempacote (1).png" alt="Pacote de Café">
     </div>
   </section>
 
-  <link rel="stylesheet" href="CSS/curva.css">
-  <section class="curved-section"  id="NossoCafe">
-    <div><img class="background" src="IMG/fundoteste4.png"></div>
-    <div class="curved-shape"></div>
+  <section class="curved-section" id="NossoCafe">
     <div class="coffee-info">
       <div class="text-side">
         <h1 class="nomecafe"><strong>Café Arábica</strong></h1>
         <img class="img" src="IMG/cafearabica2.png">
       </div>
       <div class="info-list">
-        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info1"><strong>Sabor:</strong> Suave, menos amargo, com notas frutadas e achocolatadas.</p></div>
-        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info2"><strong>Menos cafeína:</strong> Até 50% menos que o robusta.</p></div>
-        <div class="info-item"><img class="Grãoinfo3" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info3"> <strong>Notas:</strong> Chocolate, nozes, mel, frutas vermelhas, florais e cítricas.</p></div>
+        <div class="info-item"><p><strong>Sabor:</strong> Suave, notas frutadas e achocolatadas.</p></div>
+        <div class="info-item"><p><strong>Cafeína:</strong> Até 50% menos que o robusta.</p></div>
       </div>
     </div>
   </section>
 
   <section id="Serviços" class="services-section">
       <h2>Serviços</h2>
-    <div class="services-grid">
-      <div class="service-card">
-        <img src="IMG/Pessoa1.png" alt="Classificação dos grãos">
-        <div class="floating-icon">
-          <img src="IMG/grao.png" alt="Grãos de café">
-        </div>
-        <h3 class="Classificação">Classificação</h3>
-        <p>A classificação dos grãos na Ocean Coffee é feita com rigor técnico e atenção aos detalhes, garantindo que
-          apenas cafés de alta qualidade sejam selecionados.</p>
+      <div class="services-grid">
+        <div class="service-card"><h3>Classificação</h3><p>Triagem rigorosa dos grãos.</p></div>
+        <div class="service-card"><h3>Degustação</h3><p>Padrões internacionais de prova.</p></div>
+        <div class="service-card"><h3>Comercialização</h3><p>Relacionamento direto com o produtor.</p></div>
       </div>
-      <div class="service-card">
-        <img src="IMG/pessoa2.png" alt="Degustação dos grãos">
-        <div class="floating-icon">
-          <img src="IMG/xicara.png" alt="Xicara de Café">
-        </div>
-        <h3 class="Degustação">Degustação</h3>
-        <p>A degustação na Ocean Coffee é feita de maneira criteriosa, seguindo os padrões da indústria de cafés
-          especiais.</p>
+  </section>
+
+  <section id="Sobre" class="Sobre">
+      <h2>Sobre</h2>
+      <div class="container">
+        <p>A Ocean Coffee foi fundada em 2019 com a missão de unir tradição e inovação no mercado cafeeiro.</p>
       </div>
-      <div class="service-card">
-        <img src="IMG/Pessoa3.png" alt="Comercialização dos grãos">
-        <div class="floating-icon">
-          <img src="IMG/pagamento.png" alt="Xicara de Café">
+  </section>
+
+  <section id="equipamentos-destaque" class="equipamentos-destaque-section">
+      <div class="equipamentos-destaque-container">
+        <h2>Equipamentos em Destaque</h2>
+        <div class="equipamentos-destaque-product-grid" id="recent-products-grid"></div>
+        <div class="equipamentos-destaque-cta-container">
+            <a href="Market.html" class="equipamentos-destaque-main-button">Ver todos os equipamentos</a>
         </div>
-        <h3 class="Comercialização">Comercialização</h3>
-        <p>A comercialização na Ocean Coffee é feita com foco em qualidade, transparência e relacionamento direto.</p>
-      </div>
     </div>
   </section>
 
   <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-column footer-about">
-          <img src="IMG/Logo.png" alt="Logo Ocean Coffee" class="footer-logo">
-          <p>&copy; 2025 Ocean Coffee. <br>Todos os direitos reservados.</p>
-      </div>
-      <div class="footer-column footer-links">
-          <h4>Links Rápidos</h4>
-          <a href="#NossoCafe">Nosso Café</a>
-          <a href="#Serviços">Serviços</a>
-          <a href="#Sobre">Sobre</a>
-      </div>
-    </div>
+    <p>&copy; 2025 Ocean Coffee. Todos os direitos reservados.</p>
   </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <button id="btnTopo" onclick="rolarParaTopo()"><img class="up" src="IMG/up-arrow.png"></button>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
+    // Scroll para o topo
     function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
+    // Menu Mobile
     document.addEventListener('DOMContentLoaded', () => {
         const menuToggle = document.getElementById('menu-toggle');
         const mobileNav = document.getElementById('mobile-nav');
         const navOverlay = document.getElementById('nav-overlay');
-        const navLinks = document.querySelectorAll('.mobile-nav-links a');
-
-        function closeMenu() {
-            mobileNav.classList.remove('is-open');
-            navOverlay.classList.remove('is-open');
-        }
-
         menuToggle.addEventListener('click', () => {
-            mobileNav.classList.add('is-open');
-            navOverlay.classList.add('is-open');
-        });
-
-        navOverlay.addEventListener('click', closeMenu);
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
+            mobileNav.classList.toggle('is-open');
+            navOverlay.classList.toggle('is-open');
         });
     });
   </script>
 
   <script>
-    let deferredPrompt;
+    let eventoInstalacao;
     const popup = document.getElementById('pwa-popup');
     const btnInstalar = document.getElementById('btnInstalar');
     const btnNotif = document.getElementById('btnNotificacao');
-    const btnClose = document.getElementById('close-pwa-popup');
 
+    // Mostrar popup após 3 segundos se não houver permissão
     window.addEventListener('load', () => {
       setTimeout(() => {
         if (Notification.permission !== 'granted') {
           popup.style.display = 'flex';
         }
-      }, 1500);
+      }, 3000);
     });
 
+    // Fechar popup
+    document.getElementById('close-pwa-popup').addEventListener('click', () => {
+      popup.style.display = 'none';
+    });
+
+    // Capturar evento de instalação
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      deferredPrompt = e;
+      eventoInstalacao = e;
       btnInstalar.style.display = 'block';
       popup.style.display = 'flex';
     });
 
+    // Botão Notificação
     btnNotif.addEventListener('click', () => {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
+      Notification.requestPermission().then(perm => {
+        if (perm === 'granted') {
           btnNotif.style.display = 'none';
-          if (btnInstalar.style.display === 'none') {
-            popup.style.display = 'none';
-          }
+          if (btnInstalar.style.display === 'none') popup.style.display = 'none';
         }
       });
     });
 
+    // Botão Instalar
     btnInstalar.addEventListener('click', () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            popup.style.display = 'none';
-          }
-          deferredPrompt = null;
+      if (eventoInstalacao) {
+        eventoInstalacao.prompt();
+        eventoInstalacao.userChoice.then(choice => {
+          if (choice.outcome === 'accepted') popup.style.display = 'none';
         });
       }
     });
 
-    btnClose.addEventListener('click', () => {
-      popup.style.display = 'none';
-    });
-
+    // Registro do Service Worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
+      navigator.serviceWorker.register('sw.js');
     }
   </script>
 
@@ -337,39 +264,22 @@
 
     async function loadRecentProducts() {
         const grid = document.getElementById('recent-products-grid');
-        if (!grid) return;
-        const { data, error } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
-        if (error) {
-            console.error('Erro ao buscar produtos recentes:', error);
-            return;
-        }
-        grid.innerHTML = '';
-        data.forEach(product => {
-            const productCard = `
-                <article class="equipamentos-destaque-product-card">
-                    <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__image-container">
-                        <img src="${product.imagens[0] || 'IMG/placeholder.png'}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
-                    </a>
+        const { data } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
+        if (data) {
+            grid.innerHTML = data.map(p => `
+                <div class="equipamentos-destaque-product-card">
+                    <img src="${p.imagens[0]}" class="equipamentos-destaque-product-card__image">
                     <div class="equipamentos-destaque-product-card__content">
-                        <h3 class="equipamentos-destaque-product-card__title">
-                           <a href="MarketPlace.html?id=${product.id}" style="text-decoration: none; color: inherit;">${product.produto}</a>
-                        </h3>
-                        <p class="equipamentos-destaque-product-card__description">${product.descricao.substring(0, 100)}...</p>
-                        <div class="equipamentos-destaque-product-card__footer">
-                            <span class="equipamentos-destaque-product-card__price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)}</span>
-                            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">go to marketplace</a>
-                        </div>
+                        <h3>${p.produto}</h3>
+                        <p>${p.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}</p>
+                        <a href="MarketPlace.html?id=${p.id}" class="equipamentos-destaque-product-card__button">Ver Detalhes</a>
                     </div>
-                </article>
-            `;
-            grid.innerHTML += productCard;
-        });
+                </div>
+            `).join('');
+        }
     }
-    document.addEventListener('DOMContentLoaded', loadRecentProducts);
+    loadRecentProducts();
   </script>
-  <script src="JS/dolar-api.js" defer></script>
-  <script src="JS/weather-api.js" defer></script>
-  <script src="JS/theme-toggle.js"></script>
-</body>
 
+</body>
 </html>
