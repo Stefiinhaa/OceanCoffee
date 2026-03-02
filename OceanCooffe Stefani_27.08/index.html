@@ -367,28 +367,7 @@
         });
     });
   </script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then(registro => {
-          console.log('Ativado');
-          
-          registro.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: 'INSERIR_CHAVE_PUBLICA_AQUI'
-          }).then(function(inscricao) {
-            console.log(JSON.stringify(inscricao));
-          }).catch(function(erro) {
-            console.error(erro);
-          });
-        })
-        .catch(erro => {
-          console.log('Erro', erro);
-        });
-    });
-  }
-</script>
+
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
     const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
