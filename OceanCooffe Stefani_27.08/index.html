@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocean Coffee - Brasil</title>
   <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#005f73">
 
   <script src="JS/theme-applier.js"></script>
@@ -16,10 +16,14 @@
   <link rel="stylesheet" href="CSS/curva.css"> 
   <link rel="stylesheet" href="CSS/responsive.css"> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    /* FORÇAR POPUP NO TOPO E CENTRO */
+    #fundo {
+      height: 100vh;
+      background-image: url("IMG/Fundo.png");
+      background-size: cover;
+    }
     #pwa-popup {
       position: fixed !important;
       top: 0 !important;
@@ -27,12 +31,11 @@
       width: 100vw !important;
       height: 100vh !important;
       background-color: rgba(0, 0, 0, 0.85) !important;
-      display: none; /* JS controla a exibição */
+      display: none;
       justify-content: center !important;
       align-items: center !important;
-      z-index: 9999999 !important; /* Na frente de TUDO */
+      z-index: 9999999 !important;
     }
-
     .pwa-popup-content {
       background-color: #ffffff;
       padding: 30px;
@@ -44,24 +47,15 @@
       width: 350px;
       animation: zoomIn 0.3s ease-out;
     }
-
     @keyframes zoomIn {
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
-
     .pwa-popup-content h3 {
       color: #005f73;
       font-weight: bold;
       margin-bottom: 10px;
     }
-
-    .pwa-popup-content p {
-      color: #333;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
     .close-pwa {
       position: absolute;
       top: 10px;
@@ -72,7 +66,6 @@
       color: #999;
       cursor: pointer;
     }
-
     .pwa-btn-main {
       background-color: #005f73;
       color: white;
@@ -84,16 +77,9 @@
       margin-bottom: 10px;
       cursor: pointer;
     }
-
     #btnInstalar {
       background-color: #e9d8a6;
       color: #005f73;
-    }
-
-    #fundo {
-      height: 100vh;
-      background-image: url("IMG/Fundo.png");
-      background-size: cover;
     }
   </style>
 </head>
@@ -105,19 +91,20 @@
       <button class="close-pwa" id="close-pwa-popup">&times;</button>
       <img src="IMG/Loginho2.png" alt="Logo" style="width: 60px; margin-bottom: 15px;">
       <h3>Fique por dentro!</h3>
-      <p>Ative as notificações para receber alertas de novos produtos e ofertas exclusivas.</p>
-      
-      <button id="btnNotificacao" class="pwa-btn-main">🔔 ATIVAR NOTIFICAÇÕES</button>
-      <button id="btnInstalar" class="pwa-btn-main" style="display: none;">📲 INSTALAR APLICATIVO</button>
+      <p>Ative as notificacoes para receber alertas de novos produtos e ofertas exclusivas.</p>
+      <button id="btnNotificacao" class="pwa-btn-main">ATIVAR NOTIFICACOES</button>
+      <button id="btnInstalar" class="pwa-btn-main" style="display: none;">INSTALAR APLICATIVO</button>
     </div>
   </div>
 
   <header class="navbar">
     <div class="navbar-left">
       <a href="Market.html"><i class="fas fa-store"></i></a>
-      <a href="https://portal.cocatrel.com.br/DPmercadoCafe.aspx">
-        <img class="cocatrel" src="IMG/cocatrel.png" alt="Cocatrel" style="height: 30px; margin-left: 10px;">
-      </a>
+      <div>
+        <a href="https://portal.cocatrel.com.br/DPmercadoCafe.aspx">
+          <img class="cocatrel" src="IMG/cocatrel.png" alt="Cocatrel" title="Acesse o site da Cocatrel">
+        </a>
+      </div>
     </div>
     <nav class="navbar-center">
       <a href="#NossoCafe">Nosso Café</a>
@@ -127,33 +114,166 @@
     </nav>
     <div class="navbar-right" id="weather-toggle">
       <i class="fa-solid fa-cloud-sun"></i>
+      <span></span>
     </div>
   </header>
 
   <header class="mobile-header">
-      <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo" class="logo-img"></a>
-      <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+      <a href="index.html"><img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img"></a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+          <i class="fas fa-bars"></i>
+      </button>
   </header>
 
   <div class="nav-overlay" id="nav-overlay"></div>
   <nav class="mobile-nav" id="mobile-nav">
+      <div class="mobile-nav-header">
+          <img src="IMG/Loginho2.png" alt="Logo Ocean Coffee" class="logo-img" style="height: 50px;">
+      </div>
       <ul class="mobile-nav-links">
-          <li><a href="#NossoCafe">Nosso Café</a></li>
-          <li><a href="#Serviços">Serviços</a></li>
-          <li><a href="Market.html">Loja</a></li>
-          <li><a href="Login.html">Login</a></li>
+          <li><a href="#NossoCafe"><i class="fas fa-coffee"></i>Nosso Café</a></li>
+          <li><a href="#Serviços"><i class="fas fa-concierge-bell"></i>Serviços</a></li>
+          <li><a href="#Sobre"><i class="fas fa-info-circle"></i>Sobre</a></li>
+          <li><a href="Market.html"><i class="fas fa-store"></i>Loja</a></li>
+          <li><a href="Login.html"><i class="fas fa-sign-in-alt"></i>Login</a></li>
       </ul>
   </nav>
 
   <section class="fundo" id="fundo">
+    <div id="container" class="popup">
+      <button id="close-popup" title="Fechar">&times;</button>
+      <form id="search">
+        <i class="fa-solid fa-location-dot"></i>
+        <input type="search" name="city_name" id="city_name" placeholder="Buscar cidade" />
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+      <div id="weather">
+        <h1 id="title"></h1>
+        <div id="infos">
+          <div id="temp">
+            <i id="temp_icon" class="fa-solid fa-cloud-sun"></i>
+            <div>
+              <p id="temp_value">-- <sup>C°</sup></p>
+              <p id="temp_description"></p>
+            </div>
+          </div>
+          <div id="other_infos">
+            <div class="main"><i id="temp_max_icon" class="fa-solid fa-temperature-high"></i><div><h2>Temp. max</h2><p id="temp_max">-- <sup>C°</sup></p></div></div>
+            <div class="main"><i id="temp_min_icon" class="fa-solid fa-temperature-low"></i><div><h2>Temp. min</h2><p id="temp_min">-- <sup>C°</sup></p></div></div>
+            <div class="main"><i id="humidity_icon" class="fa-solid fa-droplet"></i><div><h2>Umidade</h2><p id="humidity">--%</p></div></div>
+            <div class="main"><i id="wind_icon" class="fa-solid fa-wind"></i><div><h2>Vento</h2><p id="wind">-- km/h</p></div></div>
+          </div>
+        </div>
+      </div>
+      <div id="alert"></div>
+    </div>
     <div class="Primeirasessao">
       <div class="sessao">
         <img class="Logo" src="IMG/Logo.png">
-        <p class="texto1">Comece seu dia <br><span class="cor"> Com café </span></p>
+        <p class="texto1">Comece seu dia <br>
+          <span class="cor"> Com café </span>
+        </p>
+        <br>
+        <p class="frase">"Viva a experiência de um bom café" </p>
       </div>
-      <img class="Pacote" src="IMG/Imagempacote (1).png" alt="Pacote">
+      <img class="Pacote" src="IMG/Imagempacote (1).png" alt="">
     </div>
   </section>
+
+  <link rel="stylesheet" href="CSS/curva.css">
+  <section class="curved-section"  id="NossoCafe">
+    <div><img class="background" src="IMG/fundoteste4.png"></div>
+    <div class="curved-shape"></div>
+    <div class="coffee-info">
+      <div class="text-side">
+        <h1 class="nomecafe"><strong>Café Arábica</strong></h1>
+        <img class="img" src="IMG/cafearabica2.png">
+      </div>
+      <div class="info-list">
+        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info1"><strong>Sabor:</strong> Suave, menos amargo, com notas frutadas e achocolatadas.</p></div>
+        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info2"><strong>Menos cafeína:</strong> Até 50% menos que o robusta.</p></div>
+        <div class="info-item"><img class="Grãoinfo3" src="IMG/Grãoinfo .png" alt="Ícone grão" class="icon"><p class="info3"> <strong>Notas:</strong> Chocolate, nozes, mel, frutas vermelhas, florais e cítricas.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="Serviços" class="services-section">
+      <h2>Serviços</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <img src="IMG/Pessoa1.png" alt="Classificação dos grãos">
+        <div class="floating-icon">
+          <img src="IMG/grao.png" alt="Grãos de café">
+        </div>
+        <h3 class="Classificação">Classificação</h3>
+        <p>A classificação dos grãos na Ocean Coffee é feita com rigor técnico e atenção aos detalhes, garantindo que
+          apenas cafés de alta qualidade sejam selecionados.</p>
+      </div>
+      <div class="service-card">
+        <img src="IMG/pessoa2.png" alt="Degustação dos grãos">
+        <div class="floating-icon">
+          <img src="IMG/xicara.png" alt="Xicara de Café">
+        </div>
+        <h3 class="Degustação">Degustação</h3>
+        <p>A degustação na Ocean Coffee é feita de maneira criteriosa, seguindo os padrões da indústria de cafés
+          especiais.</p>
+      </div>
+      <div class="service-card">
+        <img src="IMG/Pessoa3.png" alt="Comercialização dos grãos">
+        <div class="floating-icon">
+          <img src="IMG/pagamento.png" alt="Xicara de Café">
+        </div>
+        <h3 class="Comercialização">Comercialização</h3>
+        <p>A comercialização na Ocean Coffee é feita com foco em qualidade, transparência e relacionamento direto.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-column footer-about">
+          <img src="IMG/Logo.png" alt="Logo Ocean Coffee" class="footer-logo">
+          <p>&copy; 2025 Ocean Coffee. <br>Todos os direitos reservados.</p>
+      </div>
+      <div class="footer-column footer-links">
+          <h4>Links Rápidos</h4>
+          <a href="#NossoCafe">Nosso Café</a>
+          <a href="#Serviços">Serviços</a>
+          <a href="#Sobre">Sobre</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap%405.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <button id="btnTopo" onclick="rolarParaTopo()"><img class="up" src="IMG/up-arrow.png"></button>
+
+  <script>
+    function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileNav = document.getElementById('mobile-nav');
+        const navOverlay = document.getElementById('nav-overlay');
+        const navLinks = document.querySelectorAll('.mobile-nav-links a');
+
+        function closeMenu() {
+            mobileNav.classList.remove('is-open');
+            navOverlay.classList.remove('is-open');
+        }
+
+        menuToggle.addEventListener('click', () => {
+            mobileNav.classList.add('is-open');
+            navOverlay.classList.add('is-open');
+        });
+
+        navOverlay.addEventListener('click', closeMenu);
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+    });
+  </script>
 
   <script>
     let deferredPrompt;
@@ -162,31 +282,25 @@
     const btnNotif = document.getElementById('btnNotificacao');
     const btnClose = document.getElementById('close-pwa-popup');
 
-    // 1. Mostrar o Pop-up assim que entra (com 1.5s de delay para carregar tudo)
     window.addEventListener('load', () => {
       setTimeout(() => {
-        // Se a permissão não foi dada, mostra o popup
         if (Notification.permission !== 'granted') {
           popup.style.display = 'flex';
         }
       }, 1500);
     });
 
-    // 2. Lógica para Instalação (PWA)
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      btnInstalar.style.display = 'block'; // Mostra botão de instalar se disponível
+      btnInstalar.style.display = 'block';
       popup.style.display = 'flex';
     });
 
-    // 3. Clique em Ativar Notificações
     btnNotif.addEventListener('click', () => {
       Notification.requestPermission().then(permission => {
         if (permission === 'granted') {
-          alert("Notificações ativadas com sucesso!");
           btnNotif.style.display = 'none';
-          // Se não tiver botão de instalar, fecha o popup
           if (btnInstalar.style.display === 'none') {
             popup.style.display = 'none';
           }
@@ -194,7 +308,6 @@
       });
     });
 
-    // 4. Clique em Instalar Aplicativo
     btnInstalar.addEventListener('click', () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -207,19 +320,56 @@
       }
     });
 
-    // 5. Botão de Fechar
     btnClose.addEventListener('click', () => {
       popup.style.display = 'none';
     });
 
-    // Registrar Service Worker
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.register('./sw.js');
     }
   </script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/%40supabase/supabase-js%402.44.1/+esm";
+    const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZHhhemxubnB1b3hmenNvdm11Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg3Mjg2NzgsImV4cCI6MjA2NDMwNDY3OH0.fyToys8_muc1XyUebJ19gxGEkCVM_cXg80UJR894xQY";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadRecentProducts() {
+        const grid = document.getElementById('recent-products-grid');
+        if (!grid) return;
+        const { data, error } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
+        if (error) {
+            console.error('Erro ao buscar produtos recentes:', error);
+            return;
+        }
+        grid.innerHTML = '';
+        data.forEach(product => {
+            const productCard = `
+                <article class="equipamentos-destaque-product-card">
+                    <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__image-container">
+                        <img src="${product.imagens[0] || 'IMG/placeholder.png'}" alt="${product.produto}" class="equipamentos-destaque-product-card__image">
+                    </a>
+                    <div class="equipamentos-destaque-product-card__content">
+                        <h3 class="equipamentos-destaque-product-card__title">
+                           <a href="MarketPlace.html?id=${product.id}" style="text-decoration: none; color: inherit;">${product.produto}</a>
+                        </h3>
+                        <p class="equipamentos-destaque-product-card__description">${product.descricao.substring(0, 100)}...</p>
+                        <div class="equipamentos-destaque-product-card__footer">
+                            <span class="equipamentos-destaque-product-card__price">${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.preco)}</span>
+                            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">go to marketplace</a>
+                        </div>
+                    </div>
+                </article>
+            `;
+            grid.innerHTML += productCard;
+        });
+    }
+    document.addEventListener('DOMContentLoaded', loadRecentProducts);
+  </script>
   <script src="JS/dolar-api.js" defer></script>
   <script src="JS/weather-api.js" defer></script>
+  <script src="JS/theme-toggle.js"></script>
 </body>
+
 </html>
