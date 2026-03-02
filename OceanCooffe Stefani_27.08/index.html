@@ -368,23 +368,23 @@
     });
   </script>
 <script>
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && 'Notification' in window) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
         .then(registro => {
-          console.log('Ativado');
+          console.log('O Service Worker foi ativado.');
           
-          registro.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: 'INSERIR_CHAVE_PUBLICA_AQUI'
-          }).then(function(inscricao) {
-            console.log(JSON.stringify(inscricao));
-          }).catch(function(erro) {
-            console.error(erro);
+          // Solicita permissão explícita para mostrar as notificações
+          Notification.requestPermission().then(permissao => {
+            if (permissao === 'granted') {
+              console.log('Permissão concedida com sucesso.');
+            } else {
+              console.log('A permissão foi negada.');
+            }
           });
         })
         .catch(erro => {
-          console.log('Erro', erro);
+          console.log('Ocorreu um erro:', erro);
         });
     });
   }
