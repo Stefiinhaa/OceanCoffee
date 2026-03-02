@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+'<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ocean Coffee - Brasil</title>
   <link class="novo" rel="icon" href="IMG/Loginho2.png" type="image/png">
-
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme_color" content="#005f73">
 
   <script src="JS/theme-applier.js"></script>
   <link rel="stylesheet" href="CSS/dark-mode.css">
@@ -366,7 +367,28 @@
         });
     });
   </script>
-
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(registro => {
+          console.log('Ativado');
+          
+          registro.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: 'INSERIR_CHAVE_PUBLICA_AQUI'
+          }).then(function(inscricao) {
+            console.log(JSON.stringify(inscricao));
+          }).catch(function(erro) {
+            console.error(erro);
+          });
+        })
+        .catch(erro => {
+          console.log('Erro', erro);
+        });
+    });
+  }
+</script>
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
     const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
@@ -417,3 +439,4 @@
 </body>
 
 </html>
+'
