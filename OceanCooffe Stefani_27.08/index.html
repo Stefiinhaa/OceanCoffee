@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="CSS/api.css">
   <link rel="stylesheet" href="CSS/curva.css">
   <link rel="stylesheet" href="CSS/responsive.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
@@ -25,52 +25,32 @@
       background-size: cover;
     }
 
-    /* ESTILO DO POP-UP DE NOTIFICAÇÃO/PWA */
-    #pwa-notification-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+    /* Estilo do Banner de Notificação */
+    #push-banner {
       display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999999;
-    }
-
-    .pwa-card {
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      max-width: 350px;
-      width: 90%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .pwa-card img { width: 60px; margin-bottom: 15px; }
-    .pwa-card h3 { color: #005f73; font-weight: bold; }
-    .pwa-card p { font-size: 0.9rem; color: #555; }
-
-    .btn-pwa-main {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       background: #005f73;
       color: white;
-      border: none;
-      padding: 12px;
-      width: 100%;
-      border-radius: 10px;
-      font-weight: bold;
-      margin-top: 10px;
-      cursor: pointer;
+      padding: 15px 25px;
+      border-radius: 50px;
+      z-index: 10000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      align-items: center;
+      gap: 15px;
+      width: 90%;
+      max-width: 500px;
     }
 
-    .btn-pwa-secondary {
-      background: none;
+    #push-banner button {
+      background: #e9d8a6;
       border: none;
-      color: #888;
-      margin-top: 10px;
-      font-size: 0.8rem;
+      padding: 8px 15px;
+      border-radius: 20px;
+      color: #005f73;
+      font-weight: bold;
       cursor: pointer;
     }
   </style>
@@ -78,15 +58,10 @@
 
 <body>
 
-  <div id="pwa-notification-overlay">
-    <div class="pwa-card">
-      <img src="IMG/Loginho2.png" alt="Logo">
-      <h3>Fique por dentro!</h3>
-      <p>Receba notificações de novos equipamentos e instale nosso app para uma melhor experiência.</p>
-      <button id="btn-allow-notifications" class="btn-pwa-main">Ativar Notificações</button>
-      <button id="btn-install-pwa" class="btn-pwa-main" style="display:none; background: #e9d8a6; color: #005f73;">Instalar Aplicativo</button>
-      <button id="btn-close-pwa" class="btn-pwa-secondary">Depois</button>
-    </div>
+  <div id="push-banner">
+    <span>Deseja receber avisos de novos cafés e máquinas?</span>
+    <button onclick="ativarNotificacoes()">Ativar</button>
+    <i class="fa-solid fa-xmark" style="cursor:pointer" onclick="this.parentElement.style.display='none'"></i>
   </div>
 
   <header class="navbar">
@@ -150,18 +125,20 @@
             </div>
           </div>
           <div id="other_infos">
-            <div class="main"><i class="fa-solid fa-temperature-high"></i><div><h2>Temp. max</h2><p id="temp_max">-- <sup>C°</sup></p></div></div>
-            <div class="main"><i class="fa-solid fa-droplet"></i><div><h2>Umidade</h2><p id="humidity">--%</p></div></div>
-            <div class="main"><i class="fa-solid fa-wind"></i><div><h2>Vento</h2><p id="wind">-- km/h</p></div></div>
+            <div class="main"><i id="temp_max_icon" class="fa-solid fa-temperature-high"></i><div><h2>Temp. max</h2><p id="temp_max">-- <sup>C°</sup></p></div></div>
+            <div class="main"><i id="temp_min_icon" class="fa-solid fa-temperature-low"></i><div><h2>Temp. min</h2><p id="temp_min">-- <sup>C°</sup></p></div></div>
+            <div class="main"><i id="humidity_icon" class="fa-solid fa-droplet"></i><div><h2>Umidade</h2><p id="humidity">--%</p></div></div>
+            <div class="main"><i id="wind_icon" class="fa-solid fa-wind"></i><div><h2>Vento</h2><p id="wind">-- km/h</p></div></div>
           </div>
         </div>
       </div>
+      <div id="alert"></div>
     </div>
-
     <div class="Primeirasessao">
       <div class="sessao">
         <img class="Logo" src="IMG/Logo.png">
         <p class="texto1">Comece seu dia <br><span class="cor"> Com café </span></p>
+        <br>
         <p class="frase">"Viva a experiência de um bom café" </p>
       </div>
       <img class="Pacote" src="IMG/Imagempacote (1).png" alt="">
@@ -176,9 +153,8 @@
         <img class="img" src="IMG/cafearabica2.png">
       </div>
       <div class="info-list">
-        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png"><p><strong>Sabor:</strong> Suave e adocicado.</p></div>
-        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png"><p><strong>Menos cafeína:</strong> Qualidade superior.</p></div>
-        <div class="info-item"><img class="Grãoinfo3" src="IMG/Grãoinfo .png"><p><strong>Notas:</strong> Chocolate e Frutas.</p></div>
+        <div class="info-item"><img class="Grãoinfo" src="IMG/Grãoinfo .png"><p><strong>Sabor:</strong> Suave, notas frutadas.</p></div>
+        <div class="info-item"><img class="Grãoinfo2" src="IMG/Grãoinfo .png"><p><strong>Cafeína:</strong> Equilibrada e refinada.</p></div>
       </div>
     </div>
   </section>
@@ -186,9 +162,21 @@
   <section id="Serviços" class="services-section">
     <h2>Serviços</h2>
     <div class="services-grid">
-      <div class="service-card"><img src="IMG/Pessoa1.png"><h3>Classificação</h3><p>Rigor técnico na seleção dos grãos.</p></div>
-      <div class="service-card"><img src="IMG/pessoa2.png"><h3>Degustação</h3><p>Análise sensorial completa.</p></div>
-      <div class="service-card"><img src="IMG/Pessoa3.png"><h3>Comercialização</h3><p>Transparência no mercado.</p></div>
+      <div class="service-card">
+        <img src="IMG/Pessoa1.png" alt="Classificação">
+        <h3 class="Classificação">Classificação</h3>
+        <p>Garantia de grãos selecionados com rigor técnico.</p>
+      </div>
+      <div class="service-card">
+        <img src="IMG/pessoa2.png" alt="Degustação">
+        <h3 class="Degustação">Degustação</h3>
+        <p>Experiência sensorial única seguindo padrões internacionais.</p>
+      </div>
+      <div class="service-card">
+        <img src="IMG/Pessoa3.png" alt="Comercialização">
+        <h3 class="Comercialização">Comercialização</h3>
+        <p>Transparência e conexão direta com o mercado.</p>
+      </div>
     </div>
   </section>
 
@@ -203,44 +191,29 @@
     </div>
   </section>
 
-  <section id="Sobre" class="Sobre">
-    <h2>Sobre</h2>
-    <div class="container">
-      <div class="left-card"><img src="IMG/Bolinha.png" class="card-img"></div>
-      <div class="text-content">
-        <h3><span class="cor2">Proprietário</span>: Jorge Luiz Miguel Santos</h3>
-        <p>Fundada em 2019, a Ocean Coffee une tradição e inovação.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="Container2">
-    <h2>Nossos Princípios</h2>
-    <div class="principio-bloco">
-      <div class="card"><h3>Política</h3><p>Saúde, segurança e satisfação.</p></div>
-      <div class="card"><h3>Missão</h3><p>Ser parceiro estratégico do produtor.</p></div>
-      <div class="card"><h3>Visão</h3><p>Referência internacional em café.</p></div>
-    </div>
-  </section>
-
-  <section id="Colaboradores" class="Colaboradores">
-    <h2>Colaboradores</h2>
-    <div class="container-caixas">
-      <div class="caixa"><div class="contorno"><p>Paixão pela qualidade.</p><img src="IMG/jorge.png"><div>Jorge Luiz</div></div></div>
-      <div class="caixa"><div class="contorno"><p>Compromisso com o sabor.</p><img src="IMG/gabriel.png"><div>Gabriel</div></div></div>
-    </div>
-  </section>
-
   <section id="equipamentos-destaque" class="equipamentos-destaque-section">
     <div class="equipamentos-destaque-container">
       <h2 class="equipamentos-destaque-section-title">Equipamentos em Destaque</h2>
       <div class="equipamentos-destaque-product-grid" id="recent-products-grid"></div>
+      <div class="equipamentos-destaque-cta-container">
+        <a href="Market.html" class="equipamentos-destaque-main-button">Ver todos</a>
+      </div>
     </div>
   </section>
 
   <footer class="footer">
     <div class="footer-content">
-      <p>&copy; 2025 Ocean Coffee. Todos os direitos reservados.</p>
+      <div class="footer-column footer-about">
+        <img src="IMG/Logo.png" alt="Logo" class="footer-logo">
+        <p>&copy; 2025 Ocean Coffee. Todos os direitos reservados.</p>
+      </div>
+      <div class="footer-column footer-social">
+        <h4>Siga-nos</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -249,62 +222,41 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    const VAPID_KEY = 'SUA_CHAVE_PUBLICA_AQUI'; // Substitua pela sua chave pública
 
-    // Menu Mobile
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileNav = document.getElementById('mobile-nav');
-    const navOverlay = document.getElementById('nav-overlay');
-    
-    menuToggle.addEventListener('click', () => { mobileNav.classList.add('is-open'); navOverlay.classList.add('is-open'); });
-    navOverlay.addEventListener('click', () => { mobileNav.classList.remove('is-open'); navOverlay.classList.remove('is-open'); });
+    function urlBase64ToUint8Array(base64String) {
+      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) { outputArray[i] = rawData.charCodeAt(i); }
+      return outputArray;
+    }
 
-    // LÓGICA PWA E PUSH NOTIFICATIONS
-    let deferredPrompt;
-    const pwaOverlay = document.getElementById('pwa-notification-overlay');
-    const btnInstall = document.getElementById('btn-install-pwa');
-    const btnNotify = document.getElementById('btn-allow-notifications');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      btnInstall.style.display = 'block';
-      pwaOverlay.style.display = 'flex';
-    });
+    async function ativarNotificacoes() {
+      const registro = await navigator.serviceWorker.ready;
+      try {
+        const inscricao = await registro.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_KEY)
+        });
+        console.log('Inscrito:', JSON.stringify(inscricao));
+        alert('Notificações ativadas!');
+        document.getElementById('push-banner').style.display = 'none';
+      } catch (e) { console.error('Erro ao inscrever:', e); }
+    }
 
     window.addEventListener('load', () => {
-      // Mostrar popup se não houver permissão de notificação
-      setTimeout(() => {
-        if (Notification.permission === 'default') pwaOverlay.style.display = 'flex';
-      }, 3000);
-    });
-
-    btnNotify.addEventListener('click', () => {
-      Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-          console.log('Notificação permitida');
-          // Aqui você chamaria o seu registro de pushManager
-          pwaOverlay.style.display = 'none';
-        }
-      });
-    });
-
-    btnInstall.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') pwaOverlay.style.display = 'none';
-        deferredPrompt = null;
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').then(() => {
+          if (Notification.permission === 'default') {
+            setTimeout(() => { document.getElementById('push-banner').style.display = 'flex'; }, 3000);
+          }
+        });
       }
     });
 
-    document.getElementById('btn-close-pwa').addEventListener('click', () => {
-      pwaOverlay.style.display = 'none';
-    });
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
-    }
+    function rolarParaTopo() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   </script>
 
   <script type="module">
@@ -315,15 +267,16 @@
 
     async function loadRecentProducts() {
       const grid = document.getElementById('recent-products-grid');
-      const { data, error } = await supabase.from('aprovados').select('*').order('data_aprovacao', { ascending: false }).limit(3);
-      if (error) return;
-      grid.innerHTML = data.map(product => `
+      const { data, error } = await supabase.from('aprovados').select('*').limit(3).order('data_aprovacao', { ascending: false });
+      if (error || !data) return;
+      grid.innerHTML = data.map(p => `
         <article class="equipamentos-destaque-product-card">
-          <img src="${product.imagens[0]}" class="equipamentos-destaque-product-card__image">
+          <img src="${p.imagens[0]}" class="equipamentos-destaque-product-card__image">
           <div class="equipamentos-destaque-product-card__content">
-            <h3>${product.produto}</h3>
-            <p>R$ ${product.preco}</p>
-            <a href="MarketPlace.html?id=${product.id}" class="equipamentos-destaque-product-card__button">Saiba Mais</a>
+            <h3>${p.produto}</h3>
+            <p>${p.descricao.substring(0, 60)}...</p>
+            <span class="price">R$ ${p.preco}</span>
+            <a href="MarketPlace.html?id=${p.id}" class="equipamentos-destaque-product-card__button">Ver detalhes</a>
           </div>
         </article>
       `).join('');
@@ -331,7 +284,6 @@
     loadRecentProducts();
   </script>
 
-  <script src="JS/dolar-api.js" defer></script>
   <script src="JS/weather-api.js" defer></script>
   <script src="JS/theme-toggle.js"></script>
 </body>
