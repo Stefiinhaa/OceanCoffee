@@ -1,93 +1,60 @@
-const NOME_DO_CACHE = 'oceancoffee-v2'; // Mude a versão sempre que alterar o CSS/JS
-const arquivosParaGuardar = [
-  './',
-  './index.html',
-  './CSS/styles.css',
-  './CSS/dark-mode.css',
-  './CSS/api.css',
-  './CSS/curva.css',
-  './CSS/responsive.css',
-  './IMG/Logo.png',
-  './IMG/Loginho2.png'
+// sw.js - Service Worker para Ocean Coffee
+
+const CACHE_NAME = 'ocean-coffee-v1';
+const ASSETS_TO_CACHE = [
+  '/',
+  '/index.html',
+  '/CSS/styles.css',
+  '/IMG/Loginho2.png'
 ];
 
-// Instalação: Salva arquivos no cache
-self.addEventListener('install', evento => {
-  self.skipWaiting(); // Força o novo SW a assumir o controle imediatamente
-  evento.waitUntil(
-    caches.open(NOME_DO_CACHE)
-      .then(cache => {
-        return cache.addAll(arquivosParaGuardar);
-      })
-  );
-});
-
-// Ativação: Limpa caches antigos
-self.addEventListener('activate', evento => {
-  evento.waitUntil(
-    caches.keys().then(nomesCaches => {
-      return Promise.all(
-        nomesCaches.map(nome => {
-          if (nome !== NOME_DO_CACHE) {
-            return caches.delete(nome);
-          }
-        })
-      );
+// Instalação: Cache básico de recursos
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS_TO_CACHE);
     })
   );
+  self.skipWaiting();
 });
 
-// Fetch: Tenta buscar no cache, se não tiver, vai na rede
-self.addEventListener('fetch', evento => {
-  evento.respondWith(
-    caches.match(evento.request)
-      .then(resposta => {
-        return resposta || fetch(evento.request);
-      })
-  );
+// Ativação
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
 });
 
-// PUSH: Recebe a notificação do servidor
-self.addEventListener('push', function(evento) {
-  let dados = 'Nova atualização disponível na Ocean Coffee!';
-  
-  if (evento.data) {
-    // Tenta ler como JSON se o servidor enviar objeto, senão lê como texto
+// ESCUTAR O EVENTO DE PUSH
+// É aqui que a mágica acontece quando o servidor envia a notificação
+self.addEventListener('push', function(event) {
+  let data = { title: 'Ocean Coffee', body: 'Nova atualização para você!' };
+
+  if (event.data) {
     try {
-      const json = evento.data.json();
-      dados = json.body || dados;
+      data = event.data.json();
     } catch (e) {
-      dados = evento.data.text();
+      data = { title: 'Ocean Coffee', body: event.data.text() };
     }
   }
 
-  const opcoes = {
-    body: dados,
-    icon: 'IMG/Loginho2.png', // Ícone que aparece na notificação
-    badge: 'IMG/Loginho2.png', // Ícone pequeno na barra de status (Android)
+  const options = {
+    body: data.body,
+    icon: 'IMG/Loginho2.png', // Caminho do seu ícone
+    badge: 'IMG/Loginho2.png',
     vibrate: [100, 50, 100],
     data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      { action: 'explore', title: 'Ver novidades' },
-      { action: 'close', title: 'Fechar' }
-    ]
+      url: data.url || '/'
+    }
   };
 
-  evento.waitUntil(
-    self.registration.showNotification('Ocean Coffee', opcoes)
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
   );
 });
 
-// Clique na notificação: Abre o site
-self.addEventListener('notificationclick', function(evento) {
-  evento.notification.close();
-
-  if (evento.action !== 'close') {
-    evento.waitUntil(
-      clients.openWindow('/') // Abre a página inicial do seu site
-    );
-  }
+// Ação ao clicar na notificação (abrir o site)
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow(event.notification.data.url)
+  );
 });
