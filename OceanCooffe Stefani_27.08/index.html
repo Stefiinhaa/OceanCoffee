@@ -373,38 +373,33 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
         .then(registro => {
-          console.log('SW Ativado com Sucesso');
           
-          // Se o navegador ainda não tem a resposta da permissão, criamos um banner dinâmico e invisível no HTML
           if (Notification.permission === 'default') {
-            const banner = document.createElement('div');
-            banner.innerHTML = `
-              <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #005f73; color: white; padding: 15px 20px; border-radius: 10px; z-index: 999999; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 90%; max-width: 400px; font-family: sans-serif;">
-                <span style="flex: 1; font-size: 14px;">Deseja receber notificações sobre as novidades da loja?</span>
-                <button id="btn-permitir-notif" style="background: #e9d8a6; color: #005f73; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">Ativar</button>
-                <button id="btn-fechar-notif" style="background: transparent; color: white; border: 1px solid white; padding: 8px 12px; border-radius: 5px; cursor: pointer;">Depois</button>
+            const popup = document.createElement('div');
+            popup.innerHTML = `
+              <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #005f73; color: white; padding: 15px 25px; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center; width: 90%; max-width: 400px; font-family: sans-serif;">
+                <p style="margin: 0 0 10px 0; font-size: 14px;">Ative as notificações para receber as novidades da Ocean Coffee.</p>
+                <button id="btn-aceitar-push" style="background: #e9d8a6; color: #005f73; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 10px;">Ativar</button>
+                <button id="btn-recusar-push" style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Agora não</button>
               </div>
             `;
-            document.body.appendChild(banner);
+            document.body.appendChild(popup);
 
-            // Vincula o clique do usuário diretamente à requisição (O que o Windows/Navegador exige)
-            document.getElementById('btn-permitir-notif').addEventListener('click', () => {
+            document.getElementById('btn-aceitar-push').addEventListener('click', () => {
               Notification.requestPermission().then(permissao => {
                 if (permissao === 'granted') {
-                  console.log('Permissão garantida com sucesso!');
-                  // Aqui a notificação de Push vai aparecer sem ser bloqueada
+                  console.log('Permissão concedida. Pronto para receber Push!');
+                  // Opcionalmente, pode forçar uma notificação de teste aqui:
+                  // registro.showNotification('Ocean Coffee', { body: 'Notificações ativadas!', icon: 'IMG/Loginho2.png' });
                 }
-                banner.remove(); // Limpa o banner da tela
+                popup.remove();
               });
             });
 
-            document.getElementById('btn-fechar-notif').addEventListener('click', () => {
-              banner.remove(); // Oculta o banner se o usuário não quiser
+            document.getElementById('btn-recusar-push').addEventListener('click', () => {
+              popup.remove();
             });
           }
-        })
-        .catch(erro => {
-          console.log('Erro ao iniciar SW:', erro);
         });
     });
   }
