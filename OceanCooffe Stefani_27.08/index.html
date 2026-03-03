@@ -10,7 +10,6 @@
   <meta name="theme_color" content="#005f73">
 
   <script src="JS/theme-applier.js"></script>
-  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="CSS/dark-mode.css">
   <link rel="stylesheet" href="CSS/styles.css">
   <link rel="stylesheet" href="CSS/api.css">
@@ -368,6 +367,7 @@
         });
     });
   </script>
+
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -375,14 +375,20 @@
         .then(registro => {
           console.log('Ativado');
           
-          registro.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: 'INSERIR_CHAVE_PUBLICA_AQUI'
-          }).then(function(inscricao) {
-            console.log(JSON.stringify(inscricao));
-          }).catch(function(erro) {
-            console.error(erro);
-          });
+          registro.pushManager.getSubscription()
+            .then(function(inscricao) {
+              if (inscricao) return inscricao;
+              
+              // Tenta inscrever apenas se houver uma chave válida (opcional para notificações básicas)
+              return registro.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: 'BNo6uI1N-uXhS7JvX5R9-9uX7J_X5R9-uXhS7JvX5R9-9uX7J_X5R9-uXhS7' 
+              });
+            }).then(function(inscricao) {
+              console.log(JSON.stringify(inscricao));
+            }).catch(function(erro) {
+              console.error('Inscrição não concluída (chave VAPID necessária para Push real):', erro);
+            });
         })
         .catch(erro => {
           console.log('Erro', erro);
@@ -390,6 +396,7 @@
     });
   }
 </script>
+
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.1/+esm";
     const supabaseUrl = "https://uldxazlnnpuoxfzsovmu.supabase.co";
