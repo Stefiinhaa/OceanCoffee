@@ -1,8 +1,8 @@
 {
-  "name": "OceanCoffee",
+  "name": "Ocean Coffee Brasil",
   "short_name": "OceanCoffee",
-  "description": "Plataforma de comercio OceanCoffee",
-  "start_url": "./index.html",
+  "description": "Plataforma de comércio Ocean Coffee",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#005f73",
@@ -17,5 +17,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "gcm_sender_id": "103953800507"
 }

@@ -1,35 +1,40 @@
-// sw.js - Service Worker Ocean Coffee
+// sw.js - Motor de Notificações da Ocean Coffee
 
 self.addEventListener('install', (event) => {
-    // Força o SW a se tornar ativo imediatamente
-    self.skipWaiting();
+    self.skipWaiting(); // Força a instalação imediata
 });
 
 self.addEventListener('activate', (event) => {
-    // Garante que o SW controle a página logo de cara
-    event.waitUntil(clients.claim());
+    event.waitUntil(clients.claim()); // Assume o controle da página na hora
 });
 
-// ESCUTAR O EVENTO DE PUSH
+// ESCUTAR O PUSH DO SERVIDOR
 self.addEventListener('push', function(event) {
-    let payload = "Nova notificação da Ocean Coffee!";
+    let msg = "Nova atualização da Ocean Coffee!";
     
     if (event.data) {
-        payload = event.data.text();
+        msg = event.data.text(); // Pega o texto enviado pelo servidor
     }
 
     const options = {
-        body: payload,
-        icon: 'IMG/Loginho2.png',
-        badge: 'IMG/Loginho2.png',
+        body: msg,
+        icon: 'IMG/Logo.png',
+        badge: 'IMG/Logo.png',
         vibrate: [100, 50, 100],
         data: {
-            dateOfArrival: Date.now(),
-            primaryKey: 1
+            url: '/' // Abre a home ao clicar
         }
     };
 
     event.waitUntil(
         self.registration.showNotification('Ocean Coffee', options)
+    );
+});
+
+// Ação ao clicar na notificação
+self.addEventListener('notificationclick', function(event) {
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow(event.notification.data.url)
     );
 });
