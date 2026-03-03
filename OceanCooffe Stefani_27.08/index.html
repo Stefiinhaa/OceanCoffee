@@ -373,35 +373,24 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
         .then(registro => {
-          
-          if (Notification.permission === 'default') {
-            const popup = document.createElement('div');
-            popup.innerHTML = `
-              <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #005f73; color: white; padding: 15px 25px; border-radius: 8px; z-index: 10000; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center; width: 90%; max-width: 400px; font-family: sans-serif;">
-                <p style="margin: 0 0 10px 0; font-size: 14px;">Ative as notificações para receber as novidades da Ocean Coffee.</p>
-                <button id="btn-aceitar-push" style="background: #e9d8a6; color: #005f73; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 10px;">Ativar</button>
-                <button id="btn-recusar-push" style="background: transparent; color: white; border: 1px solid white; padding: 8px 16px; border-radius: 4px; cursor: pointer;">Agora não</button>
-              </div>
-            `;
-            document.body.appendChild(popup);
-
-            document.getElementById('btn-aceitar-push').addEventListener('click', () => {
-              Notification.requestPermission().then(permissao => {
-                if (permissao === 'granted') {
-                  console.log('Permissão concedida. Pronto para receber Push!');
-                  // Opcionalmente, pode forçar uma notificação de teste aqui:
-                  // registro.showNotification('Ocean Coffee', { body: 'Notificações ativadas!', icon: 'IMG/Loginho2.png' });
-                }
-                popup.remove();
-              });
-            });
-
-            document.getElementById('btn-recusar-push').addEventListener('click', () => {
-              popup.remove();
-            });
-          }
+          console.log('Service Worker Registrado!');
         });
     });
+
+    // O NAVEGADOR EXIGE UM CLIQUE PARA LIBERAR A PERMISSÃO
+    // Este código pede a permissão no primeiro clique que o usuário der em qualquer lugar do site
+    const pedirPermissao = () => {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permissao => {
+          if (permissao === 'granted') {
+            console.log('Permissão garantida! O Push vai aparecer na tela agora.');
+          }
+        });
+      }
+      document.removeEventListener('click', pedirPermissao); // Remove após o 1º clique
+    };
+
+    document.addEventListener('click', pedirPermissao);
   }
 </script>
 
