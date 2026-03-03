@@ -373,7 +373,38 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
         .then(registro => {
-          Notification.requestPermission();
+          console.log('SW Ativado com Sucesso');
+          
+          // Se o navegador ainda não tem a resposta da permissão, criamos um banner dinâmico e invisível no HTML
+          if (Notification.permission === 'default') {
+            const banner = document.createElement('div');
+            banner.innerHTML = `
+              <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #005f73; color: white; padding: 15px 20px; border-radius: 10px; z-index: 999999; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); width: 90%; max-width: 400px; font-family: sans-serif;">
+                <span style="flex: 1; font-size: 14px;">Deseja receber notificações sobre as novidades da loja?</span>
+                <button id="btn-permitir-notif" style="background: #e9d8a6; color: #005f73; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">Ativar</button>
+                <button id="btn-fechar-notif" style="background: transparent; color: white; border: 1px solid white; padding: 8px 12px; border-radius: 5px; cursor: pointer;">Depois</button>
+              </div>
+            `;
+            document.body.appendChild(banner);
+
+            // Vincula o clique do usuário diretamente à requisição (O que o Windows/Navegador exige)
+            document.getElementById('btn-permitir-notif').addEventListener('click', () => {
+              Notification.requestPermission().then(permissao => {
+                if (permissao === 'granted') {
+                  console.log('Permissão garantida com sucesso!');
+                  // Aqui a notificação de Push vai aparecer sem ser bloqueada
+                }
+                banner.remove(); // Limpa o banner da tela
+              });
+            });
+
+            document.getElementById('btn-fechar-notif').addEventListener('click', () => {
+              banner.remove(); // Oculta o banner se o usuário não quiser
+            });
+          }
+        })
+        .catch(erro => {
+          console.log('Erro ao iniciar SW:', erro);
         });
     });
   }
