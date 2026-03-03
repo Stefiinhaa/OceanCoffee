@@ -20,7 +20,6 @@
   </head>
 
 <style>
- 
   #fundo {
     height: 100vh;
     background-image: url("IMG/Fundo.png");
@@ -32,7 +31,6 @@
 
   <header class="navbar">
     <div class="navbar-left">
-    
       <a href="Market.html"><i class="fas fa-store"></i></a>
       <div>
         <a href="https://portal.cocatrel.com.br/DPmercadoCafe.aspx">
@@ -361,10 +359,7 @@
         });
 
         navOverlay.addEventListener('click', closeMenu);
-        
-        navLinks.forEach(link => {
-            link.addEventListener('click', closeMenu);
-        });
+        navLinks.forEach(link => link.addEventListener('click', closeMenu));
     });
   </script>
 
@@ -372,25 +367,17 @@
   if ('serviceWorker' in navigator && 'Notification' in window) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
-        .then(registro => {
-          console.log('Service Worker Registrado!');
+        .then(() => {
+          console.log('SW registado com sucesso!');
         });
     });
 
-    // O NAVEGADOR EXIGE UM CLIQUE PARA LIBERAR A PERMISSÃO
-    // Este código pede a permissão no primeiro clique que o usuário der em qualquer lugar do site
-    const pedirPermissao = () => {
+    // Pede autorização discretamente e sem avisos extra
+    document.addEventListener('click', () => {
       if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permissao => {
-          if (permissao === 'granted') {
-            console.log('Permissão garantida! O Push vai aparecer na tela agora.');
-          }
-        });
+        Notification.requestPermission();
       }
-      document.removeEventListener('click', pedirPermissao); // Remove após o 1º clique
-    };
-
-    document.addEventListener('click', pedirPermissao);
+    }, { once: true });
   }
 </script>
 
@@ -442,5 +429,4 @@
   <script src="JS/theme-toggle.js"></script>
 
 </body>
-
 </html>
