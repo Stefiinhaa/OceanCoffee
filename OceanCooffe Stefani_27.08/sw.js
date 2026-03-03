@@ -8,12 +8,20 @@ self.addEventListener('activate', (event) => {
     event.waitUntil(clients.claim()); // Assume o controle da página na hora
 });
 
+// ------------------------------------------------------------------------
+// REQUISITO OBRIGATÓRIO DO GOOGLE PARA O CELULAR DEIXAR "BAIXAR O APP" (PWA)
+self.addEventListener('fetch', function(event) {
+    // Não altera nada visualmente, apenas deixa o site carregar normalmente
+    event.respondWith(fetch(event.request));
+});
+// ------------------------------------------------------------------------
+
 // ESCUTAR O PUSH 
 self.addEventListener('push', function(event) {
     let titulo = 'Ocean Coffee';
     let msg = 'Tem uma nova notificação!';
 
-    // Tratamento à prova de falhas: tenta ler JSON, se falhar lê como texto
+    // Tratamento à prova de falhas
     if (event.data) {
         try {
             const data = event.data.json();
