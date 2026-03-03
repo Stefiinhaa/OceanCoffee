@@ -1,5 +1,4 @@
-// sw.js - Motor de Notificações da Ocean Coffee
-
+// sw.js - Motor de Notificações
 self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
@@ -10,7 +9,6 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('push', function(event) {
     let msg = "Nova atualização da Ocean Coffee!";
-    
     if (event.data) {
         msg = event.data.text();
     }
@@ -19,8 +17,7 @@ self.addEventListener('push', function(event) {
         self.registration.showNotification('Ocean Coffee', {
             body: msg,
             icon: 'IMG/Loginho2.png',
-            badge: 'IMG/Loginho2.png',
-            vibrate: [200, 100, 200, 100, 200]
+            vibrate: [200, 100, 200]
         })
     );
 });
