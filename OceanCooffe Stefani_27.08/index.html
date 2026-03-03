@@ -20,7 +20,6 @@
   </head>
 
 <style>
- 
   #fundo {
     height: 100vh;
     background-image: url("IMG/Fundo.png");
@@ -32,7 +31,6 @@
 
   <header class="navbar">
     <div class="navbar-left">
-    
       <a href="Market.html"><i class="fas fa-store"></i></a>
       <div>
         <a href="https://portal.cocatrel.com.br/DPmercadoCafe.aspx">
@@ -369,28 +367,12 @@
   </script>
 
 <script>
-  if ('serviceWorker' in navigator && 'Notification' in window) {
+  if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
-        .then(registro => {
-          console.log('Service Worker Registrado!');
-        });
+        .then(reg => console.log('SW Registrado. Pronto para o Push!'))
+        .catch(err => console.error('Erro no SW:', err));
     });
-
-    // O NAVEGADOR EXIGE UM CLIQUE PARA LIBERAR A PERMISSÃO
-    // Este código pede a permissão no primeiro clique que o usuário der em qualquer lugar do site
-    const pedirPermissao = () => {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission().then(permissao => {
-          if (permissao === 'granted') {
-            console.log('Permissão garantida! O Push vai aparecer na tela agora.');
-          }
-        });
-      }
-      document.removeEventListener('click', pedirPermissao); // Remove após o 1º clique
-    };
-
-    document.addEventListener('click', pedirPermissao);
   }
 </script>
 
