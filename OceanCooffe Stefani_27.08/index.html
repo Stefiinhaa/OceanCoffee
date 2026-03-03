@@ -369,29 +369,11 @@
   </script>
 
 <script>
-  if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator && 'Notification' in window) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
         .then(registro => {
-          console.log('Ativado');
-          
-          registro.pushManager.getSubscription()
-            .then(function(inscricao) {
-              if (inscricao) return inscricao;
-              
-              // Tenta inscrever apenas se houver uma chave válida (opcional para notificações básicas)
-              return registro.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: 'BNo6uI1N-uXhS7JvX5R9-9uX7J_X5R9-uXhS7JvX5R9-9uX7J_X5R9-uXhS7' 
-              });
-            }).then(function(inscricao) {
-              console.log(JSON.stringify(inscricao));
-            }).catch(function(erro) {
-              console.error('Inscrição não concluída (chave VAPID necessária para Push real):', erro);
-            });
-        })
-        .catch(erro => {
-          console.log('Erro', erro);
+          Notification.requestPermission();
         });
     });
   }
